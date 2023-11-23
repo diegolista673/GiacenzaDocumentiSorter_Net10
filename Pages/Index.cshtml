@@ -1,0 +1,83 @@
+﻿@page
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model IndexModel
+@{
+    ViewData["Title"] = "Giacenza Sorter " ;
+}
+@{
+    Layout = "_LayoutLogin";
+}
+
+<style>
+
+    body {
+        color: darkblue;
+    }
+
+    h5 {
+        color: red;
+    }
+
+    #box {
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+    }
+</style>
+
+
+<div class="container" id="box">
+
+    <div class="card text-white bg-info mb-3 w-75 mx-auto">
+        <div class="card-header">
+            <h2 class="text-center">Giacenza Sorter</h2>
+        </div>
+        <div class="card-body bg-white">
+
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <form class="form-group" method="post">
+
+                        <br />
+                        <div class="form-group">
+                            <input asp-for="UserName" class="form-control" placeholder="Username" />
+                        </div>
+                                               
+
+                        <div class="form-group">
+                            <input asp-for="Password" class="form-control" placeholder="Password" type="Password" />
+                        </div>
+
+
+                        <div class="form-group text-center">
+                            <input type="submit" class="btn btn-primary" value="Login" />
+                        </div>
+
+
+                        <div class="form-group text-center">
+                            <p><h5>@Model.Message</h5></p>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="col-4"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+
+}
+
+
+

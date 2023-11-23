@@ -1,0 +1,81 @@
+﻿@page
+@model GiacenzaSorterRm.Pages.PagesAssociazione.IndexModel
+
+@{
+    ViewData["Title"] = "Associazione";
+}
+
+
+
+<div class="container h-100">
+    <div class="row h-100 justify-content-center align-items-center">
+        <div class="col-12 col-md-12 col-lg-12">
+
+            <h1>Associazione</h1>
+            <br />
+            <p>
+                <a asp-page="Create">Create New</a>
+            </p>
+            <table class="table table-striped table-bordered nowrap display compact table-sm" style="width:100%" tabindex="-1" id="tableProduzione">
+                <thead>
+                    <tr>
+                        <th>
+                            Commessa
+                        </th>
+                        <th>
+                            Tipologia
+                        </th>
+                        <th>
+                            Contenitore
+                        </th>
+                        <th>
+                            Quantità
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.CommessaTipologiaContenitore)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DescCommessa)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DescTipologia)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DescContenitore)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Quantita)
+                            </td>
+                            <td>
+                                <a asp-page="./Delete" asp-route-id="@item.IdRiepilogo">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
+
+    <script>
+
+
+        $(document).ready(function () {
+            $('#tableProduzione').DataTable();
+        });
+
+
+    </script>
+}

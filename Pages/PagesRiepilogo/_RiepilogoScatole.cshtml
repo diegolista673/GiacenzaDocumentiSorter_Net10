@@ -1,0 +1,194 @@
+﻿@model GiacenzaSorterRm.Pages.PagesRiepilogo.IndexModel
+
+@{
+    Layout = null;
+}
+
+
+
+
+<div class="col-xs-6 center">
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert alert-danger" role="alert">
+            @Model.Message
+        </div>
+    }
+
+</div>
+
+@if (Model.LstScatoleView.Count > 0)
+{
+
+    <h4 class="text-center">Riepilogo Scatole @Model.Fase - ( show max 1.000 record ) </h4>
+    <hr /><br />
+
+
+          <form id="formRiepilogo" method="post" style="width:100%"
+                data-ajax="true"
+                data-ajax-method="post"
+                data-ajax-update="#dvReport"
+                data-ajax-mode="replace"
+                data-ajax-url="?handler=elimina"
+                data-ajax-success="OnSuccessRequest">
+
+              @if ((User.IsInRole("ADMIN") || User.IsInRole("SUPERVISOR")))
+              {
+
+                  <input type="submit" id="btnElimina" hidden />
+              }
+
+
+
+
+              <table class="table table-striped table-bordered nowrap display compact " style="width:100%" id="tableProduzione" tabindex="-1">
+                  <thead>
+                      <tr>
+                          <th class='notexport'>
+                              <!-- select all boxes -->
+                              @if ((User.IsInRole("ADMIN") || User.IsInRole("SUPERVISOR")))
+                              {
+                                  <input type="checkbox" id="checkAll" class="checkAll" />
+                              }
+
+                          </th>
+                          <th>
+                              @Html.DisplayNameFor(model => model.LstScatoleView[0].Scatola)
+                          </th>
+                          <th>
+                              @Html.DisplayNameFor(model => model.LstScatoleView[0].DataNormalizzazione)
+                          </th>
+                          <th>
+                              @Html.DisplayNameFor(model => model.LstScatoleView[0].DataSorter)
+                          </th>
+                          <th>
+                              @Html.DisplayNameFor(model => model.LstScatoleView[0].Note)
+                          </th>
+                          <th>
+                              @Html.DisplayNameFor(model => model.LstScatoleView[0].Stato)
+                          </th>
+                          <th>
+                              @Html.DisplayNameFor(model => model.LstScatoleView[0].Commessa)
+                          </th>
+                          <th>
+                              @Html.DisplayNameFor(model => model.LstScatoleView[0].Contenitore)
+                          </th>
+                          <th>
+                              @Html.DisplayNameFor(model => model.LstScatoleView[0].Tipologia)
+                          </th>
+                          <th>
+                              @Html.DisplayNameFor(model => model.LstScatoleView[0].TipoProdotto)
+                          </th>
+                          <th>
+                              @Html.DisplayNameFor(model => model.LstScatoleView[0].TotaleScatola)
+                          </th>
+                          <th>
+                              @Html.DisplayNameFor(model => model.LstScatoleView[0].DataArrivoBancale)
+                          </th>
+                          <th>
+                              @Html.DisplayNameFor(model => model.LstScatoleView[0].CentroNormalizzazione)
+                          </th>
+                          <th>
+                              @Html.DisplayNameFor(model => model.LstScatoleView[0].CentroSorterizzazione)
+                          </th>
+
+                          <th class='notexport'></th>
+
+                      </tr>
+                  </thead>
+                  <tbody>
+                      @foreach (var item in Model.LstScatoleView)
+                      {
+                      <tr>
+                          <td>
+
+                              @if ((User.IsInRole("ADMIN") || User.IsInRole("SUPERVISOR")))
+                              {
+
+                                  <input type="hidden" name="LstScatoleView.Index" value="@item.IdScatola" />
+                                  <input type="hidden" name="LstScatoleView[@item.IdScatola].IdScatola" value="@item.IdScatola" />
+                                  <input type="hidden" name="LstScatoleView[@item.IdScatola].Scatola" value="@item.Scatola" />
+
+                                  <input name="LstScatoleView[@item.IdScatola].Elimina" type="checkbox" class="checkbox" value="true" />
+
+                              }
+
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.Scatola)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.DataNormalizzazione)
+                          </td>
+
+                          <td>
+                              @Html.DisplayFor(modelItem => item.DataSorter)
+                          </td>
+
+                          <td>
+                              @Html.DisplayFor(modelItem => item.Note)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.Stato)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.Commessa)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.Contenitore)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.Tipologia)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.TipoProdotto)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.TotaleScatola)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.DataArrivoBancale)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.CentroNormalizzazione)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.CentroSorterizzazione)
+                          </td>
+                          <td>
+
+                              @if (User.FindFirst("Azienda").Value == "POSTEL" && ((User.IsInRole("ADMIN") || (User.IsInRole("SUPERVISOR")))))
+                              {
+                                  <a asp-page="./Edit" asp-route-id="@item.IdScatola">Modifica</a>
+
+                              }
+
+                          </td>
+                      </tr>
+                      }
+                  </tbody>
+              </table>
+
+
+
+              <input asp-for="EndDate" type="hidden" class="form-control" />
+              <input asp-for="StartDate" type="hidden" class="form-control" />
+
+          </form>
+
+
+}
+
+<script>
+    $(document).ready(function () {
+        $('.dataTables_filter input[type="search"]').css(
+            { 'width': '350px', 'display': 'inline-block' }
+        );
+    });
+
+</script>
+
+
+
+

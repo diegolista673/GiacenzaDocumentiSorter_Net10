@@ -1,0 +1,122 @@
+﻿@model GiacenzaSorterRm.Models.BancaliModel
+
+@{
+    Layout = null;
+}
+
+<style>
+
+    #LastBancale[type='text'] {
+        width: 100%;
+        font-size: 48px;
+        color: #0f08b2;
+    }
+
+.table th, .table td {
+    padding: 0.4rem;
+}
+
+</style>
+
+
+
+<div class="container-fluid vh-100">
+
+    <div class="row ">
+        <div class="col">
+            <div id="bancaleInserito">
+                <input asp-for="LastBancale" readonly tabindex="-1" placeholder="<-- bancale -->" />
+
+                @if (Model.IsAccettata)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        @Model.AlertAccettata;
+                    </div>
+                }
+                @if (Model.IsNotConforme)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        @Model.AlertNonConforme;
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-8 ">
+            <div class="table-responsive" tabindex="-1">
+
+                <table class="table table-striped table-bordered nowrap display compact  h-100" style="width:100%" id="tableProduzione" tabindex="-1">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.BancaliLst[0].Bancale)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.BancaliLst[0].IdCommessaNavigation.Commessa)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.BancaliLst[0].Note)
+                            </th>
+                            <th>
+                                Data
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.BancaliLst[0].IdCentroArrivoNavigation.CentroLavDesc)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.BancaliLst != null)
+                        {
+                            @foreach (var item in Model.BancaliLst)
+                            {
+                                <tr>
+                                    <td>
+                                        <form method="post"
+                                              data-ajax="true"
+                                              data-ajax-method="post"
+                                              data-ajax-update="#resulPdf"
+                                              data-ajax-mode="replace"
+                                              data-ajax-url="?handler=PdfBancale" >
+
+                                            <input type="hidden" name="IdBancale" value="@item.IdBancale">
+                                            
+                                            <button class="btn btn-link">@Html.DisplayFor(modelItem => item.Bancale)</button>
+                                         </form>
+
+                                    </td>
+                                    <td>
+                                        <div>@Html.DisplayFor(modelItem => item.IdCommessaNavigation.Commessa)</div>
+                                        
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Note)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DataAccettazioneBancale)
+                                    </td>
+                                    
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IdCentroArrivoNavigation.CentroLavDesc)
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-4 ">
+            <partial name="_RiepilogoPdf.cshtml" />
+        </div>
+    </div>
+
+</div>
+
+
+
+
+

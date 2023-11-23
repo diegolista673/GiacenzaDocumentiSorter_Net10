@@ -1,0 +1,59 @@
+﻿@page
+@model GiacenzaSorterRm.Pages.TipiLavorazioni.CreateModel
+
+@{
+    ViewData["Title"] = "Nuova Commessa";
+}
+
+
+    <div class="container h-100">
+        <div class="row h-100 justify-content-center align-items-center">
+            <div class="col-12 col-md-12 col-lg-6">
+
+                <h4>Nuova Commessa</h4>
+                <hr />
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <form method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                                                                  
+                            <div class="form-group">
+                                <label asp-for="Commesse.Commessa" class="control-label"></label>
+                                <input asp-for="Commesse.Commessa" class="form-control" oninput="this.value = this.value.toUpperCase()" />
+                                <span asp-validation-for="Commesse.Commessa" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <select asp-for="Commesse.IdPiattaforma" class="form-control" asp-items="@Model.PiattaformeSL">
+                                    <option value="">- Piattaforma -</option>
+                                </select>
+                                <span asp-validation-for="Commesse.IdPiattaforma" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Commesse.Note" class="control-label"></label>
+                                <textarea asp-for="Commesse.Note" class="form-control"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="submit" value="Create" class="btn btn-primary" />
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+
+                <div>
+                    <a asp-page="Index">Back to List</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

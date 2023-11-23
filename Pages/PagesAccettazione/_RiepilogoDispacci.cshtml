@@ -1,0 +1,35 @@
+﻿@model GiacenzaSorterRm.Models.DispacciModel
+
+@{
+    Layout = null;
+}
+
+<div class="table-responsive" tabindex="-1" >
+
+    <table class="table table-striped table-bordered nowrap display compact table-sm" style="width:100%" id="tableProduzioneDispacci" tabindex="-1">
+        <thead style="display:none">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ElencoDispacci)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ElencoDispacci != null)
+            {
+                @foreach (var dispaccio in Model.ElencoDispacci)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => dispaccio)
+                        </td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+
+</div>
+
+

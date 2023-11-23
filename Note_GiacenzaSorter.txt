@@ -1,0 +1,81 @@
+
+
+Aggiungere pagina per inserimento operatori -- ok
+
+
+Da testare login con active directory su IIS  -- ok
+
+testare login per ESTERNO  -- ok
+cambiare nome per società esteran mettere esterno perchè coop cambia sempre -- ok
+
+
+controllare tutti i campi tabelle tra test e produzione
+importare i dati dalla produzione e poi scambiare test con prod
+
+Aggiornare i campi centri normalizzazione e sorterizzazione con id centri dei rispettivi operatori
+
+Aggiornare il campo idGiacenza con idcentro di sorterizzazione ( perchè è dove è stato spostato il materiale)
+
+modifiche da effettuare su DB
+
+ALTER TABLE [GIACENZA_SORTER_RM_TEST].[dbo].[Commesse]
+ALTER COLUMN IdPiattaforma int NOT NULL;
+
+
+
+/*
+Dettagli indice mancanti in SQLQuery2.sql - VEVRFL1M031H\SQLEXPRESS.GIACENZA_SORTER_RM_TEST (POSTEL\diego.lista (54))
+Query Processor stima che l'implementazione del seguente indice potrebbe migliorare il costo della query di 46.4561%.
+*/
+
+
+USE [GIACENZA_SORTER_RM_TEST]
+GO
+CREATE NONCLUSTERED INDEX [IDX_GIACENZA_DETTAGLIO]
+ON [dbo].[Scatole] ([IdTipologia],[IdStato],[DataNormalizzazione])
+INCLUDE ([IdCommessa],[IdCentroGiacenza])
+GO
+
+
+USE [GIACENZA_SORTER_RM_TEST]
+GO
+CREATE NONCLUSTERED INDEX [IDX_GIACENZA_CENTRO]
+ON [dbo].[Scatole] ([IdStato],[IdCentroGiacenza],[DataNormalizzazione])
+INCLUDE ([IdContenitore],[IdCommessa])
+GO
+
+
+
+USE [GIACENZA_SORTER_RM_TEST]
+GO
+CREATE NONCLUSTERED INDEX [IDX_Macero]
+ON [dbo].[Scatole] ([IdCommessa],[IdStato],[DataNormalizzazione])
+INCLUDE ([IdContenitore],[IdCentroNormalizzazione])
+GO
+
+cambiare azienda METRA in ESTERNO tabella Operatori
+
+controllare codice dispaccio max 12 cifre - ok
+
+aggiungere vecchia giacenza - ok
+
+chiedere a deluca per etichette da controllare  
+tabella [RHM_POSTEL].[dbo].[MND_SCATOLE_STAMPATE]
+aggiungere controllo a acccettazione scatola che controlla nome etichetta, altrimenti chiede conferma ok
+
+da aggiungere 
+stampa progressivo bancale ok
+
+
+form per inserimento scatole da spostare logicamente ad altro sito e rivedere la giacenza ok
+Aggiunge campi
+DataCambioGiacenza	datetime	Checked
+IdCentroGiacenza	int	Checked
+OperatoreCambioGiacenza	varchar(100)	Checked
+NoteCambioGiacenza	varchar(300)	Checked
+
+
+controllare query giacenza dettaglio timeout quando seleziono tutti ok
+
+
+form per sorterizzare da /a commessa + tipologia

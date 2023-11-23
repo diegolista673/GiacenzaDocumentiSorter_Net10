@@ -1,0 +1,538 @@
+﻿@page "{handler?}"
+@model GiacenzaSorterRm.Pages.PagesNormalizzazione.CreateModel
+@{
+    ViewData["Title"] = "Normalizzazione";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    
+    <div class="card text-white bg-info mb-1" style="max-width: 100%;">
+        <div class="card-body">
+            <h2 class="text-center">Normalizzazione Scatola</h2>
+        </div>
+    </div>
+
+
+    <div class="row mt-3">
+
+        <div class="col-sm-3 col-md-3 col-lg-3 align-self-stretch">
+
+            <div class="card" id="app">
+
+                <div class="card-header">
+                    <h5 class="card-title">Inserimento Scatola</h5>
+                </div>
+
+                <div class="card-body">
+
+                    <form method="post"
+                          data-ajax="true"
+                          data-ajax-method="post"
+                          data-ajax-update="#resultDiv"
+                          data-ajax-mode="replace"
+                          data-ajax-url="?handler=InsertScatola"
+                          data-ajax-success="OnSuccessRequest">
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group">
+                            <label asp-for="Scatole.DataNormalizzazione" class="control-label"></label>
+                            <input asp-for="Scatole.DataNormalizzazione" class="form-control" v-model="selectDataNormalizzazione" v-on:change="onChangeDataNormalizzazione($event)" />
+                            <span asp-validation-for="Scatole.DataNormalizzazione" class="text-danger"></span>
+
+                            <p v-if="check" class="text-danger">Attenzione! Data inserita maggiore della data odierna</p>
+                            @* <p v-if="checkDataBancale" class="text-danger">Attenzione! Data inserita antecedente accettazione bancale  </p> *@
+
+                        </div>
+
+
+                        @*<div class="form-group">
+                            <input asp-for="Bancali.Bancale" class="form-control input-scatola" placeholder="Bancale" oninput="this.value = this.value.toUpperCase()" v-on:keyup.enter="enterBancale()" v-on:change="enterBancale()" v-model="bancale" v-bind:disabled="isDisabledBancale" />
+                            <span asp-validation-for="Bancali.Bancale" class="text-danger"></span>
+                          </div> *@
+
+
+                        <div class="form-group">
+                            <select v-model="selectCommessa" asp-for="Scatole.IdCommessa" class="form-control mr-sm-1" v-on:change="onChangeCommessa($event)" v-bind:disabled="isDisabledCommesse">
+                                <option value="">- Commessa -</option>
+                                <option v-for="option in optionsCommesse" v-bind:value="option.value">
+                                    {{ option.text }}
+                                </option>
+                            </select>
+                            <span asp-validation-for="Scatole.IdCommessa" class="text-danger"></span>
+                        </div>
+
+
+                        <div class="form-group">
+                            <select v-model="selectTipologia" asp-for="Scatole.IdTipologia" class="form-control mr-sm-1" v-on:change="onChangeTipologie($event)" v-bind:disabled="isDisabledTipologie">
+                                <option value="">- Tipologia -</option>
+                                <option v-for="option in optionsTipologie" v-bind:value="option.value">
+                                    {{ option.text }}
+                                </option>
+                            </select>
+                            <span asp-validation-for="Scatole.IdTipologia" class="text-danger"></span>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <select v-model="selectContenitore" asp-for="Scatole.IdContenitore" class="form-control mr-sm-1" v-on:change="onChangeContenitori($event)" v-bind:disabled="isDisabledContenitori">
+                                <option value="">- Contenitori -</option>
+                                <option v-for="option in optionsContenitori" v-bind:value="option.value">
+                                    {{ option.text }}
+                                </option>
+                            </select>
+                            <span asp-validation-for="Scatole.IdContenitore" class="text-danger"></span>
+                        </div>
+
+
+                        <div class="form-group">
+                            <select v-model="selectTipoProdotto" asp-for="Scatole.IdTipoNormalizzazione" class="form-control" v-on:change="onChangeTipoProdotto($event)" v-bind:disabled="isDisabledTipoProdotti">
+                                <option value="">- Tipo Prodotto -</option>
+                                <option v-for="option in optionsTipoProdotti" v-bind:value="option.value">
+                                    {{ option.text }}
+                                </option>
+                            </select>
+                            <span asp-validation-for="Scatole.IdTipoNormalizzazione" class="text-danger"></span>
+                        </div>
+
+
+                        <div class="form-group">
+                            <textarea asp-for="Scatole.Note" class="form-control" cols="40" rows="3" placeholder="Note" v-model="note" v-bind:disabled="isDisabledNote"></textarea>
+                            <span asp-validation-for="Scatole.Note" class="text-danger"></span>
+                        </div>
+
+
+                        <div class="form-group">
+                            <input asp-for="Scatole.Scatola" class="form-control input-scatola" placeholder="Scatola" oninput="this.value = this.value.toUpperCase()" v-model="scatola" v-bind:disabled="isDisabledScatola" />
+                            <span asp-validation-for="Scatole.Scatola" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group d-flex justify-content-end">
+                            <input type="submit" value="Save" class="btn btn-primary w-50" id="btnPost" v-bind:disabled="isFormInvalid"/>
+                            <button type="button" class="btn btn-outline-primary ml-2 w-50" id="btnReset" v-on:click="resetForm">Clear Form</button>
+                        </div>
+
+
+                    </form>
+
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-9 col-md-9 col-lg-9 align-self-stretch">
+            <div id="resultDiv">
+                <partial name="_RiepilogoNormalizzateInserite" model="Model.ScatoleModel" />
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+@section scripts{
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
+
+
+    <script>
+
+        $(document).ready(function () {
+            $('#tableProduzione').DataTable({
+                "scrollX": true
+            });
+        });
+
+
+        function OnSuccessRequest() {
+
+            $('#tableProduzione').DataTable({
+                "scrollX": true
+            });
+
+            $("#tableProduzione").DataTable().page('last').draw('page');
+
+            document.getElementById('Scatole_Scatola').value = '';
+            document.getElementById('Scatole_Note').value = '';
+
+        };
+
+
+
+        $('#confirm-submit').on('shown.bs.modal', function () { $('#submitModal').trigger('focus'), $('#scatola').val('') })
+
+
+        var vm = new Vue({
+
+            el: '#app',
+            props: ['date'],
+            data: {
+                // checkDataBancale :false,
+                check : false,
+                selectDataNormalizzazione : String(moment(@Json.Serialize(Model.Scatole.DataNormalizzazione)).format('L')),
+
+                // isDisabledBancale : true,
+                // bancale : "",
+                // dataAccettazioneBancale : '',
+
+                isScatolaMondo: false,
+                isDisabledScatola :true,
+                scatola : "",
+
+                isDisabledNote : true,
+                note : "",
+
+                selectCommessa: "",
+                optionsCommesse: @Json.Serialize(Model.CommesseSL),
+                isDisabledCommesse:true,
+
+                selectTipologia: "",
+                optionsTipologie: @Json.Serialize(Model.TipologieSL ),
+                isDisabledTipologie: true,
+
+                selectContenitore: "",
+                optionsContenitori: @Json.Serialize(Model.ContenitoriSL ),
+                isDisabledContenitori: true,
+
+                selectTipoProdotto: "",
+                optionsTipoProdotti : @Json.Serialize(Model.TipoNormSL),
+                isDisabledTipoProdotti: true,
+
+            },
+            computed: {
+                isFormInvalid: function () {
+
+                    if (
+                        // this.bancale != "" &&
+                        this.selectCommessa != "" &&
+                        this.selectContenitore != "" &&
+                        this.selectTipologia != "" &&
+                        this.selectTipoProdotto != "" &&
+                        this.scatola != "") {
+                        return false;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            },
+            methods: {
+                
+                resetForm(){
+                    var self = this;
+                    self.selectDataNormalizzazione = ""
+
+                    // self.isDisabledBancale = true
+                    // self.bancale = ""
+
+                    self.isDisabledCommesse = true
+                    self.selectCommessa = ""
+
+                    self.isDisabledTipologie = true
+                    self.selectTipologia = ""
+
+                    self.isDisabledContenitori = true
+                    self.selectContenitore = ""
+
+                    self.isDisabledTipoProdotti = true
+                    self.selectTipoProdotto = ""
+
+                    self.isDisabledNote = true
+                    self.note = ""
+
+                    self.isDisabledScatola = true
+                    self.scatola = ""
+                },
+                onChangeDataNormalizzazione: function (event) {
+
+                    var self = this;
+                    var currentDate = moment().format('L')
+                    var dateEntered = moment(self.selectDataNormalizzazione).format("L")
+
+                    if (dateEntered > currentDate) {
+                        // self.isDisabledBancale = true
+                        self.check = true
+                        self.resetForm()
+                    }
+                    else{
+                       self.check = false
+                       self.isDisabledCommesse = false
+                       self.isDisabledTipologie = false
+                       self.onChangeCommessa()
+                       // self.isDisabledBancale = false
+                    }
+                        
+                },
+                onChangeCommessa: function (event) {
+                    var self = this;
+
+                    if (self.selectCommessa == "") {
+
+                        self.selectTipologia = ""
+                        self.isDisabledTipologie = true
+
+                        self.selectContenitore = ""
+                        self.isDisabledContenitori = true
+
+                        self.selectTipoProdotto = ""
+                        self.isDisabledTipoProdotti = true
+
+                    }
+                    else {
+
+                        //GET Tipologie e contenitori dedicati
+
+                        axios({
+                            method: 'get',
+                            headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+                            url: '?handler=AssociazioneTipologia',
+                            params: {
+                                idCommessa: Number(self.selectCommessa)
+
+                            }
+                        })
+                            .then(function (response) {
+
+                                var obj = JSON.parse(response.data)
+
+                                if (Object.keys(obj).length > 0) {
+                                    function renameKey(obj, oldKey, newKey) {
+                                        obj[newKey] = obj[oldKey];
+                                        delete obj[oldKey];
+                                    }
+
+                                    self.optionsTipologie = obj
+
+                                    const arr = self.optionsTipologie;
+                                    arr.forEach(obj => renameKey(obj, 'Disabled', 'disabled'));
+                                    arr.forEach(obj => renameKey(obj, 'Group', 'group'));
+                                    arr.forEach(obj => renameKey(obj, 'Selected', 'selected'));
+                                    arr.forEach(obj => renameKey(obj, 'Text', 'text'));
+                                    arr.forEach(obj => renameKey(obj, 'Value', 'value'));
+                                    self.optionsTipologie = arr;
+
+                                    self.selectTipologia = ""
+                                    self.isDisabledTipologie = false
+
+                                    self.selectContenitore = ""
+                                    self.isDisabledContenitori = true
+                                    self.selectTipoProdotto = ""
+                                    self.isDisabledTipoProdotti = true
+
+                                    self.select = self.selectCommessa
+
+                                }
+                                else {
+                                    self.selectTipologia = ""
+                                    self.isDisabledTipologie = true
+                                    self.selectContenitore = ""
+                                    self.isDisabledContenitori = true
+                                    self.selectTipoProdotto = ""
+                                    self.isDisabledTipoProdotti = true
+                                }
+
+
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                    }
+
+
+                },
+                onChangeTipologie: function (event) {
+
+                    var self = this;
+
+                    if (self.selectTipologia == "") {
+                        self.selectContenitore = ""
+                        self.isDisabledContenitori = true
+                        self.selectTipoProdotto = ""
+                        self.isDisabledTipoProdotti = true
+                    }
+                    else {
+
+                        //GET Contenitori associati alla tipologia
+
+                        axios({
+                            method: 'get',
+                            headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+                            url: '?handler=AssociazioneContenitore',
+                            params: {
+                                idCommessa: Number(self.selectCommessa),
+                                idTipologia: Number(self.selectTipologia)
+
+                            }
+                        })
+                            .then(function (response) {
+
+                                var obj = JSON.parse(response.data)
+
+                                if (Object.keys(obj).length > 0) {
+                                    function renameKey(obj, oldKey, newKey) {
+                                        obj[newKey] = obj[oldKey];
+                                        delete obj[oldKey];
+                                    }
+
+                                    self.optionsContenitori = obj
+
+                                    const arr = self.optionsContenitori;
+                                    arr.forEach(obj => renameKey(obj, 'Disabled', 'disabled'));
+                                    arr.forEach(obj => renameKey(obj, 'Group', 'group'));
+                                    arr.forEach(obj => renameKey(obj, 'Selected', 'selected'));
+                                    arr.forEach(obj => renameKey(obj, 'Text', 'text'));
+                                    arr.forEach(obj => renameKey(obj, 'Value', 'value'));
+                                    self.optionsContenitori = arr;
+
+                                    self.selectContenitore = ""
+                                    self.isDisabledContenitori = false
+                                    self.selectTipoProdotto = ""
+                                    self.isDisabledTipoProdotti = true
+                                }
+                                else {
+                                    self.selectContenitore = ""
+                                    self.isDisabledContenitori = true
+                                    self.selectTipoProdotto = ""
+                                    self.isDisabledTipoProdotti = true
+
+                                }
+
+
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+
+
+                    }
+
+                },
+                onChangeContenitori: function (event) {
+
+                    var self = this;
+
+                    if (self.selectContenitore == "") {
+                        self.selectTipoProdotto = ""
+                        self.isDisabledTipoProdotti = true
+                    }
+                    else {
+                        self.selectTipoProdotto = ""
+                        self.isDisabledTipoProdotti = false
+
+                    }
+
+                },
+                onChangeTipoProdotto: function (event) {
+
+                    var self = this;
+                    if (self.scatola != '') {
+                        self.scatola = ''
+                    }
+
+                    self.isDisabledScatola = false
+                    self.isDisabledNote = false
+
+                },
+                onChangeScatola: function (event) {
+
+                    var self = this;
+                    //GET scatola from Mondo
+                    axios({
+                        method: 'get',
+                        headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+                        url: '?handler=ScatolaMondo',
+                        params: {
+                            scatola: self.scatola
+                        }
+                    })
+                        .then(function (response) {
+
+                            var obj = JSON.parse(response.data)
+
+                            if (obj == false) {
+                                $('#confirm-submit').modal('show');
+                                self.scatola = '';
+                            }
+                            else {
+                                $('#confirm-submit').modal('hide');
+                            }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+                },
+                // enterBancale() {
+                //     var self = this;
+
+                //     if (self.bancale.trim() == "") {
+                //         resetForm()
+                //     }
+                    //  else
+                    //  {
+                        //    axios({
+                            //     method: 'get',
+                            //     headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+                            //     url: '?handler=FindIdCommessa',
+                            //     params: {
+                                //      bancale: self.bancale
+                            //     }
+                            //    })
+                            //    .then(function (response) {
+
+                //                 if (response.data != '')
+                //                 {
+                //                     self.checkBancale = false
+                //                     var pallet = JSON.parse(response.data)
+                //                     self.selectCommessa = pallet[0]
+                //                     self.dataAccettazioneBancale = moment(pallet[1]).format('L')
+
+                //                     self.isDisabledCommesse = false
+                //                     self.isDisabledTipologie = false
+
+                //                     self.onChangeDataAccettazioneBancale()
+                //                     self.onChangeCommessa()
+                //                 }
+                //                 else{
+                //                     self.resetForm()
+                //                 }
+                            //    })
+                            //    .catch(function (error) {
+                //                 self.resetForm()
+                            //     console.log(error);
+                            //    });
+                    //  }
+                // },
+                // onChangeDataAccettazioneBancale: function () {
+
+                //     var self = this;
+                //     var dataBancale = self.dataAccettazioneBancale
+                //     var dateEntered = moment(self.selectDataNormalizzazione).format("L")
+
+                //     if (dateEntered < dataBancale) {
+                //         self.isDisabledBancale = true
+                //         self.checkDataBancale = true
+                //         self.resetForm()
+                //     }
+                //     else{
+                //        self.checkDataBancale = false
+                //        self.isDisabledBancale = false
+                //     }
+                // },
+            }
+
+        });
+
+    </script>
+}
+
+
+

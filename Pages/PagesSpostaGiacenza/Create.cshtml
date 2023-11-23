@@ -1,0 +1,113 @@
+﻿@page "{handler?}"
+@model GiacenzaSorterRm.Pages.PagesSpostaGiacenza.CreateModel
+@{
+    ViewData["Title"] = "Sposta Giacenza";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+
+    <div class="card text-white bg-info mb-1" style="max-width: 100%;">
+        <div class="card-body">
+            <h2 class="text-center">Sposta Giacenza</h2>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 ">
+
+            <div class="card" id="app">
+
+                <div class="card-header">
+                    <h5 class="card-title">Aggiornamento Scatola</h5>
+                </div>
+                <div class="card-body">
+
+                    <form method="post"
+                          data-ajax="true"
+                          data-ajax-method="post"
+                          data-ajax-update="#resultDiv"
+                          data-ajax-mode="replace"
+                          data-ajax-url="?handler=AggiornaScatola"
+                          data-ajax-success="OnSuccessRequest">
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group">
+                            <label class="control-label">Data Cambio Giacenza</label>
+                            <input asp-for="Scatole.DataCambioGiacenza" class="form-control" />
+                            <span asp-validation-for="Scatole.DataCambioGiacenza" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <select asp-for="Scatole.IdCentroGiacenza" class="form-control" asp-items="@Model.CentriSL">
+                                <option value="">- Centro di Destinazione -</option>
+                            </select>
+                            <span asp-validation-for="Scatole.IdCentroGiacenza" class="text-danger"></span>
+                        </div>
+
+
+                        <div class="form-group">
+                            <textarea asp-for="Scatole.NoteCambioGiacenza" class="form-control" cols="40" rows="3" placeholder="Note"></textarea>
+                            <span asp-validation-for="Scatole.NoteCambioGiacenza" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <input asp-for="Scatole.Scatola" class="form-control" />
+                        </div>
+                         
+
+                        <div class="form-group d-flex justify-content-end">
+                            <input type="submit" value="Aggiorna" class="btn btn-primary" id="btnPost" />
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-9 col-md-9 col-lg-9 col-xl-9 align-self-stretch">
+            <div id="resultDiv">
+                <partial name="_RiepilogoScatoleGiacenza" model="Model.ScatoleModel" />
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+@section scripts{
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
+
+    <script>
+
+            $(document).ready(function () {
+                $('#tableProduzione').DataTable({
+                    "scrollX": true
+                });
+            });
+
+            function OnSuccessRequest() {
+
+                $('#tableProduzione').DataTable({
+                    "scrollX": true,
+                    "order": []
+                });
+
+                document.getElementById('Scatole_Scatola').value = '';
+                document.getElementById('Scatole_NoteCambioGiacenza').value = '';
+                $("#tableProduzione").DataTable().page('last').draw('page');
+
+            };
+
+
+    </script>
+}
+
+
+

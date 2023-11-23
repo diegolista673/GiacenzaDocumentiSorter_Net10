@@ -1,0 +1,64 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <UserSecretsId>9acb3e7a-9267-45f3-a014-fbb6eccf71f7</UserSecretsId>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <WarningLevel>1</WarningLevel>
+  </PropertyGroup>
+
+    <PropertyGroup>
+	    <EnvironmentName>Development</EnvironmentName>
+		<!--<EnvironmentName>Production</EnvironmentName>-->
+    </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\Database_1\**" />
+    <Compile Remove="wwwroot\obj\**" />
+    <Content Remove="Models\Database_1\**" />
+    <Content Remove="wwwroot\obj\**" />
+    <EmbeddedResource Remove="Models\Database_1\**" />
+    <EmbeddedResource Remove="wwwroot\obj\**" />
+    <None Remove="Models\Database_1\**" />
+    <None Remove="wwwroot\obj\**" />
+    <TypeScriptCompile Remove="Models\Database_1\**" />
+    <TypeScriptCompile Remove="wwwroot\obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BarcodeLib" Version="3.0.3" />
+    <PackageReference Include="ClosedXML" Version="0.102.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.12" />
+	  <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="7.0.3" />
+	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.3" />
+	  <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.3" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.3" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.3">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.3" />
+	  <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.2.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.10" />
+    <PackageReference Include="NLog" Version="5.2.5" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.5" />
+    <PackageReference Include="PDFsharpNetStandard2" Version="1.51.4845" />
+    <PackageReference Include="Shyjus.BrowserDetector" Version="2.0.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+    <PackageReference Include="System.DirectoryServices" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\favicon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>
+

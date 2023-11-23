@@ -1,0 +1,238 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>@ViewData["Title"]</title>
+
+    <link href="~/lib/jqueryui/jquery-ui.css" rel="stylesheet" />
+
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+
+    <!-- font-awesome -->
+    <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
+
+
+    <!-- datatables -->
+    <link href="~/lib/datatables/datatables.css" rel="stylesheet" type="text/css" />
+
+    <link href="~/logistic.png" rel="shortcut icon" type="image/x-icon" />
+    <link href="~/logistic.png" rel="icon" type="image/x-icon" />
+
+
+</head>
+
+<body>
+
+    <style>
+        test {
+            margin-right: 0;
+        }
+    </style>
+
+
+    <header>
+        @if (@User.Identity.Name != null)
+        {
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                <div class="container-fluid">
+
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="navbar-collapse collapse w-100">
+                        <ul class="navbar-nav mr-auto w-100 justify-content-start">
+
+                            
+                            @if ((User.IsInRole("ADMIN") || User.IsInRole("SUPERVISOR")))
+                            {
+
+                                <li class="nav-item dropdown active">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Logistica</a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" asp-page="/PagesAccettazione/Create">Accettazione&nbspBancali</a>
+                                        <a class="dropdown-item" asp-page="/PagesNormalizzazione/Create">Normalizzazione&nbspScatole</a>
+                                    </div>
+                                </li>
+
+
+                                <li class="nav-item dropdown active">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Sorter</a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" asp-page="/PagesSorter/Create">Scansione Sorter</a>
+                                    </div>
+                                </li>
+
+                                <li class="nav-item dropdown active">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Manuale</a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" asp-page="/PagesMacero/Index">Macero</a>
+                                        <a class="dropdown-item" asp-page="/PagesSpostaGiacenza/Create">Sposta&nbspGiacenza</a>
+                                    </div>
+                                </li>
+
+
+
+                                <li class="nav-item dropdown active">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Report</a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" asp-page="/PagesRiepilogoBancali/Index">Report&nbspBancali</a>
+                                        <a class="dropdown-item" asp-page="/PagesVolumi/Index">Report Giacenza</a>
+                                        <a class="dropdown-item" asp-page="/PagesRiepilogo/Index">Report&nbspScatole</a>
+                                        <a class="dropdown-item" asp-page="/PagesNormalizzato/Index">Report&nbspScatole&nbspNormalizzazione</a>
+                                        <a class="dropdown-item" asp-page="/PagesSorterizzato/Index">Report&nbspScatole&nbspSorter</a>
+                                    </div>
+                                </li>
+
+
+
+                                <li class="nav-item dropdown active">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Settings</a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" asp-page="/PagesAssociazione/Index">Associazione</a>
+                                        <a class="dropdown-item" asp-page="/TipiLavorazioni/Index">Commesse</a>
+                                        <a class="dropdown-item" asp-page="/TipiContenitori/Index">Contenitori</a>
+                                        <a class="dropdown-item" asp-page="/PagesOperatori/Index">Operatori</a>
+                                        <a class="dropdown-item" asp-page="/TipoPiattaforme/Index">Piattaforme</a>
+                                        <a class="dropdown-item" asp-page="/TipologiaNormalizzazione/Index">Tipologia Normalizzazione</a>
+                                        <a class="dropdown-item" asp-page="/TipiDocumenti/Index">Tipologie</a>
+                                    </div>
+                                </li>
+
+                            }
+                            else if (User.FindFirst("Azienda").Value == "POSTEL")
+                            {
+
+                                <li class="nav-item ">
+                                    <a class="nav-link text-dark" asp-area="" asp-page="/PagesSorter/Create">Sorter</a>
+                                </li>
+
+                                <li class="nav-item ">
+                                    <a class="nav-link text-dark" asp-area="" asp-page="/PagesSorterizzato/Index">Sorterizzato</a>
+                                </li>
+
+                                <li class="nav-item dropdown active">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Riepilogo</a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" asp-page="/PagesRiepilogoBancali/Index">Riepilogo&nbspBancali</a>
+                                        <a class="dropdown-item" asp-page="/PagesRiepilogo/Index">Riepilogo&nbspScatole</a>
+                                        <a class="dropdown-item" asp-page="/PagesRicercaDispaccio/Index">Ricerca&nbspDispaccio</a>
+                                    </div>
+                                </li>
+
+                                <li class="nav-item dropdown active">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Giacenza</a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" asp-page="/PagesVolumi/Index">Riepilogo Giacenza</a>
+                                        <a class="dropdown-item" asp-page="/PagesSpostaGiacenza/Create">Sposta&nbspGiacenza</a>
+                                    </div>
+                                </li>
+
+
+                            }
+                            else if (User.FindFirst("Azienda").Value != "POSTEL")
+                            {
+
+                                <li class="nav-item dropdown active">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Accettazione</a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" asp-page="/PagesRiepilogoBancali/Index">Accettazione&nbspBancali</a>
+                                        <a class="dropdown-item" asp-page="/PagesAccettazione/Create">Normalizzazione&nbspScatole</a>
+                                    </div>
+                                </li>
+
+
+                                <li class="nav-item ">
+                                    <a class="nav-link text-dark" asp-area="" asp-page="/PagesAccettazione/Create">Accettazione</a>
+                                </li>
+
+                                <li class="nav-item ">
+                                    <a class="nav-link text-dark" asp-area="" asp-page="/PagesNormalizzazione/Create">Normalizzazione</a>
+                                </li>
+
+                                <li class="nav-item ">
+                                    <a class="nav-link text-dark" asp-area="" asp-page="/PagesNormalizzato/Index">Normalizzato</a>
+                                </li>
+
+                                <li class="nav-item dropdown active">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Riepilogo</a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" asp-page="/PagesRiepilogoBancali/Index">Riepilogo&nbspBancali</a>
+                                        <a class="dropdown-item" asp-page="/PagesRiepilogo/Index">Riepilogo&nbspScatole</a>
+                                        <a class="dropdown-item" asp-page="/PagesRicercaDispaccio/Index">Ricerca&nbspDispaccio</a>
+                                    </div>
+                                </li>
+                            }
+
+
+
+                        </ul>
+
+                        <ul class="navbar-nav ml-auto w-100 justify-content-end">
+
+                            @* User *@
+                            <li class="nav-item justify-content-end">
+                                <a class="nav-link active" tabindex="-1"><i class="far fa-user"></i> @User.Identity.Name&nbsp( @User.FindFirst("Ruolo").Value.ToLower() - @User.FindFirst("Centro").Value.ToLower() ) </a>
+                            </li>
+
+                            @* Logout *@
+                            <li class="nav-item active justify-content-end">
+                                <a class="nav-link active" tabindex="-1" asp-page="/Logout/Index"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                </div>
+            </nav>
+
+        }
+
+
+    </header>
+
+    <div class="container-fluid">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted ">
+        <div class="container text-center">
+                       
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @*<script src="~/lib/jqueryui/jquery-ui.js"></script>*@
+    <script src="~/lib/jqueryui/jquery-ui.min.js"></script>
+
+    <!-- datatables -->
+    @*<script src="~/lib/datatables/datatables.js"></script>*@
+    <script src="~/lib/datatables/datatables.min.js"></script>
+
+    <!-- Vue-js -->
+    @*<script src="~/lib/vue/vue.js"></script>*@
+    <script src="~/lib/vue/vue.min.js"></script>
+
+
+    <!-- Axios -->
+    @*<script src="~/lib/axios/axios.js"></script>*@
+    <script src="~/lib/axios/axios.min.js"></script>
+
+    <!-- Moment -->
+    <script src="~/lib/moment/moment.js"></script>
+
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>

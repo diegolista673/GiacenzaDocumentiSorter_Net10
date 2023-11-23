@@ -1,0 +1,120 @@
+﻿@page
+@model GiacenzaSorterRm.Pages.PagesSorter.CreateModel
+
+@{
+    ViewData["Title"] = "Sorter";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+    <div class="container-fluid">
+
+        <div class="card text-white bg-info mb-3" style="max-width: 100%;">
+
+            <div class="card-body">
+                <h2 class="text-center">Sorter</h2>
+
+            </div>
+        </div>
+
+        <br />
+        <div class="row">
+
+            <div class="col-sm-3 col-md-3 col-lg-3 align-self-stretch">
+
+                <div class="card" id="app">
+
+                    <div class="card-header">
+                        <h5 class="card-title">Scatola Sorter</h5>
+                    </div>
+                    <div class="card-body ">
+
+                        <form method="post"
+                              data-ajax="true"
+                              data-ajax-method="post"
+                              data-ajax-update="#resultDiv"
+                              data-ajax-mode="replace"
+                              data-ajax-url="?handler=InsertScatola"
+                              data-ajax-success="OnSuccessRequest">
+
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <div class="form-group">
+                                <label asp-for="Scatole.DataSorter" class="control-label"></label>
+                                <input asp-for="Scatole.DataSorter" class="form-control" />
+                                <span asp-validation-for="Scatole.DataSorter" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <textarea asp-for="Scatole.Note" class="form-control" cols="40" rows="3" placeholder="Note"></textarea>
+                                <span asp-validation-for="Scatole.Note" class="text-danger"></span>
+                            </div>
+
+
+                            <div class="form-group">
+                                <input asp-for="Scatole.Scatola" class="form-control" placeholder="Scatola" oninput="this.value = this.value.toUpperCase()" />
+                                <span asp-validation-for="Scatole.Scatola" class="text-danger"></span>
+                            </div>
+
+
+
+                            <div class="form-group">
+
+                                <input type="hidden" asp-for="Scatole.IdCommessa" value="0" />
+                                <input type="hidden" asp-for="Scatole.IdTipologia" value="0" />
+                                <input type="hidden" asp-for="Scatole.IdContenitore" value="0" />
+
+                                <input type="submit" value="Save" class="btn btn-primary" />
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-9 col-md-9 col-lg-9 align-self-stretch">
+
+
+
+                <div id="resultDiv">
+                    <partial name="_RiepilogoScatoleSorter" model="Model.ScatoleModel" />
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
+
+    
+    <script>
+
+        $(document).ready(function () {
+            $('#tableProduzione').DataTable({
+                "scrollX": true
+            });
+        });
+
+        function OnSuccessRequest() {
+
+            $('#tableProduzione').DataTable({});
+
+            document.getElementById('Scatole_Scatola').value = '';
+            document.getElementById('Scatole_Note').value = '';
+        };
+
+        function OnFailureRequest() {
+
+            document.getElementById('resultDiv').innerHTML += '<br>Error!';
+
+        };
+
+    </script>
+}

@@ -1,0 +1,377 @@
+﻿@page
+@model GiacenzaSorterRm.Pages.PagesRiepilogoBancali.IndexModel
+
+@{
+    ViewData["Title"] = "Riepilogo Bancali";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid ">
+
+
+    <div class="row">
+        <div class="col">
+            <div class="card text-white bg-info mb-3" style="max-width: 100%;">
+                <div class="card-body">
+                    <h2 class="text-center">Riepilogo Bancali</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row ">
+
+        <div class="col-3 ">
+
+
+            @* Search by data accettazione o fuori sla *@
+            <div class="row mb-1">
+                <div class="col">
+                    <div class="card border-bg-light">
+                        <h5 class="card-header">Bancali</h5>
+
+                        <div class="card-body">
+
+                            <form method="post" id="formSelected"
+                                  data-ajax="true"
+                                  data-ajax-method="post"
+                                  data-ajax-update="#dvReport"
+                                  data-ajax-mode="replace"
+                                  data-ajax-url="?handler=Report"
+                                  data-ajax-success="OnSuccessRequest">
+
+                                
+                                @if (User.IsInRole("ADMIN") || User.IsInRole("SUPERVISOR"))
+                                {
+                                    <div class="form-group">
+                                        <select asp-for="SelectedCentro" asp-items="Model.LstCentri" class="col-xs-12 form-control" >
+                                            <option value="0">- Seleziona Centro -</option>
+                                        </select>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="form-group">
+                                        <select asp-for="SelectedCentro" class="col-xs-12 form-control" >
+                                            <option value="0">@Model.Centro</option>
+                                        </select>
+                                    </div>
+                                }
+
+
+
+                                <div class="form-group">
+                                    <select asp-for="Option" onchange="change(this)" class="col-xs-12 form-control" id="selectType">
+                                        <option value="0">- Seleziona Tipo -</option>
+                                        <option value="1">Data Accettazione</option>
+                                        @* <option value="2">Fuori SLA</option> *@
+                                    </select>
+                                </div>
+
+                                <div class="form-group" id="DatePickerID">
+                                    <label for="Date">Da:</label>
+                                    <input asp-for="StartDate" class="form-control"  id="StartDate" />
+                                    <span asp-validation-for="StartDate" class="text-danger"></span>
+
+                                    <label for="Date">A:</label>
+                                    <input asp-for="EndDate" class="form-control"  id="EndDate"/>
+                                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                                </div>
+
+                                <input type="submit" value="Report" class="col-auto btn btn-primary justify-content-end" asp-page-handler="Report" id="btnStartNorm" />
+
+                            </form>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+        @* report *@
+        <div class="col-9 ">
+            <div class="row">
+                <div class="col">
+                    <div class="card border-bg-light w-100">
+
+                        <h5 class="card-header">
+                            Report
+                        </h5>
+
+                        <div id="divProcessing">
+                            <br />
+                            <br />
+                            <p class="text-center">Processing data, please wait . . .</p>
+                            <p>
+                                <img class="mx-auto d-block" src="~/images/Spinner.gif" />
+                            </p>
+                        </div>
+
+                        <div class="center-text m-2" id="dvReport" ></div>
+
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</div>
+
+
+
+
+
+<!-- Modal elimina-->
+<div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Elimina Bancali</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Eliminare i bancali selezionati ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="submitModal" class="btn btn-primary"> Elimina</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal no scatole-->
+<div class="modal fade" id="modalNoScatole" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Elimina Bancali</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Non ci sono bancali selezionati
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+         $('#DatePickerID').hide();
+        });
+
+        function change() {
+            var selectBox = document.getElementById("selectType");
+            var selected = selectBox.options[selectBox.selectedIndex].value;
+
+            if(selected === '1'){
+                $('#DatePickerID').show();
+            }
+            else{
+                $('#DatePickerID').hide();
+            }
+        }
+
+
+        $("#divProcessing").hide();
+
+        $('#btnStartNorm').click(function () {
+            $("#divProcessing").show();
+            $("#dvReport").hide();
+        });
+
+
+
+        $('#submitModal').click(function () {
+            $('#confirm-submit').modal('hide');
+
+            $('#btnElimina').click();
+            $("#divProcessing").show();
+            $("#dvReport").hide();
+
+        });
+
+
+
+    </script>
+
+    @if (Model.Ruolo == "ADMIN" || Model.Ruolo == "SUPERVISOR")
+    {
+        <script>
+
+            function OnSuccessRequest() {
+
+                $("#divProcessing").hide();
+                $("#dvReport").show();
+
+                // Check or Uncheck All checkboxes
+                $("#checkAll").change(function () {
+                    var checked = $(this).is(':checked');
+                    if (checked) {
+                        $(".checkbox").each(function () {
+                            $(this).prop("checked", true);
+                        });
+                    } else {
+                        $(".checkbox").each(function () {
+                            $(this).prop("checked", false);
+                        });
+                    }
+                });
+
+                // Changing state of CheckAll checkbox
+                $(".checkbox").click(function () {
+
+                    if ($(".checkbox").length == $(".checkbox:checked").length) {
+                        $("#checkall").prop("checked", true);
+                    } else {
+                        $("#checkall").removeAttr("checked");
+                    }
+
+                });
+
+
+                var table = $('#tableProduzione').DataTable({
+                    dom: 'Bflrtip',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            autoFilter: true,
+                            text: '<i class="fas fa-file-excel"></i> Export to Excel',
+                            exportOptions: {
+                                columns: ':not(.notexport)'
+                            },
+                            className: 'col-auto btn btn-primary',
+                            title: function () {
+                                var str = 'Riepilogo bancali dal ' + $('#StartDate').val() + ' al ' + $('#EndDate').val() 
+                                return str
+                            }
+
+                        }
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            orderable: false,
+                            searchable: false,
+                        }
+                    ],
+                    order: [[2, 'asc']],
+                    scrollX: true
+                });
+
+                table.button().add(1, {
+
+                    action: function (e, dt, button, config) {
+
+
+                        var atLeastOneIsChecked = $('.checkbox').is(':checked');
+                        if (atLeastOneIsChecked) {
+                            $('#confirm-submit').modal('show');
+                        }
+                        else {
+
+                            $('#modalNoScatole').modal('show');
+                        }
+
+                    },
+                    text: '<i class="far fa-trash-alt"></i> Delete',
+                    className: 'col-auto btn btn-danger ml-2'
+                });
+
+            };
+
+        </script>
+    }
+    else
+    {
+        <script>
+
+            function OnSuccessRequest() {
+
+                $("#divProcessing").hide();
+                $("#dvReport").show();
+
+                // Check or Uncheck All checkboxes
+                $("#checkAll").change(function () {
+                    var checked = $(this).is(':checked');
+                    if (checked) {
+                        $(".checkbox").each(function () {
+                            $(this).prop("checked", true);
+                        });
+                    } else {
+                        $(".checkbox").each(function () {
+                            $(this).prop("checked", false);
+                        });
+                    }
+                });
+
+                // Changing state of CheckAll checkbox
+                $(".checkbox").click(function () {
+
+                    if ($(".checkbox").length == $(".checkbox:checked").length) {
+                        $("#checkall").prop("checked", true);
+                    } else {
+                        $("#checkall").removeAttr("checked");
+                    }
+
+                });
+                var table = $('#tableProduzione').DataTable({
+                    dom: 'Bflrtip',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            exportOptions: {
+                                columns: ':not(.notexport)'
+                            },
+                            className: 'col-auto btn btn-primary',
+                            title: function () {
+                                var str = 'Riepilogo bancali dal ' + $('#StartDate').val() + ' al ' + $('#EndDate').val()
+                                return str
+                            },
+                            autoFilter: true,
+                            text: '<i class="fas fa-file-excel"></i> Export to Excel'
+
+
+                        }
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            orderable: false,
+                            searchable: false,
+                        }
+                    ],
+                    order: [[2, 'asc']],
+                    scrollX: true
+                });
+
+
+            };
+
+        </script>
+    }
+}
+

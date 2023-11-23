@@ -1,0 +1,62 @@
+﻿@page
+@model GiacenzaSorterRm.Pages.TipologiaNormalizzazione.IndexModel
+
+@{
+    ViewData["Title"] = "Tipo Prodotto";
+}
+
+
+<div class="container h-100">
+    <div class="row h-100 justify-content-center align-items-center">
+        <div class="col-12 col-md-12 col-lg-12">
+
+            <h1>Tipo Prodotto</h1>
+            <br />
+            <p>
+                <a asp-page="Create">Create New</a>
+            </p>
+
+            <table class="table table-striped table-bordered nowrap display compact table-sm" style="width:100%" tabindex="-1" id="tableProduzione">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TipiNormalizzazione[0].TipoNormalizzazione)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.TipiNormalizzazione)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TipoNormalizzazione)
+                            </td>
+                            <td>
+                                <a asp-page="./Edit" asp-route-id="@item.IdTipoNormalizzazione">Edit</a> |
+                                <a asp-page="./Delete" asp-route-id="@item.IdTipoNormalizzazione">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
+
+    <script>
+
+
+        $(document).ready(function () {
+            $('#tableProduzione').DataTable();
+        });
+
+
+    </script>
+}
+

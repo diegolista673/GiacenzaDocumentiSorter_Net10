@@ -1,0 +1,74 @@
+﻿@model GiacenzaSorterRm.Pages.PagesRicercaDispaccio.IndexModel
+
+@{
+    Layout = null;
+}
+
+
+
+
+<div class="col-xs-6 center">
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert alert-danger" role="alert">
+            @Model.Message
+        </div>
+    }
+
+</div>
+
+@if (Model.LstBancaliDispacci.Count > 0)
+{
+
+    <table class="table table-striped table-bordered nowrap display compact table-sm" style="width:100%" id="tableProduzione" tabindex="-1">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.LstBancaliDispacci[0].Dispaccio)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LstBancaliDispacci[0].Bancale)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LstBancaliDispacci[0].DataAssociazione)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LstBancaliDispacci[0].Operatore)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LstBancaliDispacci[0].Centro)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.LstBancaliDispacci)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Dispaccio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Bancale)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DataAssociazione)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Operatore)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Centro)
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+
+}
+
+
+
+
+

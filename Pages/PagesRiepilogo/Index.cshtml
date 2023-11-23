@@ -1,0 +1,370 @@
+﻿@page
+@model GiacenzaSorterRm.Pages.PagesRiepilogo.IndexModel
+
+@{
+    ViewData["Title"] = "Riepilogo Scatole";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+
+
+    <div class="container-fluid">
+
+        <div class="card text-white bg-info mb-3" style="max-width: 100%;">
+
+            <div class="card-body">
+                <h2 class="text-center">Riepilogo Scatole</h2>
+
+            </div>
+        </div>
+
+
+        <br />
+
+        <form class="form-inline justify-content-center" method="post" id="formSelected"
+              data-ajax="true"
+              data-ajax-method="post"
+              data-ajax-update="#dvReport"
+              data-ajax-mode="replace"
+              data-ajax-url="?handler=Report"
+              data-ajax-success="OnSuccessRequest">
+
+
+@*             @if (Model.Ruolo.ToLower() == "supervisor" || Model.Ruolo.ToLower() == "ADMIN")
+            {
+                <select asp-for="SelectedCentro" asp-items="Model.LstCentri" class="m-2 mr-2 col-xs-9 form-control" id="selectCentro">
+                    <option value="0">- Seleziona Centro -</option>
+                </select>
+                <div><span asp-validation-for="SelectedCentro" class="text-danger"></span></div>
+            } *@
+
+
+
+            <select asp-for="SelectedCentro" asp-items="Model.LstCentri" class="m-2 mr-2 col-xs-9 form-control" id="selectCentro">
+                <option value="0">- Seleziona Centro -</option>
+            </select>
+            <div><span asp-validation-for="SelectedCentro" class="text-danger"></span></div>
+            
+
+
+            <div class="form-group">
+            <select asp-for="IdCommessa" class=" m-2 mr-2 col-xs-9 form-control" asp-items="@Model.CommesseSL" id="selectCommessa">
+                    <option value="0">- Seleziona Commessa -</option>
+                </select>
+                <span asp-validation-for="IdCommessa" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <select asp-for="SelectedFase" class="m-2 mr-2 col-xs-9 form-control" id="select1">
+                    <option value="">- Seleziona Tipo -</option>
+                    <option value="NORMALIZZATE">NORMALIZZATE</option>
+                    <option value="SORTERIZZATE">SORTERIZZATE</option>
+                </select>
+                <div><span asp-validation-for="SelectedFase" class="text-danger"></span></div>
+            </div>
+
+
+
+            <label for="Date" class="m-1 col-xs-3 col-form-label ml-4 mr-2">Dal :</label>
+            <div class="m-2 col-xs-9">
+                <input asp-for="StartDate" class="form-control mr-4" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+
+
+            <label for="Date" class="m-1 col-xs-3 col-form-label mr-2">Al :</label>
+            <div class="m-2 col-xs-9">
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+
+            <div class="m-2 col-auto px-0">
+                <input type="submit" value="Report" class="col-auto btn btn-primary" asp-page-handler="ReportNormalizzazione" id="btnStartNorm" />
+            </div>
+
+        </form>
+
+        <br /><br />
+
+        <div id="divProcessing">
+            <br />
+            <br />
+            <p class="text-center">Processing data, please wait . . .</p>
+            <p>
+                <img class="mx-auto d-block" src="~/images/Spinner.gif" />
+            </p>
+
+        </div>
+
+
+        <div class="center-text" id="dvReport"></div>
+
+
+    </div>
+
+<!-- Modal elimina-->
+<div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Elimina Scatole</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Eliminare le scatole selezionate ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="submitModal" class="btn btn-primary"> Elimina</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal no scatole-->
+<div class="modal fade" id="modalNoScatole" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Elimina Scatole</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Non ci sono scatole selezionate
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
+
+    <script>
+
+        $("#divProcessing").hide();
+
+
+        $('#btnStartSort').click(function () {
+            $("#divProcessing").show();
+            $("#dvReport").hide();
+        });
+
+
+        $('#submitModal').click(function () {
+            $('#confirm-submit').modal('hide');
+
+            $('#btnElimina').click();
+            $("#divProcessing").show();
+            $("#dvReport").hide();
+
+        });
+
+    </script>
+
+
+    @if (User.FindFirst("Azienda").Value == "POSTEL")
+    {
+        <script>
+            $('#btnStartNorm').click(function () {
+
+                selectElementCentro = document.querySelector('#selectCentro');
+                selectElement = document.querySelector('#select1');
+                selectElementCommessa = document.querySelector('#selectCommessa');
+
+                if (selectElement.value != '' && selectElementCentro.value != 0 && selectElementCommessa.value != 0) {
+                    $("#divProcessing").show();
+                    $("#dvReport").hide();
+                }
+            });
+        </script>
+    }
+    else
+    {
+        <script>
+            $('#btnStartNorm').click(function () {
+
+                selectElement = document.querySelector('#select1');
+                selectElementCommessa = document.querySelector('#selectCommessa');
+
+                if (selectElement.value != '' && selectElementCommessa.value != 0) {
+                    $("#divProcessing").show();
+                    $("#dvReport").hide();
+                }
+            });
+        </script>
+    }
+
+
+
+
+    @if (Model.Ruolo == "ADMIN" || Model.Ruolo == "SUPERVISOR")
+    {
+        <script>
+
+            function OnSuccessRequest() {
+
+                $("#divProcessing").hide();
+                $("#dvReport").show();
+
+                // Check or Uncheck All checkboxes
+                $("#checkAll").change(function () {
+                    var checked = $(this).is(':checked');
+                    if (checked) {
+                        $(".checkbox").each(function () {
+                            $(this).prop("checked", true);
+                        });
+                    } else {
+                        $(".checkbox").each(function () {
+                            $(this).prop("checked", false);
+                        });
+                    }
+                });
+
+                // Changing state of CheckAll checkbox
+                $(".checkbox").click(function () {
+
+                    if ($(".checkbox").length == $(".checkbox:checked").length) {
+                        $("#checkall").prop("checked", true);
+                    } else {
+                        $("#checkall").removeAttr("checked");
+                    }
+
+                });
+
+
+                var table = $('#tableProduzione').DataTable({
+                    dom: 'Bflrtip',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            autoFilter: true,
+                            text: '<i class="fas fa-file-excel"></i> Export to Excel',
+                            exportOptions: {
+                                columns: ':not(.notexport)'
+                            },
+                            className: 'col-auto btn btn-primary',
+                            title: function () {
+                                var str = 'Riepilogo scatole ' + $('#SelectedFase').val() + ' dal ' + $('#StartDate').val() + ' al ' + $('#EndDate').val() 
+                                return str
+                            }
+
+                        }
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            orderable: false,
+                            searchable: false,
+                        }
+                    ],
+                    order: [[2, 'asc']],
+                    scrollX: true
+                });
+
+                table.button().add(1, {
+
+                    action: function (e, dt, button, config) {
+
+
+                        var atLeastOneIsChecked = $('.checkbox').is(':checked');
+                        if (atLeastOneIsChecked) {
+                            $('#confirm-submit').modal('show');
+                        }
+                        else {
+
+                            $('#modalNoScatole').modal('show');
+                        }
+
+                    },
+                    text: '<i class="far fa-trash-alt"></i> Delete',
+                    className: 'col-auto btn btn-danger ml-2'
+                });
+
+            };
+
+        </script>
+    }
+    else
+    {
+        <script>
+
+            function OnSuccessRequest() {
+
+                $("#divProcessing").hide();
+                $("#dvReport").show();
+
+                // Check or Uncheck All checkboxes
+                $("#checkAll").change(function () {
+                    var checked = $(this).is(':checked');
+                    if (checked) {
+                        $(".checkbox").each(function () {
+                            $(this).prop("checked", true);
+                        });
+                    } else {
+                        $(".checkbox").each(function () {
+                            $(this).prop("checked", false);
+                        });
+                    }
+                });
+
+                // Changing state of CheckAll checkbox
+                $(".checkbox").click(function () {
+
+                    if ($(".checkbox").length == $(".checkbox:checked").length) {
+                        $("#checkall").prop("checked", true);
+                    } else {
+                        $("#checkall").removeAttr("checked");
+                    }
+
+                });
+                var table = $('#tableProduzione').DataTable({
+                    dom: 'Bflrtip',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            exportOptions: {
+                                columns: ':not(.notexport)'
+                            },
+                            className: 'col-auto btn btn-primary',
+                            title: function () {
+                                var str = 'Riepilogo scatole ' + $('#SelectedFase').val() + ' dal ' + $('#StartDate').val() + ' al ' + $('#EndDate').val()
+                                return str
+                            },
+                            autoFilter: true,
+                            text: '<i class="fas fa-file-excel"></i> Export to Excel'
+
+
+                        }
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            orderable: false,
+                            searchable: false,
+                        }
+                    ],
+                    order: [[2, 'asc']],
+                    scrollX: true
+                });
+
+
+            };
+
+        </script>
+    }
+}
+

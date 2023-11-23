@@ -1,0 +1,51 @@
+﻿@page
+@model GiacenzaSorterRm.Pages.TipiDocumenti.CreateModel
+
+@{
+    ViewData["Title"] = "Nuova Tipologia";
+
+}
+
+
+<div class="container h-100">
+    <div class="row h-100 justify-content-center align-items-center">
+        <div class="col-12 col-md-12 col-lg-6">
+
+            <h4>Nuova Tipologia</h4>
+            <hr />
+            <div class="row">
+                <div class="col-md-12">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="Tipologie.Tipologia" class="control-label"></label>
+                            <input asp-for="Tipologie.Tipologia" class="form-control" oninput="this.value = this.value.toUpperCase()"/>
+                            <span asp-validation-for="Tipologie.Tipologia" class="text-danger" ></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Tipologie.Note" class="control-label"></label>
+                            <textarea asp-for="Tipologie.Note" class="form-control" cols="40" rows="2" placeholder="Note"></textarea>
+                            <span asp-validation-for="Tipologie.Note" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div>
+                <a asp-page="Index">Back to List</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

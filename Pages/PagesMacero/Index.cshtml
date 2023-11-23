@@ -1,0 +1,244 @@
+﻿@page
+@model GiacenzaSorterRm.Pages.PagesMacero.IndexModel
+
+@{
+    ViewData["Title"] = "Macero";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+
+    <div class="container-fluid">
+
+        <div class="card text-white bg-info mb-1" style="max-width: 100%;">
+
+            <div class="card-body">
+                <h2 class="text-center">Macero</h2>
+
+            </div>
+        </div>
+
+
+        <br />
+
+        <form class="form-inline justify-content-center" method="post" id="formSelected"
+              data-ajax="true"
+              data-ajax-method="post"
+              data-ajax-update="#dvReport"
+              data-ajax-mode="replace"
+              data-ajax-url="?handler=Report"
+              data-ajax-success="OnSuccessRequest">
+
+
+
+            <div class="form-group">
+            <select asp-for="IdCommessa" class=" m-2 mr-2 col-xs-9 form-control" asp-items="@Model.CommesseSL" id="selectCommessa">
+                    <option value="0">- Seleziona Commessa -</option>
+                </select>
+                <span asp-validation-for="IdCommessa" class="text-danger"></span>
+            </div>
+
+
+            <label for="Date" class="m-1 col-xs-3 col-form-label ml-4 mr-2">Dal :</label>
+            <div class="m-2 col-xs-9">
+                <input asp-for="StartDate" class="form-control mr-4" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+
+
+            <label for="Date" class="m-1 col-xs-3 col-form-label mr-2">Al :</label>
+            <div class="m-2 col-xs-9">
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+
+            <div class="m-2 col-auto px-0">
+                <input type="submit" value="Report" class="col-auto btn btn-primary" asp-page-handler="ReportNormalizzazione" id="btnStartNorm" />
+            </div>
+
+        </form>
+
+        <br /><br />
+
+        <div id="divProcessing">
+            <br />
+            <br />
+            <p class="text-center">Processing data, please wait . . .</p>
+            <p>
+                <img class="mx-auto d-block" src="~/images/Spinner.gif" />
+            </p>
+
+        </div>
+
+
+        <div class="center-text" id="dvReport"></div>
+
+
+    </div>
+
+<!-- Modal rischiesta macero-->
+<div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Macera Scatole</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Macerare la commessa selezionata ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="submitModal" class="btn btn-primary">Macera</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
+
+    <script>
+
+
+        $("#divProcessing").hide();
+
+
+
+        $('#btnStartNorm').click(function () {
+
+            selectElementCommessa = document.querySelector('#selectCommessa');
+
+            if (selectElementCommessa.value != 0) {
+                $("#divProcessing").show();
+                $("#dvReport").hide();
+            }
+
+
+        });
+
+
+
+        $('#btnStartSort').click(function () {
+            $("#divProcessing").show();
+            $("#dvReport").hide();
+        });
+
+        $('#submitModal').click(function () {
+            $('#confirm-submit').modal('hide');
+
+            $('#btnElimina').click();
+            $("#divProcessing").show();
+            $("#dvReport").hide();
+
+        });
+
+
+
+    </script>
+
+
+    @if (Model.Ruolo == "ADMIN" || Model.Ruolo == "SUPERVISOR")
+    {
+        <script>
+
+            function OnSuccessRequest() {
+
+                $("#divProcessing").hide();
+                $("#dvReport").show();
+
+
+                var table = $('#tableProduzione').DataTable({
+                    dom: 'Bflrtip',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            autoFilter: true,
+                            text: '<i class="fas fa-file-excel"></i> Export to Excel',
+                            exportOptions: {
+                                columns: ':not(.notexport)'
+                            },
+                            className: 'col-auto btn btn-primary',
+                            title: function () {
+                                var str = 'Riepilogo scatole dal ' + $('#StartDate').val() + ' al ' + $('#EndDate').val() 
+                                return str
+                            }
+
+                        }
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            orderable: false,
+                            searchable: false,
+                        }
+                    ],
+                    order: [[2, 'asc']],
+                    scrollX: true
+                });
+
+                table.button().add(1, {
+
+                    action: function (e, dt, button, config) {
+                        $('#confirm-submit').modal('show');
+                    },
+                    text: '<i class="far fa-trash-alt"></i> Macera',
+                    className: 'col-auto btn btn-danger ml-2'
+                });
+
+            };
+
+        </script>
+    }
+    else
+    {
+        <script>
+
+            function OnSuccessRequest() {
+
+                $("#divProcessing").hide();
+                $("#dvReport").show();
+
+
+                var table = $('#tableProduzione').DataTable({
+                    dom: 'Bflrtip',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            exportOptions: {
+                                columns: ':not(.notexport)'
+                            },
+                            className: 'col-auto btn btn-primary',
+                            title: function () {
+                                var str = 'Riepilogo scatole dal ' + $('#StartDate').val() + ' al ' + $('#EndDate').val()
+                                return str
+                            },
+                            autoFilter: true,
+                            text: '<i class="fas fa-file-excel"></i> Export to Excel'
+
+
+                        }
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            orderable: false,
+                            searchable: false,
+                        }
+                    ],
+                    order: [[2, 'asc']],
+                    scrollX: true
+                });
+
+
+            };
+
+        </script>
+    }
+}
+

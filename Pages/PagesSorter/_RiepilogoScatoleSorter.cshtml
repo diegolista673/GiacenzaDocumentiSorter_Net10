@@ -1,0 +1,97 @@
+﻿@model GiacenzaSorterRm.Models.ScatoleModel
+
+@{
+    Layout = null;
+}
+
+    <style>
+        #LastScatola[type='text'] {
+            width: 100%;
+            font-size: 48px;
+            color: #0f08b2;
+        }
+    </style>
+
+
+    <div id="scatolaInserita">
+        <input asp-for="LastScatola" readonly tabindex="-1" placeholder="<-- scatola sorter -->" />
+        <br />
+
+        @if (Model.AlertSorterizzata != "")
+        {
+            <div class="alert alert-danger" role="alert">
+                @Model.AlertSorterizzata
+            </div>
+        }
+
+    </div>
+<br />
+<br />
+<div class="class="table-responsive" tabindex="-1">
+
+    <table class="table table-striped table-bordered nowrap display compact" style="width:100%" id="tableProduzione" tabindex="-1">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ScatoleLst[0].Scatola)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ScatoleLst[0].IdCommessaNavigation.Commessa)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ScatoleLst[0].IdContenitoreNavigation.Contenitore)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ScatoleLst[0].IdTipologiaNavigation.Tipologia)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ScatoleLst[0].Note)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ScatoleLst[0].DataSorter )
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ScatoleLst[0].IdStatoNavigation.Stato)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ScatoleLst[0].OperatoreSorter)
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ScatoleLst)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Scatola)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdCommessaNavigation.Commessa)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdContenitoreNavigation.Contenitore)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdTipologiaNavigation.Tipologia)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Note)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DataSorter)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdStatoNavigation.Stato)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OperatoreSorter)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+

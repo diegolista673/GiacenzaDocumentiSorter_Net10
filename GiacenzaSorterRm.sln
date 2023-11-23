@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30309.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GiacenzaSorterRm", "GiacenzaSorterRm.csproj", "{1C8D8AB1-B2C1-4C9B-9057-80490A2AA9CA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1C8D8AB1-B2C1-4C9B-9057-80490A2AA9CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C8D8AB1-B2C1-4C9B-9057-80490A2AA9CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C8D8AB1-B2C1-4C9B-9057-80490A2AA9CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C8D8AB1-B2C1-4C9B-9057-80490A2AA9CA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B47F6E30-06A2-4C33-901C-5CC4BE561AB5}
+	EndGlobalSection
+EndGlobal

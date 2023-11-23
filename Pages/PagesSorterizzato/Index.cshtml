@@ -1,0 +1,129 @@
+﻿@page
+@model GiacenzaSorterRm.Pages.PagesSorterizzato.IndexModel
+
+@{
+    ViewData["Title"] = "Totale Sorterizzato";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+    <div class="container-fluid">
+
+        <div class="card text-white bg-info mb-1" style="max-width: 100%;">
+
+            <div class="card-body">
+                <h2 class="text-center">Commesse Sorter</h2>
+
+            </div>
+        </div>
+
+
+        <br />
+
+
+        <form class="form-inline justify-content-center" method="post"
+              data-ajax="true"
+              data-ajax-method="post"
+              data-ajax-update="#dvReport"
+              data-ajax-mode="replace"
+              data-ajax-url="?handler=Report"
+              data-ajax-success="OnSuccessRequest">
+
+
+            @if (Model.Ruolo.ToLower() == "supervisor" || Model.Ruolo.ToLower() == "ADMIN")
+            {
+                <div class="form-group">
+                    <select asp-for="SelectedCentro" asp-items="Model.LstCentri" class="form-control mr-2">
+                        <option value="0">- Seleziona Centro -</option>
+                    </select>
+                </div>
+
+            }
+
+            <label for="Date" class="m-1 col-xs-3 col-form-label mr-2">Data Sorter Da :</label>
+            <div class="m-2 col-xs-9">
+                <input asp-for="StartDate" class="form-control mr-2" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+
+            <label for="Date" class="m-1 col-xs-3 col-form-label mr-2">Data Sorter A :</label>
+            <div class="m-2 col-xs-9">
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+
+            <div class="m-2 col-auto px-0">
+
+                <input type="submit" value="Report" class="col-auto btn btn-primary" asp-page-handler="Report" id="btnStart" />
+
+            </div>
+
+            <br />
+
+        </form>
+
+        <br />
+
+        <div id="divProcessing">
+            <br />
+            <br />
+            <p class="text-center">Processing data, please wait . . .</p>
+            <p>
+                <img class="mx-auto d-block" src="~/images/Spinner.gif" />
+            </p>
+
+        </div>
+
+        <div class="center-text" id="dvReport"></div>
+
+    </div>
+
+
+
+
+
+
+
+
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
+
+    <script>
+
+
+        $("#divProcessing").hide();
+
+        $('#btnStart').click(function () {
+            $("#divProcessing").show();
+            $("#dvReport").hide();
+        });
+
+
+        function OnSuccessRequest() {
+            $("#divProcessing").hide();
+            $("#dvReport").show();
+
+            $('#tableProduzione').DataTable({
+                dom: 'Bflrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        autoFilter: true,
+                        text: '<i class="fas fa-file-excel"></i> Export To Excel',
+                        className: 'col-auto btn btn-primary',
+                        title: function () {
+                            var str = 'Prodotto Sorterizzato - data sorter dal ' + $('#StartDate').val() + ' al ' + $('#EndDate').val()
+                            return str
+                        }
+
+                    }
+                ],
+                order: [[0, 'asc']],
+                scrollX: true
+            });
+        };
+
+
+    </script>
+}
+

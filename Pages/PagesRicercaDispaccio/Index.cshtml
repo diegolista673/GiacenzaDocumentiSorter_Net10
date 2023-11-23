@@ -1,0 +1,134 @@
+﻿@page
+@model GiacenzaSorterRm.Pages.PagesRicercaDispaccio.IndexModel
+@{
+    ViewData["Title"] = "Ricerca Dispaccio";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+
+<div class="container-fluid">
+
+
+    <div class="card text-white bg-info mb-3" style="max-width: 100%;">
+
+        <div class="card-body">
+            <h2 class="text-center">Ricerca Dispaccio <-> Bancale</h2>
+        </div>
+    </div>
+
+
+    <br />
+
+
+    <form class="form-inline justify-content-center" method="post" id="formSelected"
+          data-ajax="true"
+          data-ajax-method="post"
+          data-ajax-update="#dvReport"
+          data-ajax-mode="replace"
+          data-ajax-url="?handler=Report"
+          data-ajax-success="OnSuccessRequest">
+
+
+        <select asp-for="SelectedItem" asp-items="Model.LstRicerca" class="m-2 mr-2 col-xs-9 form-control">
+            <option value="0">- Seleziona Tipo -</option>
+        </select>
+
+
+        <div class="m-2 col-xs-9">
+            <input asp-for="ItemRicerca" class="form-control input-dispaccio" style="width:300px" oninput="this.value = this.value.toUpperCase()" />
+            <span asp-validation-for="ItemRicerca" class="text-danger"></span>
+        </div>
+
+        <div class="m-2 col-auto px-0">
+            <input type="submit" value="Report" class="col-auto btn btn-primary" asp-page-handler="Report" id="btnStartNorm" />
+        </div>
+
+    </form>
+
+    <br /><br />
+
+    <div id="divProcessing">
+        <br />
+        <br />
+        <p class="text-center">Processing data, please wait . . .</p>
+        <p>
+            <img class="mx-auto d-block" src="~/images/Spinner.gif" />
+        </p>
+
+    </div>
+
+
+    <div class="center-text" id="dvReport"></div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
+
+    <script>
+
+        $("#divProcessing").hide();
+
+        $('#btnStartNorm').click(function () {
+
+            if(document.getElementById('ItemRicerca').value != ''){
+                $("#divProcessing").show();
+                $("#dvReport").hide();
+            }
+
+        });
+
+
+
+        function OnSuccessRequest() {
+
+                $("#divProcessing").hide();
+                $("#dvReport").show();
+
+                var table = $('#tableProduzione').DataTable({
+                    dom: 'Bflrtip',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            exportOptions: {
+                                columns: ':not(.notexport)'
+                            },
+                            className: 'col-auto btn btn-primary',
+                            title: function () {
+                                var str = 'Riepilogo Dispaccio e Bancali'
+                                return str
+                            },
+                            autoFilter: true,
+                            text: '<i class="fas fa-file-excel"></i> Export to Excel'
+
+
+                        }
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            orderable: false,
+                            searchable: false,
+                        }
+                    ],
+                    order: [[2, 'asc']],
+                    scrollX: true
+                });
+
+
+            };
+
+
+    </script>
+
+}
