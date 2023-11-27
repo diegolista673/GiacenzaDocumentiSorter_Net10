@@ -28,8 +28,11 @@
                         <th>
                             Contenitore
                         </th>
-                        <th>
+                        <th style="width: 10%;text-align: center ">
                             Quantità
+                        </th>
+                        <th style="width: 10%;text-align: center ">
+                            Attiva
                         </th>
                         <th></th>
                     </tr>
@@ -47,10 +50,21 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.DescContenitore)
                             </td>
-                            <td>
+                            <td style="width: 10%;text-align: center ">
                                 @Html.DisplayFor(modelItem => item.Quantita)
                             </td>
+                            <td style="width: 10%;text-align: center ">
+                                @if (item.Attiva == true)
+                                {
+                                    <div>SI</div>
+                                }
+                                else
+                                {
+                                    <div>NO</div>
+                                }
+                            </td>
                             <td>
+                                <a asp-page="./Edit" asp-route-id="@item.IdRiepilogo">Edit</a>  <span> | </span>
                                 <a asp-page="./Delete" asp-route-id="@item.IdRiepilogo">Delete</a>
                             </td>
                         </tr>

@@ -79,3 +79,10 @@ controllare query giacenza dettaglio timeout quando seleziono tutti ok
 
 
 form per sorterizzare da /a commessa + tipologia
+
+
+form di avviso per macero ok
+
+aggiungere flag attivo per associazione commessa tipologia contenitore, aggiungere nuove tipologie senza renderele visibili, intanto è possibile aggiungere le nuove dal foglio excel
+
+controllare i diritti delle utenze nel layout

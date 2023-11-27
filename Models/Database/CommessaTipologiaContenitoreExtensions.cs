@@ -24,5 +24,9 @@ namespace GiacenzaSorterRm.Models.Database
 
         [Display(Name = "Contenitore")]
         public string DescContenitore { get; set; }
+
+        
+        [DisplayFormat(DataFormatString = "{0:N0}")]
+        public string Quantita { get; set; }
     }
 }

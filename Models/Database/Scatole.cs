@@ -41,6 +41,10 @@ public partial class Scatole
 
     public string NoteCambioGiacenza { get; set; }
 
+    public string OperatoreMacero { get; set; }
+
+    public DateTime? DataMacero { get; set; }
+
     public virtual CentriLav IdCentroGiacenzaNavigation { get; set; }
 
     public virtual CentriLav IdCentroNormalizzazioneNavigation { get; set; }

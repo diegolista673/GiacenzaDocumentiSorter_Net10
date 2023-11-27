@@ -246,7 +246,7 @@ namespace GiacenzaSorterRm.Pages
 
             if (env == "Production")
             {
-                if (user.Azienda == "ESTERNO")
+                if (user.Azienda == "METRA")
                 {
                     var passwordHasher = new PasswordHasher<string>();
                     var state = passwordHasher.VerifyHashedPassword(null, user.Password, Password);

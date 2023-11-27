@@ -20,4 +20,6 @@ public partial class CommessaTipologiaContenitore
     public string DescContenitore { get; set; }
 
     public int? Quantita { get; set; }
+
+    public bool? Attiva { get; set; }
 }

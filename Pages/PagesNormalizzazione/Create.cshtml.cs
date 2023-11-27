@@ -207,8 +207,6 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
         }
 
 
-
-
         private bool ScatolaExists(string scatola)
         {
             return _context.Scatoles.Any(e => e.Scatola == scatola);
@@ -232,8 +230,6 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
             ContenitoriSL = new SelectList(_context.Contenitoris, "IdContenitore", "Contenitore");
             TipoNormSL = new SelectList(_context.TipiNormalizzaziones, "IdTipoNormalizzazione", "TipoNormalizzazione");
         }
-
-
 
 
         public async Task<List<Scatole>> GetListScatole(DateTime? dataLavorazione)
@@ -294,7 +290,7 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
 
         public async Task<JsonResult> OnGetAssociazioneTipologiaAsync(int idCommessa)
         {
-            var lstTipologie = await _context.CommessaTipologiaContenitores.Where(x => x.IdCommessa == idCommessa).OrderBy(x => x.IdRiepilogo).Select(x => x.IdTipologia).ToListAsync();
+            var lstTipologie = await _context.CommessaTipologiaContenitores.Where(x => x.IdCommessa == idCommessa && x.Attiva == true).OrderBy(x => x.IdRiepilogo).Select(x => x.IdTipologia).ToListAsync();
 
             var SelectTipologie = await _context.Tipologies.Where(x => lstTipologie.Contains(x.IdTipologia)).Select(a =>
                                         new SelectListItem
@@ -350,16 +346,6 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
 
 
 
-        //public async Task<JsonResult> OnGetScatolaMondoAsync(string scatola)
-        //{
-        //    bool res = await ControllaNomeScatolaMondoAsync(scatola);
-
-        //    //string jsondata = JsonConvert.SerializeObject(res);
-
-        //    return new JsonResult(res);
-        //    //return new JsonResult(jsondata);
-
-        //}
 
 
 

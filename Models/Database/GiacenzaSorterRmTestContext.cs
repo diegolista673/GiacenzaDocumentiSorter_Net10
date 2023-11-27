@@ -236,11 +236,14 @@ public partial class GiacenzaSorterRmTestContext : DbContext
 
             entity.ToTable("Scatole");
 
-            entity.HasIndex(e => new { e.IdStato, e.IdCentroNormalizzazione, e.DataNormalizzazione }, "IDX_Giacenza");
+            entity.HasIndex(e => new { e.IdStato, e.IdCentroGiacenza, e.DataNormalizzazione }, "IDX_GIACENZA_CENTRO");
+
+            entity.HasIndex(e => new { e.IdTipologia, e.IdStato, e.DataNormalizzazione }, "IDX_GIACENZA_DETTAGLIO");
 
             entity.HasIndex(e => new { e.IdCommessa, e.IdStato, e.DataNormalizzazione }, "IDX_Macero");
 
             entity.Property(e => e.DataCambioGiacenza).HasColumnType("datetime");
+            entity.Property(e => e.DataMacero).HasColumnType("datetime");
             entity.Property(e => e.DataNormalizzazione).HasColumnType("datetime");
             entity.Property(e => e.DataSorter).HasColumnType("datetime");
             entity.Property(e => e.Note).IsUnicode(false);
@@ -248,6 +251,9 @@ public partial class GiacenzaSorterRmTestContext : DbContext
                 .HasMaxLength(300)
                 .IsUnicode(false);
             entity.Property(e => e.OperatoreCambioGiacenza)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.OperatoreMacero)
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.OperatoreNormalizzazione)
