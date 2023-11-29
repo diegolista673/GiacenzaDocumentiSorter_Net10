@@ -89,25 +89,25 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
                     //se tutti
                     if (CentroID == 5)
                     {
-                        lstSC = (IQueryable<Scatole>)_context.Scatoles
-                                                            .Include(s => s.IdCommessaNavigation)
-                                                            .Include(s => s.IdContenitoreNavigation)
-                                                            .Include(s => s.IdStatoNavigation)
-                                                            .Include(s => s.IdCentroGiacenzaNavigation)
-                                                            .Include(s => s.IdTipologiaNavigation)
-                                                            .Where(x => x.DataNormalizzazione <= EndDate && x.IdCommessaNavigation.Attiva == true && x.IdStato == 1)
-                                                            .AsNoTracking();
+                        lstSC = _context.Scatoles
+                                        .Include(s => s.IdCommessaNavigation)
+                                        .Include(s => s.IdContenitoreNavigation)
+                                        .Include(s => s.IdStatoNavigation)
+                                        .Include(s => s.IdCentroGiacenzaNavigation)
+                                        .Include(s => s.IdTipologiaNavigation)
+                                        .Where(x => x.DataNormalizzazione <= EndDate && x.IdCommessaNavigation.Attiva == true && x.IdStato == 1)
+                                        .AsNoTracking().AsQueryable();
                     }
                     else
                     {
-                        lstSC = (IQueryable<Scatole>)_context.Scatoles
-                                                            .Include(s => s.IdCommessaNavigation)
-                                                            .Include(s => s.IdContenitoreNavigation)
-                                                            .Include(s => s.IdStatoNavigation)
-                                                            .Include(s => s.IdCentroGiacenzaNavigation)
-                                                            .Include(s => s.IdTipologiaNavigation)
-                                                            .Where(x => x.DataNormalizzazione <= EndDate && x.IdCentroGiacenza == CentroID && x.IdCommessaNavigation.Attiva == true && x.IdStato == 1)
-                                                            .AsNoTracking();
+                        lstSC = _context.Scatoles
+                                        .Include(s => s.IdCommessaNavigation)
+                                        .Include(s => s.IdContenitoreNavigation)
+                                        .Include(s => s.IdStatoNavigation)
+                                        .Include(s => s.IdCentroGiacenzaNavigation)
+                                        .Include(s => s.IdTipologiaNavigation)
+                                        .Where(x => x.DataNormalizzazione <= EndDate && x.IdCentroGiacenza == CentroID && x.IdCommessaNavigation.Attiva == true && x.IdStato == 1)
+                                        .AsNoTracking().AsQueryable();
                     }
 
 
@@ -115,7 +115,7 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
                     //documenti normalizzati IN data selezionata
                     //documenti sorterizzati IN data selezionata
                     //totale giacenza FINO ALLA data selezionata
-                    LstCommesseView = await (from p in lstSC.AsQueryable()
+                    LstCommesseView = await (from p in lstSC
                                              group p by new { p.IdCommessaNavigation.Commessa, p.IdTipologiaNavigation.Tipologia, p.IdCentroGiacenzaNavigation.CentroLavDesc } into g
                                              select new CommesseView
                                              {

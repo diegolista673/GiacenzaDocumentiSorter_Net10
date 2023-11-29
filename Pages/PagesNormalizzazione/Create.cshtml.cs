@@ -181,7 +181,7 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
         private async Task<bool> ControllaNomeScatolaMondoAsync(string nomeScatola)
         {
             bool res = false;
-            string sql = @"SELECT COD_STAMPA FROM [RHM_POSTEL].[dbo].[MND_SCATOLE_STAMPATE_LISTA] where COD_STAMPA = @scatola";
+            string sql = @"SELECT COD_STAMPA FROM MND_SCATOLE_STAMPATE_LISTA where COD_STAMPA = @scatola";
 
             using (SqlConnection connection = new SqlConnection(MyConnections.CnxnMondo))
             {
@@ -260,8 +260,6 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
             return ScatoleLst;
 
         }
-
-
 
 
         public async Task<JsonResult> OnGetFindIdCommessaAsync(string bancale)

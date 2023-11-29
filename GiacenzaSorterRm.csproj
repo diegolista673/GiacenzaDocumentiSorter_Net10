@@ -9,23 +9,12 @@
     <WarningLevel>1</WarningLevel>
   </PropertyGroup>
 
-    <PropertyGroup>
-	    <EnvironmentName>Development</EnvironmentName>
-		<!--<EnvironmentName>Production</EnvironmentName>-->
-    </PropertyGroup>
+  <PropertyGroup>
+    <EnvironmentName>Development</EnvironmentName>
+	<!--<EnvironmentName>Production</EnvironmentName>-->
+  </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Models\Database_1\**" />
-    <Compile Remove="wwwroot\obj\**" />
-    <Content Remove="Models\Database_1\**" />
-    <Content Remove="wwwroot\obj\**" />
-    <EmbeddedResource Remove="Models\Database_1\**" />
-    <EmbeddedResource Remove="wwwroot\obj\**" />
-    <None Remove="Models\Database_1\**" />
-    <None Remove="wwwroot\obj\**" />
-    <TypeScriptCompile Remove="Models\Database_1\**" />
-    <TypeScriptCompile Remove="wwwroot\obj\**" />
-  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="BarcodeLib" Version="3.0.3" />

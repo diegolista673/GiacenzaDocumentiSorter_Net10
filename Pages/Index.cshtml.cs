@@ -26,7 +26,7 @@ namespace GiacenzaSorterRm.Pages
     public class IndexModel : PageModel
     {
 
-        private readonly GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext _context;
+        private readonly GiacenzaSorterRmTestContext _context;
         private readonly ILogger<IndexModel> _logger;
         private readonly IBrowserDetector browserDetector;
 
@@ -48,14 +48,12 @@ namespace GiacenzaSorterRm.Pages
         public List<SelectListItem> SelectCentro { get; set; }
 
 
-        public IndexModel(ILogger<IndexModel> logger, GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext context, IBrowserDetector browserDetector)
+        public IndexModel(ILogger<IndexModel> logger, GiacenzaSorterRmTestContext context, IBrowserDetector browserDetector)
         {
-            
             _logger = logger;
             _logger.LogInformation("Pagina di Login");
             _context = context;
             this.browserDetector = browserDetector;
-
         }
 
 
@@ -84,6 +82,132 @@ namespace GiacenzaSorterRm.Pages
                 Message = "Login failed";
                 return Page();
             }
+
+
+            try
+            {
+                //set Development ( per fase di debug ) or set Production in launchSettings.json
+                //set property in project for production
+                //<PropertyGroup>
+                //< EnvironmentName > Production </ EnvironmentName >
+                //</ PropertyGroup >
+
+                var user = await _context.Operatoris.Include(s => s.IdCentroLavNavigation).Where(x => x.Operatore == UserName).AsNoTracking().FirstOrDefaultAsync();
+
+                _logger.LogInformation(user.Operatore);
+
+                if (user != null)
+                {
+                    var claims = new List<Claim>
+                                        {
+                                            new Claim(ClaimTypes.Name, UserName)
+                                        };
+
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    var ruolo = new Claim(claimsIdentity.RoleClaimType, user.Ruolo);
+                    claimsIdentity.AddClaim(ruolo);
+
+                    var azienda = new Claim("Azienda", user.Azienda);
+                    claimsIdentity.AddClaim(azienda);
+
+                    var idOper = new Claim("IdOperatore", user.IdOperatore.ToString());
+                    claimsIdentity.AddClaim(idOper);
+
+                    var idCentro = new Claim("idCentro", user.IdCentroLav.ToString());
+                    claimsIdentity.AddClaim(idCentro);
+
+                    var Site = new Claim("Centro", user.IdCentroLavNavigation.CentroLavDesc.ToString());
+                    claimsIdentity.AddClaim(Site);
+
+                    var Ruolo = new Claim("Ruolo", user.Ruolo.ToString());
+                    claimsIdentity.AddClaim(Ruolo);
+
+                    var authProperties = new AuthenticationProperties
+                    {
+                        //AllowRefresh = true,
+                        // Refreshing the authentication session should be allowed.
+
+                        ExpiresUtc = DateTimeOffset.UtcNow.AddHours(4),
+                        // The time at which the authentication ticket expires. A 
+                        // value set here overrides the ExpireTimeSpan option of 
+                        // CookieAuthenticationOptions set with AddCookie.
+
+                        //IsPersistent = true,
+                        // Whether the authentication session is persisted across 
+                        // multiple requests. When used with cookies, controls
+                        // whether the cookie's lifetime is absolute (matching the
+                        // lifetime of the authentication ticket) or session-based.
+
+                        //IssuedUtc = <DateTimeOffset>,
+                        // The time at which the authentication ticket was issued.
+
+                        //RedirectUri = "./Index"
+                        // The full path or absolute URI to be used as an http 
+                        // redirect response value.
+                    };
+
+                    //await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity),
+                        authProperties);
+                }
+                else
+                {
+                    Message = "Login failed";
+                    return Page();
+                }
+
+                var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+                if (env == "Development")
+                {
+                    if (user != null)
+                    {
+                        return RedirectToPage("/Home");
+                    }
+                }
+                else
+                {
+                    if (user.Azienda == "ESTERNO")
+                    {
+                        var passwordHasher = new PasswordHasher<string>();
+                        var state = passwordHasher.VerifyHashedPassword(null, user.Password, Password);
+
+                        if (state == PasswordVerificationResult.Success || state == PasswordVerificationResult.SuccessRehashNeeded)
+                        {
+                            return RedirectToPage("/Home");
+                        }
+                    }
+                    else
+                    {
+                        bool res = ActiveDirectoryAuthenticate(UserName, Password);
+                        if (res)
+                        {
+                            if (user != null)
+                            {
+                                return RedirectToPage("/Home");
+                            }
+                        }
+                    }
+
+                }
+
+
+                Message = "Login failed";
+                return Page();
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex.Message);
+                Message = ex.Message;
+                return Page();
+            }
+
+
 
 
 
@@ -164,115 +288,7 @@ namespace GiacenzaSorterRm.Pages
 
 
 
-            //set Development ( per fase di debug ) or set Production in launchSettings.json
-            //set property in project for production
-            //<PropertyGroup>
-            //< EnvironmentName > Production </ EnvironmentName >
-            //</ PropertyGroup >
 
-            var user = await _context.Operatoris.Include(s => s.IdCentroLavNavigation).Where(x => x.Operatore == UserName).AsNoTracking().FirstOrDefaultAsync();
-
-            if (user != null)
-            {
-                var claims = new List<Claim>
-                                        {
-                                            new Claim(ClaimTypes.Name, UserName)
-                                        };
-
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                var ruolo = new Claim(claimsIdentity.RoleClaimType, user.Ruolo);
-                claimsIdentity.AddClaim(ruolo);
-
-
-                var azienda = new Claim("Azienda", user.Azienda);
-                claimsIdentity.AddClaim(azienda);
-
-                var idOper = new Claim("IdOperatore", user.IdOperatore.ToString());
-                claimsIdentity.AddClaim(idOper);
-
-                var idCentro = new Claim("idCentro", user.IdCentroLav.ToString());
-                claimsIdentity.AddClaim(idCentro);
-
-                var Site = new Claim("Centro", user.IdCentroLavNavigation.CentroLavDesc.ToString());
-                claimsIdentity.AddClaim(Site);
-
-                var Ruolo = new Claim("Ruolo", user.Ruolo.ToString());
-                claimsIdentity.AddClaim(Ruolo);
-
-                var authProperties = new AuthenticationProperties
-                {
-                    //AllowRefresh = true,
-                    // Refreshing the authentication session should be allowed.
-
-                    ExpiresUtc = DateTimeOffset.UtcNow.AddHours(4),
-                    // The time at which the authentication ticket expires. A 
-                    // value set here overrides the ExpireTimeSpan option of 
-                    // CookieAuthenticationOptions set with AddCookie.
-
-                    //IsPersistent = true,
-                    // Whether the authentication session is persisted across 
-                    // multiple requests. When used with cookies, controls
-                    // whether the cookie's lifetime is absolute (matching the
-                    // lifetime of the authentication ticket) or session-based.
-
-                    //IssuedUtc = <DateTimeOffset>,
-                    // The time at which the authentication ticket was issued.
-
-                    //RedirectUri = "./Index"
-                    // The full path or absolute URI to be used as an http 
-                    // redirect response value.
-                };
-
-                //await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity),
-                    authProperties);
-            }
-
-            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
-
-            if (env == "Development")
-            {
-                if (user != null)
-                {
-                    return RedirectToPage("/Home");
-                }
-            }
-
-
-            if (env == "Production")
-            {
-                if (user.Azienda == "METRA")
-                {
-                    var passwordHasher = new PasswordHasher<string>();
-                    var state = passwordHasher.VerifyHashedPassword(null, user.Password, Password);
-
-                    if (state == PasswordVerificationResult.Success || state == PasswordVerificationResult.SuccessRehashNeeded)
-                    {
-                        return RedirectToPage("/Home");
-                    }
-                }
-                else
-                {
-                    bool res = ActiveDirectoryAuthenticate(UserName, Password);
-                    if (res)
-                    {
-                        if (user != null)
-                        {
-                            return RedirectToPage("/Home");
-                        }
-                    }
-                }
-
-            }
-        
-
-            Message = "Login failed";
-            return Page();
         }
 
 

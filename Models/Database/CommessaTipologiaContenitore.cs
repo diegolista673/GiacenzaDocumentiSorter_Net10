@@ -19,7 +19,13 @@ public partial class CommessaTipologiaContenitore
 
     public string DescContenitore { get; set; }
 
+    public bool? Attiva { get; set; }
+
     public int? Quantita { get; set; }
 
-    public bool? Attiva { get; set; }
+    public virtual Commesse IdCommessaNavigation { get; set; }
+
+    public virtual Contenitori IdContenitoreNavigation { get; set; }
+
+    public virtual Tipologie IdTipologiaNavigation { get; set; }
 }

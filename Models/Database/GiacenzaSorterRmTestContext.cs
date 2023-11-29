@@ -122,7 +122,6 @@ public partial class GiacenzaSorterRmTestContext : DbContext
 
             entity.ToTable("CentriLav");
 
-            entity.Property(e => e.IdCentroLavorazione).ValueGeneratedNever();
             entity.Property(e => e.CentroLavDesc)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -133,11 +132,12 @@ public partial class GiacenzaSorterRmTestContext : DbContext
 
         modelBuilder.Entity<CommessaTipologiaContenitore>(entity =>
         {
-            entity.HasKey(e => e.IdRiepilogo);
+            entity.HasKey(e => e.IdRiepilogo).HasName("PK_Riepilogo");
 
             entity.ToTable("CommessaTipologiaContenitore");
 
-            entity.Property(e => e.IdRiepilogo).ValueGeneratedNever();
+            entity.HasIndex(e => new { e.IdCommessa, e.IdTipologia, e.IdContenitore }, "IX_CommessaTipologiaContenitore").IsUnique();
+
             entity.Property(e => e.DescCommessa)
                 .HasMaxLength(100)
                 .IsUnicode(false);
@@ -147,18 +147,29 @@ public partial class GiacenzaSorterRmTestContext : DbContext
             entity.Property(e => e.DescTipologia)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+
+            entity.HasOne(d => d.IdCommessaNavigation).WithMany(p => p.CommessaTipologiaContenitores)
+                .HasForeignKey(d => d.IdCommessa)
+                .HasConstraintName("FK_Riepilogo_Commesse");
+
+            entity.HasOne(d => d.IdContenitoreNavigation).WithMany(p => p.CommessaTipologiaContenitores)
+                .HasForeignKey(d => d.IdContenitore)
+                .HasConstraintName("FK_Riepilogo_Contenitori");
+
+            entity.HasOne(d => d.IdTipologiaNavigation).WithMany(p => p.CommessaTipologiaContenitores)
+                .HasForeignKey(d => d.IdTipologia)
+                .HasConstraintName("FK_Riepilogo_Tipologie");
         });
 
         modelBuilder.Entity<Commesse>(entity =>
         {
-            entity.HasKey(e => e.IdCommessa).HasName("PK_Commesse2");
+            entity.HasKey(e => e.IdCommessa);
 
             entity.ToTable("Commesse");
 
             entity.HasIndex(e => e.Commessa, "IX_Commesse").IsUnique();
 
             entity.Property(e => e.Commessa)
-                .IsRequired()
                 .HasMaxLength(200)
                 .IsUnicode(false);
             entity.Property(e => e.DataCreazione).HasColumnType("datetime");
@@ -168,12 +179,10 @@ public partial class GiacenzaSorterRmTestContext : DbContext
 
             entity.HasOne(d => d.IdOperatoreNavigation).WithMany(p => p.Commesses)
                 .HasForeignKey(d => d.IdOperatore)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Commesse_Operatori1");
+                .HasConstraintName("FK_Commesse_Operatori");
 
             entity.HasOne(d => d.IdPiattaformaNavigation).WithMany(p => p.Commesses)
                 .HasForeignKey(d => d.IdPiattaforma)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Commesse_Piattaforme");
         });
 
@@ -183,7 +192,8 @@ public partial class GiacenzaSorterRmTestContext : DbContext
 
             entity.ToTable("Contenitori");
 
-            entity.Property(e => e.IdContenitore).ValueGeneratedNever();
+            entity.HasIndex(e => e.Contenitore, "IX_Contenitori").IsUnique();
+
             entity.Property(e => e.Contenitore)
                 .HasMaxLength(100)
                 .IsUnicode(false);
@@ -200,7 +210,6 @@ public partial class GiacenzaSorterRmTestContext : DbContext
 
             entity.ToTable("Operatori");
 
-            entity.Property(e => e.IdOperatore).ValueGeneratedNever();
             entity.Property(e => e.Azienda)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -236,11 +245,7 @@ public partial class GiacenzaSorterRmTestContext : DbContext
 
             entity.ToTable("Scatole");
 
-            entity.HasIndex(e => new { e.IdStato, e.IdCentroGiacenza, e.DataNormalizzazione }, "IDX_GIACENZA_CENTRO");
-
-            entity.HasIndex(e => new { e.IdTipologia, e.IdStato, e.DataNormalizzazione }, "IDX_GIACENZA_DETTAGLIO");
-
-            entity.HasIndex(e => new { e.IdCommessa, e.IdStato, e.DataNormalizzazione }, "IDX_Macero");
+            entity.HasIndex(e => e.Scatola, "IX_Scatole").IsUnique();
 
             entity.Property(e => e.DataCambioGiacenza).HasColumnType("datetime");
             entity.Property(e => e.DataMacero).HasColumnType("datetime");
@@ -269,11 +274,10 @@ public partial class GiacenzaSorterRmTestContext : DbContext
 
             entity.HasOne(d => d.IdCentroGiacenzaNavigation).WithMany(p => p.ScatoleIdCentroGiacenzaNavigations)
                 .HasForeignKey(d => d.IdCentroGiacenza)
-                .HasConstraintName("FK_Scatole_CentriLavCambioGiacenza");
+                .HasConstraintName("FK_Scatole_CentriLav2");
 
             entity.HasOne(d => d.IdCentroNormalizzazioneNavigation).WithMany(p => p.ScatoleIdCentroNormalizzazioneNavigations)
                 .HasForeignKey(d => d.IdCentroNormalizzazione)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Scatole_CentriLav");
 
             entity.HasOne(d => d.IdCentroSorterizzazioneNavigation).WithMany(p => p.ScatoleIdCentroSorterizzazioneNavigations)
@@ -312,7 +316,6 @@ public partial class GiacenzaSorterRmTestContext : DbContext
 
             entity.ToTable("Stati");
 
-            entity.Property(e => e.IdStato).ValueGeneratedNever();
             entity.Property(e => e.Stato)
                 .HasMaxLength(100)
                 .IsUnicode(false);
@@ -320,11 +323,10 @@ public partial class GiacenzaSorterRmTestContext : DbContext
 
         modelBuilder.Entity<TipiNormalizzazione>(entity =>
         {
-            entity.HasKey(e => e.IdTipoNormalizzazione);
+            entity.HasKey(e => e.IdTipoNormalizzazione).HasName("PK_TipiNormalizzazzione");
 
             entity.ToTable("TipiNormalizzazione");
 
-            entity.Property(e => e.IdTipoNormalizzazione).ValueGeneratedNever();
             entity.Property(e => e.TipoNormalizzazione)
                 .IsRequired()
                 .HasMaxLength(100)
@@ -337,7 +339,8 @@ public partial class GiacenzaSorterRmTestContext : DbContext
 
             entity.ToTable("Tipologie");
 
-            entity.Property(e => e.IdTipologia).ValueGeneratedNever();
+            entity.HasIndex(e => e.Tipologia, "IX_Tipologie").IsUnique();
+
             entity.Property(e => e.DataCreazione).HasColumnType("datetime");
             entity.Property(e => e.Note).IsUnicode(false);
             entity.Property(e => e.Tipologia)

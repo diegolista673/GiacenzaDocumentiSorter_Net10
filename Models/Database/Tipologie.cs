@@ -15,6 +15,8 @@ public partial class Tipologie
 
     public string Note { get; set; }
 
+    public virtual ICollection<CommessaTipologiaContenitore> CommessaTipologiaContenitores { get; } = new List<CommessaTipologiaContenitore>();
+
     public virtual Operatori IdOperatoreCreazioneNavigation { get; set; }
 
     public virtual ICollection<Scatole> Scatoles { get; } = new List<Scatole>();

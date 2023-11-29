@@ -29,7 +29,7 @@ public partial class Scatole
 
     public int IdTipoNormalizzazione { get; set; }
 
-    public int IdCentroNormalizzazione { get; set; }
+    public int? IdCentroNormalizzazione { get; set; }
 
     public int? IdCentroSorterizzazione { get; set; }
 

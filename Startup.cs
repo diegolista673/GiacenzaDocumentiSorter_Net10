@@ -30,8 +30,8 @@ namespace GiacenzaSorterRm
         public void ConfigureServices(IServiceCollection services)
         {
             //debug
-            //services.AddDbContext<GiacenzaSorterRmTestContext>(options => options.UseSqlServer(MyConnections.GiacenzaSorterRmContext).EnableSensitiveDataLogging());
-            services.AddDbContext<GiacenzaSorterRmTestContext>(options => options.UseSqlServer(MyConnections.GiacenzaSorterRmContext));
+            services.AddDbContext<GiacenzaSorterRmTestContext>(options => options.UseSqlServer(MyConnections.GiacenzaSorterRmContext).EnableSensitiveDataLogging());
+            //services.AddDbContext<GiacenzaSorterRmTestContext>(options => options.UseSqlServer(MyConnections.GiacenzaSorterRmContext));
            
 
             services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");

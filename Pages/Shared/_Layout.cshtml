@@ -49,7 +49,9 @@
                     <div class="navbar-collapse collapse w-100">
                         <ul class="navbar-nav mr-auto w-100 justify-content-start">
 
-                            
+
+
+
                             @if ((User.IsInRole("ADMIN") || User.IsInRole("SUPERVISOR")))
                             {
 
@@ -108,64 +110,110 @@
                             }
                             else if (User.FindFirst("Azienda").Value == "POSTEL")
                             {
-
-                                <li class="nav-item ">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/PagesSorter/Create">Sorter</a>
+                                <li class="nav-item dropdown disabled">
+                                    <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Logistica</a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" asp-page="/PagesAccettazione/Create">Accettazione&nbspBancali</a>
+                                        <a class="dropdown-item" asp-page="/PagesNormalizzazione/Create">Normalizzazione&nbspScatole</a>
+                                    </div>
                                 </li>
 
-                                <li class="nav-item ">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/PagesSorterizzato/Index">Sorterizzato</a>
-                                </li>
 
                                 <li class="nav-item dropdown active">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Riepilogo</a>
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Sorter</a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" asp-page="/PagesRiepilogoBancali/Index">Riepilogo&nbspBancali</a>
-                                        <a class="dropdown-item" asp-page="/PagesRiepilogo/Index">Riepilogo&nbspScatole</a>
-                                        <a class="dropdown-item" asp-page="/PagesRicercaDispaccio/Index">Ricerca&nbspDispaccio</a>
+                                        <a class="dropdown-item" asp-page="/PagesSorter/Create">Scansione Sorter</a>
                                     </div>
                                 </li>
 
                                 <li class="nav-item dropdown active">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Giacenza</a>
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Aggiornamento</a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" asp-page="/PagesVolumi/Index">Riepilogo Giacenza</a>
+                                        <a class="dropdown-item" asp-page="/PagesMacero/Index">Macero</a>
                                         <a class="dropdown-item" asp-page="/PagesSpostaGiacenza/Create">Sposta&nbspGiacenza</a>
                                     </div>
                                 </li>
 
 
-                            }
-                            else if (User.FindFirst("Azienda").Value != "POSTEL")
-                            {
 
-                                <li class="nav-item dropdown active">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Accettazione</a>
-                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" asp-page="/PagesRiepilogoBancali/Index">Accettazione&nbspBancali</a>
-                                        <a class="dropdown-item" asp-page="/PagesAccettazione/Create">Normalizzazione&nbspScatole</a>
+                                <li class="nav-item dropdown active" >
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1" >Reports</a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown" >
+                                        <a class="dropdown-item" asp-page="/PagesRiepilogoBancali/Index">Report&nbspBancali</a>
+                                        <a class="dropdown-item" asp-page="/PagesVolumi/Index">Report Giacenza</a>
+                                        <a class="dropdown-item" asp-page="/PagesRiepilogo/Index">Report&nbspScatole</a>
+                                        <a class="dropdown-item" asp-page="/PagesNormalizzato/Index">Report&nbspScatole&nbspNormalizzazione</a>
+                                        <a class="dropdown-item" asp-page="/PagesSorterizzato/Index">Report&nbspScatole&nbspSorter</a>
                                     </div>
                                 </li>
 
 
-                                <li class="nav-item ">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/PagesAccettazione/Create">Accettazione</a>
+
+                                <li class="nav-item dropdown disabled" >
+                                    <a class="nav-link dropdown-toggle disabled " href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Impostazioni</a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown" disabled>
+                                        <a class="dropdown-item" asp-page="/PagesAssociazione/Index" >Associazione</a>
+                                        <a class="dropdown-item" asp-page="/TipiLavorazioni/Index">Commesse</a>
+                                        <a class="dropdown-item" asp-page="/TipiContenitori/Index">Contenitori</a>
+                                        <a class="dropdown-item" asp-page="/PagesOperatori/Index">Operatori</a>
+                                        <a class="dropdown-item" asp-page="/TipoPiattaforme/Index">Piattaforme</a>
+                                        <a class="dropdown-item" asp-page="/TipologiaNormalizzazione/Index">Tipologia Normalizzazione</a>
+                                        <a class="dropdown-item" asp-page="/TipiDocumenti/Index">Tipologie</a>
+                                    </div>
                                 </li>
 
-                                <li class="nav-item ">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/PagesNormalizzazione/Create">Normalizzazione</a>
+                            }
+                            else if (User.FindFirst("Azienda").Value == "ESTERNO")
+                            {
+                                <li class="nav-item dropdown active">
+                                    <a class="nav-link dropdown-toggle " href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Logistica</a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" asp-page="/PagesAccettazione/Create">Accettazione&nbspBancali</a>
+                                        <a class="dropdown-item" asp-page="/PagesNormalizzazione/Create">Normalizzazione&nbspScatole</a>
+                                    </div>
                                 </li>
 
-                                <li class="nav-item ">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/PagesNormalizzato/Index">Normalizzato</a>
+
+                                <li class="nav-item dropdown disabled">
+                                    <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Sorter</a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" asp-page="/PagesSorter/Create">Scansione Sorter</a>
+                                    </div>
                                 </li>
+
+                                <li class="nav-item dropdown disabled">
+                                    <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Aggiornamento</a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" asp-page="/PagesMacero/Index">Macero</a>
+                                        <a class="dropdown-item" asp-page="/PagesSpostaGiacenza/Create">Sposta&nbspGiacenza</a>
+                                    </div>
+                                </li>
+
+
 
                                 <li class="nav-item dropdown active">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Riepilogo</a>
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Reports</a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" asp-page="/PagesRiepilogoBancali/Index">Riepilogo&nbspBancali</a>
-                                        <a class="dropdown-item" asp-page="/PagesRiepilogo/Index">Riepilogo&nbspScatole</a>
-                                        <a class="dropdown-item" asp-page="/PagesRicercaDispaccio/Index">Ricerca&nbspDispaccio</a>
+                                        <a class="dropdown-item" asp-page="/PagesRiepilogoBancali/Index">Report&nbspBancali</a>
+                                        <a class="dropdown-item" asp-page="/PagesVolumi/Index">Report Giacenza</a>
+                                        <a class="dropdown-item" asp-page="/PagesRiepilogo/Index">Report&nbspScatole</a>
+                                        <a class="dropdown-item" asp-page="/PagesNormalizzato/Index">Report&nbspScatole&nbspNormalizzazione</a>
+                                        <a class="dropdown-item" asp-page="/PagesSorterizzato/Index">Report&nbspScatole&nbspSorter</a>
+                                    </div>
+                                </li>
+
+
+
+                                <li class="nav-item dropdown disabled">
+                                    <a class="nav-link dropdown-toggle disabled " href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Impostazioni</a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown" disabled>
+                                        <a class="dropdown-item" asp-page="/PagesAssociazione/Index">Associazione</a>
+                                        <a class="dropdown-item" asp-page="/TipiLavorazioni/Index">Commesse</a>
+                                        <a class="dropdown-item" asp-page="/TipiContenitori/Index">Contenitori</a>
+                                        <a class="dropdown-item" asp-page="/PagesOperatori/Index">Operatori</a>
+                                        <a class="dropdown-item" asp-page="/TipoPiattaforme/Index">Piattaforme</a>
+                                        <a class="dropdown-item" asp-page="/TipologiaNormalizzazione/Index">Tipologia Normalizzazione</a>
+                                        <a class="dropdown-item" asp-page="/TipiDocumenti/Index">Tipologie</a>
                                     </div>
                                 </li>
                             }

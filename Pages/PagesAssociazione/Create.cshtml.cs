@@ -33,9 +33,9 @@ namespace GiacenzaSorterRm.Pages.PagesAssociazione
 
         public IActionResult OnGet()
         {
-            CommesseSL = new SelectList(_context.Commesses, "IdCommessa", "Commessa");
-            TipologieSL = new SelectList(_context.Tipologies, "IdTipologia", "Tipologia");
-            ContenitoriSL = new SelectList(_context.Contenitoris, "IdContenitore", "Contenitore");
+            CommesseSL = new SelectList(_context.Commesses.OrderBy(x => x.Commessa), "IdCommessa", "Commessa");
+            TipologieSL = new SelectList(_context.Tipologies.OrderBy(x=> x.Tipologia), "IdTipologia", "Tipologia");
+            ContenitoriSL = new SelectList(_context.Contenitoris.OrderBy(x => x.Contenitore), "IdContenitore", "Contenitore");
 
             return Page();
         }
@@ -54,18 +54,25 @@ namespace GiacenzaSorterRm.Pages.PagesAssociazione
 
             try
             {
-
                 Ctc.DescCommessa = _context.Commesses.Where(p => p.IdCommessa == Ctc.IdCommessa).Select(x=> x.Commessa).First();
                 Ctc.DescTipologia = _context.Tipologies.Where(p => p.IdTipologia == Ctc.IdTipologia).Select(x => x.Tipologia).First();
                 Ctc.DescContenitore = _context.Contenitoris.Where(p => p.IdContenitore == Ctc.IdContenitore).Select(x => x.Contenitore).First();
                 Ctc.Quantita = _context.Contenitoris.Where(p => p.IdContenitore == Ctc.IdContenitore).Select(x => x.TotaleDocumenti).First();
 
                 _context.CommessaTipologiaContenitores.Add(Ctc);
+
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex)
             {
                 ModelState.AddModelError(string.Empty, "Unable to save. " + "The record is already in use.");
+                _logger.LogError(ex.Message);
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                _logger.LogError(ex.Message);
                 return Page();
             }
 

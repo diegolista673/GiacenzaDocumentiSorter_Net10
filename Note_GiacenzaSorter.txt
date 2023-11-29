@@ -1,28 +1,3 @@
-
-
-Aggiungere pagina per inserimento operatori -- ok
-
-
-Da testare login con active directory su IIS  -- ok
-
-testare login per ESTERNO  -- ok
-cambiare nome per società esteran mettere esterno perchè coop cambia sempre -- ok
-
-
-controllare tutti i campi tabelle tra test e produzione
-importare i dati dalla produzione e poi scambiare test con prod
-
-Aggiornare i campi centri normalizzazione e sorterizzazione con id centri dei rispettivi operatori
-
-Aggiornare il campo idGiacenza con idcentro di sorterizzazione ( perchè è dove è stato spostato il materiale)
-
-modifiche da effettuare su DB
-
-ALTER TABLE [GIACENZA_SORTER_RM_TEST].[dbo].[Commesse]
-ALTER COLUMN IdPiattaforma int NOT NULL;
-
-
-
 /*
 Dettagli indice mancanti in SQLQuery2.sql - VEVRFL1M031H\SQLEXPRESS.GIACENZA_SORTER_RM_TEST (POSTEL\diego.lista (54))
 Query Processor stima che l'implementazione del seguente indice potrebbe migliorare il costo della query di 46.4561%.
@@ -53,36 +28,27 @@ ON [dbo].[Scatole] ([IdCommessa],[IdStato],[DataNormalizzazione])
 INCLUDE ([IdContenitore],[IdCentroNormalizzazione])
 GO
 
+database allineato a produzione ok
+
+
+Da testare login con active directory su IIS  -- ok
+
+controllare i diritti delle utenze nel layout -- ok
+
+controllare perchè non elimina file vecchi nlog, permmessi nella cartella
+
+
+
+In produzione definitiva
 cambiare azienda METRA in ESTERNO tabella Operatori
 
-controllare codice dispaccio max 12 cifre - ok
+Aggiornare i campi centri normalizzazione e sorterizzazione con id centri dei rispettivi operatori
 
-aggiungere vecchia giacenza - ok
+Aggiornare il campo idGiacenza con idcentro di sorterizzazione ( perchè è dove è stato spostato il materiale)
 
-chiedere a deluca per etichette da controllare  
-tabella [RHM_POSTEL].[dbo].[MND_SCATOLE_STAMPATE]
-aggiungere controllo a acccettazione scatola che controlla nome etichetta, altrimenti chiede conferma ok
+inserire nuove tipologie e contenitori solo quandosi parte con il nuovo applicativo
 
-da aggiungere 
-stampa progressivo bancale ok
+produzione cambiare in operatori OWNER con ADMIN
 
 
-form per inserimento scatole da spostare logicamente ad altro sito e rivedere la giacenza ok
-Aggiunge campi
-DataCambioGiacenza	datetime	Checked
-IdCentroGiacenza	int	Checked
-OperatoreCambioGiacenza	varchar(100)	Checked
-NoteCambioGiacenza	varchar(300)	Checked
 
-
-controllare query giacenza dettaglio timeout quando seleziono tutti ok
-
-
-form per sorterizzare da /a commessa + tipologia
-
-
-form di avviso per macero ok
-
-aggiungere flag attivo per associazione commessa tipologia contenitore, aggiungere nuove tipologie senza renderele visibili, intanto è possibile aggiungere le nuove dal foglio excel
-
-controllare i diritti delle utenze nel layout

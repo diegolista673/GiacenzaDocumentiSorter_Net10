@@ -70,7 +70,6 @@ namespace GiacenzaSorterRm.Pages.PagesMacero
         }
 
 
-
         public async Task<IActionResult> OnPostReportAsync()
         {
             Ruolo = User.FindFirstValue("Ruolo");
@@ -100,7 +99,7 @@ namespace GiacenzaSorterRm.Pages.PagesMacero
                                     INNER JOIN Piattaforme AS p ON c.IdPiattaforma = p.IdPiattaforma
                                     INNER JOIN Contenitori AS c0 ON s.IdContenitore = c0.IdContenitore
                                     INNER JOIN Stati AS s0 ON s.IdStato = s0.IdStato
-                                    INNER JOIN CentriLav AS c1 ON s.IdCentroNormalizzazione = c1.IdCentroLavorazione
+                                    INNER JOIN CentriLav AS c1 ON s.IdCentroGiacenza = c1.IdCentroLavorazione
                                     INNER JOIN Tipologie AS t ON s.IdTipologia = t.IdTipologia
                                     WHERE s.IdStato = 1 and convert(date,s.DataNormalizzazione) >= {0} and convert(date,s.DataNormalizzazione) <= {1} and s.IdCommessa = {2} 
                                     group by p.Piattaforma,c1.CentroLavDesc,c.Commessa
@@ -109,7 +108,6 @@ namespace GiacenzaSorterRm.Pages.PagesMacero
 
                             using (SqlCommand cmd = new SqlCommand(sql))
                             {
-
                                 cmd.Connection = con;
                                 cmd.CommandTimeout = 120;
                                 cmd.Parameters.Clear();
@@ -122,7 +120,6 @@ namespace GiacenzaSorterRm.Pages.PagesMacero
                                 {
                                     Message = "Not results found";
                                 }
-
 
                                 return Partial("_RiepilogoMacero", this);
                             }
@@ -145,8 +142,6 @@ namespace GiacenzaSorterRm.Pages.PagesMacero
                 return Page();
             }
         }
-
-
 
 
         public async Task<IActionResult> OnPostMacera()

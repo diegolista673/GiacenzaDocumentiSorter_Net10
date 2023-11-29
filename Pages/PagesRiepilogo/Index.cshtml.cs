@@ -125,7 +125,7 @@ namespace GiacenzaSorterRm.Pages.PagesRiepilogo
 
                 if (ModelState.IsValid)
                 {
-                    if (SelectedFase == "NORMALIZZATE")
+                    if (SelectedFase == "NORMALIZZAZIONE")
                     {
                         await SetSearch(StartDate, EndDate, "normalizzazione", CentroID);
                         Fase = "Normalizzate";
@@ -149,11 +149,6 @@ namespace GiacenzaSorterRm.Pages.PagesRiepilogo
                 _logger.LogError(ex.Message);
                 return Page();
             }
-
-
-
-
-
         }
 
 
@@ -174,7 +169,7 @@ namespace GiacenzaSorterRm.Pages.PagesRiepilogo
                         await _context.SaveChangesAsync();
                         _logger.LogInformation("Delete scatola normalizzata : " + scatola.Scatola + " - operatore : " + User.Identity.Name);
 
-                        await SetSearch(StartDate, EndDate, "sorter", scatola.IdCentroNormalizzazione);
+                        await SetSearch(StartDate, EndDate, "sorter", (int)scatola.IdCentroNormalizzazione);
                         return Partial("_RiepilogoScatole", this);
                     }
                 }
@@ -270,11 +265,11 @@ namespace GiacenzaSorterRm.Pages.PagesRiepilogo
                                     TipoProdotto= m.IdTipoNormalizzazioneNavigation.TipoNormalizzazione,
                                     TotaleScatola = (int)m.IdContenitoreNavigation.TotaleDocumenti,
                                     Elimina = false,
-                                    IdCentroNormalizzazione = m.IdCentroNormalizzazione,
+                                    IdCentroNormalizzazione = (int)m.IdCentroNormalizzazione,
                                     IdCentroSorterizzazione = m.IdCentroSorterizzazione,
                                     CentroNormalizzazione = m.IdCentroNormalizzazioneNavigation.CentroLavDesc,
                                     CentroSorterizzazione = m.IdCentroSorterizzazioneNavigation.CentroLavDesc
-                                }).OrderBy(x => x.IdScatola).Take(1000).ToListAsync();
+                                }).OrderBy(x => x.IdScatola).ToListAsync();
 
 
             if (LstScatoleView.Count == 0)
