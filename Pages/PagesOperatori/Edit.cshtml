@@ -2,7 +2,7 @@
 @model GiacenzaSorterRm.Pages.PagesOperatori.EditModel
 
 @{
-    ViewData["Title"] = "Edit Contenitore";
+    ViewData["Title"] = "Edit Operatore";
 }
 
 <div class="container h-100">
@@ -41,7 +41,7 @@
                 {
                     <div class="form-group">
                         <label asp-for="Operatori.Ruolo" class="control-label"></label>
-                        <select asp-for="Operatori.Ruolo" class="form-control">
+                        <select asp-for="Operatori.Ruolo" class="form-control" v-model="selectRuolo" >
                             <option value="">- Ruolo -</option>
                             <option value="SUPERVISOR">SUPERVISOR</option>
                             <option value="USER">USER</option>
@@ -104,19 +104,23 @@
                 Password: '',
                 isDisabledPassword: true,
                 selectAzienda: "",
+                selectRuolo: "",
             },
             methods: {
 
                 onChangeAzienda: function (event) {
 
                     var self = this;
+                    var preRuolo = self.selectRuolo
                     if ((self.selectAzienda == "POSTEL") || (self.selectAzienda == "")) {
                         self.isDisabledPassword = true
                         self.Password = ''
+                        self.selectRuolo = preRuolo
                     }
                     else {
                         self.isDisabledPassword = false
                         self.Password = ''
+                        self.selectRuolo = 'USER'
                     }
                 }
             }

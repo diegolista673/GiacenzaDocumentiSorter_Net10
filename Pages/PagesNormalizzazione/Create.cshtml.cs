@@ -120,6 +120,7 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
                         Scatole.OperatoreNormalizzazione = User.Identity.Name;
                         Scatole.IdStato = 1;
                         Scatole.IdCentroNormalizzazione = CentroAppartenenza.SetCentroByUser(User);
+                        Scatole.IdCentroGiacenza = CentroAppartenenza.SetCentroByUser(User);
                         //Scatole.IdBancale = pallet.IdBancale;
 
                         _context.Scatoles.Add(Scatole);
@@ -222,7 +223,7 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
                 DataNormalizzazione = DateTime.Now
             };
 
-            var sel = await _context.Commesses.ToListAsync();
+            var sel = await _context.Commesses.Where(x=> x.Attiva == true).OrderBy(x=> x.Commessa).ToListAsync();
 
             CommesseSL = new SelectList(sel, "IdCommessa", "Commessa");
             
@@ -295,7 +296,7 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
                                         {
                                             Value = a.IdTipologia.ToString(),
                                             Text = a.Tipologia
-                                        }).AsNoTracking().ToListAsync();
+                                        }).AsNoTracking().OrderBy(x=> x.Text).ToListAsync();
             
             string jsondata = JsonConvert.SerializeObject(SelectTipologie);
             
@@ -305,7 +306,7 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
 
         public async Task<JsonResult> OnGetAssociazioneContenitoreAsync(int idCommessa, int idTipologia)
         {
-            var lstContenitori = await _context.CommessaTipologiaContenitores.Where(x => x.IdCommessa == idCommessa && x.IdTipologia==idTipologia).Select(x => x.IdContenitore).ToListAsync();
+            var lstContenitori = await _context.CommessaTipologiaContenitores.Where(x => x.IdCommessa == idCommessa && x.IdTipologia==idTipologia && x.Attiva == true).Select(x => x.IdContenitore).ToListAsync();
 
             var SelectContenitore = await _context.Contenitoris.Where(x => lstContenitori.Contains(x.IdContenitore)).Select(a =>
                                         new SelectListItem

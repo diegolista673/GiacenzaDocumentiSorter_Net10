@@ -116,7 +116,7 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
                     //documenti sorterizzati IN data selezionata
                     //totale giacenza FINO ALLA data selezionata
                     LstCommesseView = await (from p in lstSC
-                                             group p by new { p.IdCommessaNavigation.Commessa, p.IdTipologiaNavigation.Tipologia, p.IdCentroGiacenzaNavigation.CentroLavDesc } into g
+                                             group p by new { p.IdCommessaNavigation.Commessa, p.IdTipologiaNavigation.Tipologia, p.IdCentroGiacenzaNavigation.CentroLavDesc, p.IdCommessaNavigation.IdPiattaformaNavigation.Piattaforma } into g
                                              select new CommesseView
                                              {
                                                  Commessa = g.Key.Commessa,
@@ -126,7 +126,8 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
                                                  TotaleDocumentiGiacenza = g.Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
                                                  ScatolaNormalizzataOld = g.Where(p => p.IdCommessaNavigation.Commessa == g.Key.Commessa && p.IdTipologiaNavigation.Tipologia == g.Key.Tipologia).OrderBy(x => x.DataNormalizzazione).Select(x => x.Scatola).FirstOrDefault(),
                                                  DataScatolaOld = g.Where(p => p.IdCommessaNavigation.Commessa == g.Key.Commessa && p.IdTipologiaNavigation.Tipologia == g.Key.Tipologia).OrderBy(x => x.DataNormalizzazione).Select(x => x.DataNormalizzazione).FirstOrDefault(),
-                                                 CentroGiacenza = g.Key.CentroLavDesc
+                                                 CentroGiacenza = g.Key.CentroLavDesc,
+                                                 Piattaforma = g.Key.Piattaforma
                                              }).OrderBy(z => z.Commessa).ThenBy(z => z.Tipologia).ToListAsync();
 
 

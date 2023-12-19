@@ -41,5 +41,8 @@ namespace GiacenzaSorterRm.Models
         [DataType(DataType.Date)]
         [Display(Name = "Data Bancale più vecchia")]
         public DateTime? DataBancaleOld { get; set; }
+
+
+        public string Piattaforma { get; set; }
     }
 }

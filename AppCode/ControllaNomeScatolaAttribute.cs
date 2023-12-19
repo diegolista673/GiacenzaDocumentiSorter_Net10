@@ -4,7 +4,7 @@ using GiacenzaSorterRm.Models.Database;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 
-namespace GiacenzaSorterRm.Models
+namespace GiacenzaSorterRm.AppCode
 {
 
     public class ControllaNomeScatolaAttribute : ValidationAttribute

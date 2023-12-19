@@ -35,20 +35,35 @@ Da testare login con active directory su IIS  -- ok
 
 controllare i diritti delle utenze nel layout -- ok
 
-controllare perchè non elimina file vecchi nlog, permmessi nella cartella
-
 
 
 In produzione definitiva
-cambiare azienda METRA in ESTERNO tabella Operatori
+
 
 Aggiornare i campi centri normalizzazione e sorterizzazione con id centri dei rispettivi operatori
 
-Aggiornare il campo idGiacenza con idcentro di sorterizzazione ( perchè è dove è stato spostato il materiale)
+Dove c'è stata sorterizzazione Aggiornare il campo idGiacenza con idcentro di sorterizzazione ( perchè è dove è stato spostato il materiale)
+
+Dove non c'è stata sorterizzazione il Aggiornare il campo idGiacenza con idcentro di normalizzazione
+
+
+
+cambiare azienda METRA in ESTERNO tabella Operatori
+
+produzione cambiare in operatori OWNER con ADMIN
+
+
+
+
+nascondere le tipologie vecchie
 
 inserire nuove tipologie e contenitori solo quandosi parte con il nuovo applicativo
 
-produzione cambiare in operatori OWNER con ADMIN
+
+
+
+
+
 
 
 

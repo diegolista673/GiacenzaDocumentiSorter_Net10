@@ -49,9 +49,6 @@
                     <div class="navbar-collapse collapse w-100">
                         <ul class="navbar-nav mr-auto w-100 justify-content-start">
 
-
-
-
                             @if ((User.IsInRole("ADMIN") || User.IsInRole("SUPERVISOR")))
                             {
 
@@ -195,10 +192,10 @@
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="-1">Reports</a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" asp-page="/PagesRiepilogoBancali/Index">Report&nbspBancali</a>
-                                        <a class="dropdown-item" asp-page="/PagesVolumi/Index">Report Giacenza</a>
+                                        <a class="dropdown-item disabled" asp-page="/PagesVolumi/Index">Report Giacenza</a>
                                         <a class="dropdown-item" asp-page="/PagesRiepilogo/Index">Report&nbspScatole</a>
                                         <a class="dropdown-item" asp-page="/PagesNormalizzato/Index">Report&nbspScatole&nbspNormalizzazione</a>
-                                        <a class="dropdown-item" asp-page="/PagesSorterizzato/Index">Report&nbspScatole&nbspSorter</a>
+                                        <a class="dropdown-item disabled" asp-page="/PagesSorterizzato/Index">Report&nbspScatole&nbspSorter</a>
                                     </div>
                                 </li>
 
@@ -226,7 +223,7 @@
 
                             @* User *@
                             <li class="nav-item justify-content-end">
-                                <a class="nav-link active" tabindex="-1"><i class="far fa-user"></i> @User.Identity.Name&nbsp( @User.FindFirst("Ruolo").Value.ToLower() - @User.FindFirst("Centro").Value.ToLower() ) </a>
+                                <a class="nav-link active" tabindex="-1"><i class="far fa-user"></i> @User.Identity.Name&nbsp( @User.FindFirst("Ruolo").Value.ToLower() - @User.FindFirst("Azienda").Value.ToLower() - @User.FindFirst("Centro").Value.ToLower() ) </a>
                             </li>
 
                             @* Logout *@

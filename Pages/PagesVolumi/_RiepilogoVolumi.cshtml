@@ -64,6 +64,9 @@
                     @Html.DisplayNameFor(model => model.LstCommesseView[0].Tipologia)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.LstCommesseView[0].Piattaforma)
+                </th>
+                <th>
                     Normalizzati il <br> @Model.EndDate.ToShortDateString()
                 </th>
                 <th>
@@ -93,6 +96,9 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Tipologia)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Piattaforma)
                     </td>
                     <td class="text-center">
                         @Html.DisplayFor(modelItem => item.TotaleDocumentiNormalizzati)

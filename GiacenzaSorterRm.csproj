@@ -10,8 +10,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <EnvironmentName>Development</EnvironmentName>
-	<!--<EnvironmentName>Production</EnvironmentName>-->
+    <!--<EnvironmentName>Development</EnvironmentName>-->
+	<EnvironmentName>Production</EnvironmentName>
   </PropertyGroup>
 
 
@@ -47,6 +47,10 @@
     <Content Update="wwwroot\favicon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\pdf\" />
   </ItemGroup>
 
 </Project>

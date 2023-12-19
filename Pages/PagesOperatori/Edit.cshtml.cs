@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using GiacenzaSorterRm.AppCode;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace GiacenzaSorterRm.Pages.PagesOperatori
 {
@@ -67,9 +68,14 @@ namespace GiacenzaSorterRm.Pages.PagesOperatori
                 return Page();
             }
 
-            var passwordHasher = new PasswordHasher<string>();
-            var hash = passwordHasher.HashPassword(null, Operatori.Password);
-            Operatori.Password = hash;
+
+            if (Operatori.Azienda.ToLower() == "esterno")
+            {
+                var passwordHasher = new PasswordHasher<string>();
+                var hash = passwordHasher.HashPassword(null, Operatori.Password);
+                Operatori.Password = hash;
+            }
+
 
             _context.Attach(Operatori).State = EntityState.Modified;
 

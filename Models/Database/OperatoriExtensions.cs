@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GiacenzaSorterRm.AppCode;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -34,13 +35,14 @@ namespace GiacenzaSorterRm.Models.Database
         public string Azienda { get; set; }
 
 
-        [Required(ErrorMessage = "Password is required")]
+        //[Required(ErrorMessage = "Password is required")]
+        [RequiredIfAttribute("Azienda", value: "postel", ErrorMessage = "Password is required")]
         [StringLength(8, ErrorMessage = "Must be 8 characters", MinimumLength = 8)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
 
-        [Required(ErrorMessage = "Operatore is required")]
+       [Required(ErrorMessage = "Operatore is required")]
         public string Operatore { get; set; }
 
     }
