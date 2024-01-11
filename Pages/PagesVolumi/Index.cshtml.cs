@@ -29,10 +29,12 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
             _context = context;
         }
 
-        [BindProperty]
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime EndDate { get; set; } = DateTime.Now;
+        //[BindProperty]
+        //[Required]
+        //[DataType(DataType.Date)]
+        //public DateTime EndDate { get; set; } = DateTime.Now;
+
+        public DateTime EndDate { get; set; } = DateTime.Now.Date;
 
         public string Message { get; set; }
         public List<CommesseView> LstCommesseView { get; set; }
@@ -78,6 +80,8 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
         
         public async Task<IActionResult> ReportDettaglioAsync()
         {
+            
+
             try
             {
                 Ruolo = User.FindFirstValue("Ruolo");
@@ -89,32 +93,6 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
 
                 if (ModelState.IsValid)
                 {
-
-
-                    //NB:
-                    //documenti normalizzati IN data selezionata
-                    //documenti sorterizzati IN data selezionata
-                    //totale giacenza FINO ALLA data selezionata
-                    //LstCommesseView = (from p in lstScatole
-                    //                   group p by new { p.IdCommessaNavigation.Commessa, p.IdTipologiaNavigation.Tipologia } into g
-                    //                   select new CommesseView
-                    //                   {
-                    //                       Commessa = g.Key.Commessa,
-                    //                       Tipologia = g.Key.Tipologia,
-                    //                       TotaleDocumentiNormalizzati = g.Where(x => x.DataNormalizzazione == EndDate).Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
-                    //                       TotaleDocumentiSorterizzati = g.Where(z => z.DataSorter == EndDate).Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
-                    //                       TotaleDocumentiMacerati = g.Where(z => z.IdStato == 3).Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
-                    //                       TotaleDocumentiGiacenza = g.Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti) - g.Where(z => z.IdStatoNavigation.Stato == "SORTERIZZATO").Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti) - g.Where(z => z.IdStatoNavigation.Stato == "MACERATO").Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
-                    //                       ScatolaNormalizzataOld = g.Where(p => p.IdCommessaNavigation.Commessa == g.Key.Commessa && p.IdTipologiaNavigation.Tipologia == g.Key.Tipologia && p.DataSorter == null).OrderBy(x => x.DataNormalizzazione).Select(x => x.Scatola).FirstOrDefault(),
-                    //                       DataScatolaOld = g.Where(p => p.IdCommessaNavigation.Commessa == g.Key.Commessa && p.IdTipologiaNavigation.Tipologia == g.Key.Tipologia && p.DataSorter == null).OrderBy(x => x.DataNormalizzazione).Select(x => x.DataNormalizzazione).FirstOrDefault()
-
-                    //                   }).OrderBy(z => z.Commessa).ThenBy(z => z.Tipologia).ToList();
-
-
-
-
-
-
 
                     //se tutti
                     if (CentroID == 5)
@@ -150,7 +128,6 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
                                         .AsNoTracking().AsQueryable();
                     }
 
-
                     //NB:
                     //documenti normalizzati IN data selezionata
                     //documenti sorterizzati IN data selezionata
@@ -184,8 +161,6 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
                     //                       DataScatolaOld = g.Where(p => p.IdCommessaNavigation.Commessa == g.Key.Commessa && p.IdTipologiaNavigation.Tipologia == g.Key.Tipologia && p.DataSorter == null).OrderBy(x => x.DataNormalizzazione).Select(x => x.DataNormalizzazione).FirstOrDefault()
 
                     //                   }).OrderBy(z => z.Commessa).ThenBy(z => z.Tipologia).ToList();
-
-
 
 
                     TotaleGiacenza = LstCommesseView.Sum(x => x.TotaleDocumentiGiacenza);
