@@ -65,11 +65,11 @@ namespace GiacenzaSorterRm.Pages.PagesSorterizzato
             Utente = User.Identity.Name;
 
 
-            LstCentri = await _context.CentriLavs.Where(x => x.IdCentroLavorazione != 5).Select(a => new SelectListItem
+            LstCentri = await _context.CentriLavs.Select(a => new SelectListItem
             {
                 Value = a.IdCentroLavorazione.ToString(),
                 Text = a.CentroLavDesc
-            }).OrderBy(x => x.Text).ToListAsync();
+            }).OrderBy(x => x.Value).ToListAsync();
 
             return Page();
         }
@@ -83,28 +83,36 @@ namespace GiacenzaSorterRm.Pages.PagesSorterizzato
 
             if (ModelState.IsValid)
             {
+                IQueryable<Scatole> lstScatole;
 
-                var lstScatole = await _context.Scatoles
+                if (CentroID != 5)
+                {
+                    lstScatole = _context.Scatoles
                                         .Include(s => s.IdTipologiaNavigation)
                                         .Include(s => s.IdCommessaNavigation)
-                                        .Include(s => s.IdContenitoreNavigation)                                        
-                                        .AsNoTracking().Where(x => x.DataSorter >= StartDate && x.DataSorter <= EndDate && x.IdCentroSorterizzazione == CentroID).ToListAsync();
+                                        .Include(s => s.IdContenitoreNavigation)
+                                        .AsNoTracking().Where(x => x.DataSorter >= StartDate && x.DataSorter <= EndDate && x.IdCentroSorterizzazione == CentroID).AsQueryable();
+                }
+                else
+                {
+                    lstScatole = _context.Scatoles
+                                        .Include(s => s.IdTipologiaNavigation)
+                                        .Include(s => s.IdCommessaNavigation)
+                                        .Include(s => s.IdContenitoreNavigation)
+                                        .AsNoTracking().Where(x => x.DataSorter >= StartDate && x.DataSorter <= EndDate ).AsQueryable();
+                }
 
 
 
-                LstCommesseView = (from p in lstScatole
-                                   group p by new { p.IdCommessaNavigation.Commessa, p.IdTipologiaNavigation.Tipologia } into g
-                                   let scatolaNormalizzataOld = _context.Scatoles.Where(p => p.DataSorter == null && p.IdCentroSorterizzazione == CentroID).OrderBy(x => x.DataNormalizzazione)
-                                   let dataScatolaOld = _context.Scatoles.Where(p => p.DataSorter == null && p.IdCentroSorterizzazione == CentroID).OrderBy(x => x.DataNormalizzazione)
-                                   select new CommesseView
-                                   {
-                                       Commessa = g.Key.Commessa,
-                                       Tipologia = g.Key.Tipologia,
-                                       TotaleDocumentiSorterizzati = g.Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
-                                       ScatolaNormalizzataOld = scatolaNormalizzataOld.Where(p => p.IdCommessaNavigation.Commessa == g.Key.Commessa && p.IdTipologiaNavigation.Tipologia == g.Key.Tipologia).Select(x => x.Scatola).FirstOrDefault(),
-                                       DataScatolaOld = dataScatolaOld.Where(p => p.IdCommessaNavigation.Commessa == g.Key.Commessa && p.IdTipologiaNavigation.Tipologia == g.Key.Tipologia).Select(x => x.DataNormalizzazione).FirstOrDefault()
 
-                                   }).OrderBy(z => z.Commessa).ThenBy(z => z.Tipologia).ToList();
+                LstCommesseView = await  (from p in lstScatole
+                                           group p by new { p.IdCommessaNavigation.Commessa, p.IdTipologiaNavigation.Tipologia } into g
+                                           select new CommesseView
+                                           {
+                                               Commessa = g.Key.Commessa,
+                                               Tipologia = g.Key.Tipologia,
+                                               TotaleDocumentiSorterizzati = g.Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti)                             
+                                           }).OrderBy(z => z.Commessa).ThenBy(z => z.Tipologia).ToListAsync();
 
 
                 if (LstCommesseView.Count == 0)

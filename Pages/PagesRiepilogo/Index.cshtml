@@ -30,15 +30,6 @@
               data-ajax-success="OnSuccessRequest">
 
 
-@*             @if (Model.Ruolo.ToLower() == "supervisor" || Model.Ruolo.ToLower() == "ADMIN")
-            {
-                <select asp-for="SelectedCentro" asp-items="Model.LstCentri" class="m-2 mr-2 col-xs-9 form-control" id="selectCentro">
-                    <option value="0">- Seleziona Centro -</option>
-                </select>
-                <div><span asp-validation-for="SelectedCentro" class="text-danger"></span></div>
-            } *@
-
-
 
             <select asp-for="SelectedCentro" asp-items="Model.LstCentri" class="m-2 mr-2 col-xs-9 form-control" id="selectCentro">
                 <option value="0">- Seleziona Centro -</option>
@@ -50,6 +41,7 @@
             <div class="form-group">
             <select asp-for="IdCommessa" class=" m-2 mr-2 col-xs-9 form-control" asp-items="@Model.CommesseSL" id="selectCommessa">
                     <option value="0">- Seleziona Commessa -</option>
+                    <option value="999">TUTTE LE COMMESSE</option>
                 </select>
                 <span asp-validation-for="IdCommessa" class="text-danger"></span>
             </div>

@@ -13,15 +13,15 @@ namespace GiacenzaSorterRm.Models
         public string Commessa { get; set; }
         public string Tipologia { get; set; }
 
-        //[DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         [Display(Name = "Documenti Normalizzati")]
         public int TotaleDocumentiNormalizzati { get; set; }
 
-        //[DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         [Display(Name = "Documenti Sorter")]
         public int TotaleDocumentiSorterizzati { get; set; }
 
-        //[DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         [Display(Name = "Documenti Giacenza")]
         public int TotaleDocumentiGiacenza { get; set; }
                 

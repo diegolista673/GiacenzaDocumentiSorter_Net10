@@ -61,13 +61,12 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzato
 
             Ruolo = User.FindFirstValue("Ruolo");
             Utente = User.Identity.Name;
-            
 
-            LstCentri = await _context.CentriLavs.Where(x => x.IdCentroLavorazione != 5).Select(a => new SelectListItem
+            LstCentri = await _context.CentriLavs.Select(a => new SelectListItem
             {
                 Value = a.IdCentroLavorazione.ToString(),
                 Text = a.CentroLavDesc
-            }).OrderBy(x => x.Text).ToListAsync();
+            }).OrderBy(x => x.Value).ToListAsync();
 
             return Page();
         }
@@ -81,25 +80,38 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzato
 
             if (ModelState.IsValid)
             {
-
-                var lstScatole = await _context.Scatoles
-                                        .Include(s => s.IdCommessaNavigation)
-                                        .Include(s => s.IdContenitoreNavigation)
-                                        .Include(s => s.IdTipoNormalizzazioneNavigation)
-                                        .Include(s => s.IdTipologiaNavigation).Where(x => x.DataNormalizzazione >= StartDate && x.DataNormalizzazione <= EndDate & x.IdCentroNormalizzazione == centroID)
-                                        .AsNoTracking().ToListAsync();
+                IQueryable<Scatole> lstScatole;
 
 
+                if (centroID != 5)
+                {
+                    lstScatole = _context.Scatoles
+                        .Include(s => s.IdCommessaNavigation)
+                        .Include(s => s.IdContenitoreNavigation)
+                        .Include(s => s.IdTipoNormalizzazioneNavigation)
+                        .Include(s => s.IdTipologiaNavigation).Where(x => x.DataNormalizzazione >= StartDate && x.DataNormalizzazione <= EndDate & x.IdCentroNormalizzazione == centroID)
+                        .AsNoTracking().AsQueryable();
+                }
+                else
+                {
+                    lstScatole = _context.Scatoles
+                        .Include(s => s.IdCommessaNavigation)
+                        .Include(s => s.IdContenitoreNavigation)
+                        .Include(s => s.IdTipoNormalizzazioneNavigation)
+                        .Include(s => s.IdTipologiaNavigation).Where(x => x.DataNormalizzazione >= StartDate && x.DataNormalizzazione <= EndDate)
+                        .AsNoTracking().AsQueryable();
+                }
 
-                LstCommesseView = (from p in lstScatole
-                                   group p by new { p.IdCommessaNavigation.Commessa, p.IdTipologiaNavigation.Tipologia } into g
-                                   select new CommesseView
-                                   {
-                                       Commessa = g.Key.Commessa,
-                                       Tipologia = g.Key.Tipologia,
-                                       TotaleDocumentiNormalizzati = g.Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
 
-                                   }).OrderBy(z => z.Commessa).ThenBy(z => z.Tipologia).ToList();
+                LstCommesseView = await (from p in lstScatole
+                                           group p by new { p.IdCommessaNavigation.Commessa, p.IdTipologiaNavigation.Tipologia } into g
+                                           select new CommesseView
+                                           {
+                                               Commessa = g.Key.Commessa,
+                                               Tipologia = g.Key.Tipologia,
+                                               TotaleDocumentiNormalizzati = g.Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
+
+                                           }).OrderBy(z => z.Commessa).ThenBy(z => z.Tipologia).ToListAsync();
 
 
                 if (LstCommesseView.Count == 0)

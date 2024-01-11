@@ -27,15 +27,13 @@
               data-ajax-url="?handler=Report"
               data-ajax-success="OnSuccessRequest">
 
-            @if (Model.Ruolo.ToLower() == "supervisor" || Model.Ruolo.ToLower() == "ADMIN")
-            {
-                <div class="form-group">
-                    <select asp-for="SelectedCentro" asp-items="Model.LstCentri" class="form-control mr-2">
-                        <option value="0">- Seleziona Centro -</option>
-                    </select>
-                </div>
 
-            }
+            <div class="form-group">
+                <select asp-for="SelectedCentro" asp-items="Model.LstCentri" class="form-control mr-2">
+                    <option value="0">- Seleziona Centro -</option>
+                </select>
+            </div>
+
 
             <label for="Date" class="m-1 col-xs-3 col-form-label mr-2">Normalizzazione Da :</label>
             <div class="m-2 col-xs-9">
@@ -106,6 +104,16 @@
                         autoFilter: true,
                         text: '<i class="fas fa-file-excel"></i> Export to Excel',
                         className: 'col-auto btn btn-primary',
+                        exportOptions: {
+                            format: {
+                                body: function (data, row, column, node) {
+                                    data = $('<p>' + data + '</p>').text();
+                                    return column === 2 ?
+                                        data.replace(/[.]/g, '') :
+                                        data;
+                                }
+                            }
+                        },
                         title: function () {
                             var str = 'Prodotto normalizzato - data normalizzazione dal ' + $('#StartDate').val() + ' al ' + $('#EndDate').val()
                             return str

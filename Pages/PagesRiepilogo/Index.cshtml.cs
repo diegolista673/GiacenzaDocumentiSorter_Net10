@@ -13,6 +13,8 @@ using GiacenzaSorterRm.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace GiacenzaSorterRm.Pages.PagesRiepilogo
 {
@@ -104,7 +106,7 @@ namespace GiacenzaSorterRm.Pages.PagesRiepilogo
 
 
 
-            var sel = await _context.Commesses.ToListAsync();
+            var sel = await _context.Commesses.OrderBy(x => x.Commessa).ToListAsync();
 
             CommesseSL = new SelectList(sel, "IdCommessa", "Commessa");
 
@@ -185,69 +187,80 @@ namespace GiacenzaSorterRm.Pages.PagesRiepilogo
 
         public async Task SetSearch( DateTime startDate, DateTime endDate, string flag, int idCentro)
         {
-            IQueryable<Scatole> lstScatole;
+   
+            var query = new List<Scatole>();
+            IQueryable<Scatole> lstScatole = query.AsQueryable();
 
-            //se tutti
-            if (idCentro == 5)
+
+            //tutti i centri and tutte le commesse and flag = "normalizzazione"
+            if (idCentro == 5 & IdCommessa == 999 & flag == "normalizzazione")
             {
-
-                if (flag == "normalizzazione")
-                {
-                    lstScatole = _context.Scatoles
-                                        .Include(s => s.IdCommessaNavigation)
-                                        .Include(s => s.IdContenitoreNavigation)
-                                        .Include(s => s.IdStatoNavigation)
-                                        .Include(s => s.IdTipoNormalizzazioneNavigation)
-                                        .Include(s => s.IdCentroNormalizzazioneNavigation)
-                                        .Include(s => s.IdCentroSorterizzazioneNavigation)
-                                        .Include(s => s.IdTipologiaNavigation).Where(x => x.DataNormalizzazione >= startDate && x.DataNormalizzazione <= endDate && x.IdCommessa == IdCommessa  )
-                                        .AsQueryable();
-                }
-                else
-                {
-                    lstScatole = _context.Scatoles
-                                        .Include(s => s.IdCommessaNavigation)
-                                        .Include(s => s.IdContenitoreNavigation)
-                                        .Include(s => s.IdStatoNavigation)
-                                        .Include(s => s.IdTipoNormalizzazioneNavigation)
-                                        .Include(s => s.IdCentroNormalizzazioneNavigation)
-                                        .Include(s => s.IdCentroSorterizzazioneNavigation)
-                                        .Include(s => s.IdTipologiaNavigation).Where(x => x.DataSorter >= startDate && x.DataSorter <= endDate && x.IdCommessa == IdCommessa)
-                                        .AsQueryable();
-                }
+                lstScatole = _context.Scatoles.Where(x => x.DataNormalizzazione >= startDate && x.DataNormalizzazione <= endDate).AsQueryable();
             }
-            else
+            
+            
+            //tutti i centri and tutte le commesse and flag = "sorter"
+            if (idCentro == 5 & IdCommessa == 999 & flag == "sorter")
             {
+                lstScatole = _context.Scatoles.Where(x => x.DataSorter >= startDate && x.DataSorter <= endDate).AsQueryable();
+            }
 
-                if (flag == "normalizzazione")
-                {
-                    lstScatole = _context.Scatoles
-                                        .Include(s => s.IdCommessaNavigation)
-                                        .Include(s => s.IdContenitoreNavigation)
-                                        .Include(s => s.IdStatoNavigation)
-                                        .Include(s => s.IdTipoNormalizzazioneNavigation)
-                                        .Include(s => s.IdCentroNormalizzazioneNavigation)
-                                        .Include(s => s.IdCentroSorterizzazioneNavigation)
-                                        .Include(s => s.IdTipologiaNavigation).Where(x => x.DataNormalizzazione >= startDate && x.DataNormalizzazione <= endDate && x.IdCentroNormalizzazione == idCentro && x.IdCommessa == IdCommessa)
-                                        .AsQueryable();
-                }
-                else
-                {
-                    lstScatole = _context.Scatoles
-                                        .Include(s => s.IdCommessaNavigation)
-                                        .Include(s => s.IdContenitoreNavigation)
-                                        .Include(s => s.IdStatoNavigation)
-                                        .Include(s => s.IdTipoNormalizzazioneNavigation)
-                                        .Include(s => s.IdCentroNormalizzazioneNavigation)
-                                        .Include(s => s.IdCentroSorterizzazioneNavigation)
-                                        .Include(s => s.IdTipologiaNavigation).Where(x => x.DataSorter >= startDate && x.DataSorter <= endDate && x.IdCentroNormalizzazione == idCentro && x.IdCommessa == IdCommessa)
-                                        .AsQueryable();
-                }
+
+            //Per tutti i centri di lavorazione and 1 commessa e flag = "normalizzazione"
+            if (idCentro == 5 & IdCommessa > 0 & IdCommessa < 999 & flag == "normalizzazione")
+            {
+                lstScatole = _context.Scatoles.Where(x => x.DataNormalizzazione >= startDate && x.DataNormalizzazione <= endDate && x.IdCommessa == IdCommessa).AsQueryable();
             }
 
 
 
+            //Per tutti i centri di lavorazione and 1 commessa  e flag = "sorter"
+            if (idCentro == 5 & IdCommessa > 0 & IdCommessa < 999 & flag == "sorter")
+            {
+                lstScatole = _context.Scatoles.Where(x => x.DataSorter >= startDate && x.DataSorter <= endDate && x.IdCommessa == IdCommessa).AsQueryable();
+            }
 
+
+
+            //Per 1 centro di lavorazione and tutte le commesse e flag = "normalizzazione"
+            if (idCentro != 5 & IdCommessa == 999 & flag == "normalizzazione")
+            {
+                lstScatole = _context.Scatoles.Where(x => x.DataNormalizzazione >= startDate && x.DataNormalizzazione <= endDate && x.IdCentroNormalizzazione == idCentro).AsQueryable();
+            }
+
+
+            //Per 1 centro di lavorazione and tutte le commesse e flag = "sorter"
+            if (idCentro != 5 & IdCommessa == 999 & flag == "sorter")
+            {
+                lstScatole = _context.Scatoles.Where(x => x.DataSorter >= startDate && x.DataSorter <= endDate && x.IdCentroSorterizzazione == idCentro).AsQueryable();
+            }
+
+
+            //Per centro di lavorazione e per 1 commessa e flag = "normalizzazione"
+            if (idCentro != 5 & IdCommessa > 0 & IdCommessa < 999 & flag == "normalizzazione")
+            {
+                lstScatole = _context.Scatoles.Where(x => x.DataNormalizzazione >= startDate && x.DataNormalizzazione <= endDate && x.IdCentroNormalizzazione == idCentro && x.IdCommessa == IdCommessa)
+                                              .AsQueryable();
+            }
+            
+                 
+            
+            //Per centro di lavorazione e per 1 commessa e flag = "sorter"
+            if (idCentro != 5 & IdCommessa > 0 & IdCommessa < 999 & flag == "sorter")
+            {
+                lstScatole = _context.Scatoles.Where(x => x.DataSorter >= startDate && x.DataSorter <= endDate && x.IdCentroSorterizzazione == idCentro && x.IdCommessa == IdCommessa)
+                                    .AsQueryable();
+            }
+
+
+            lstScatole.Include(s => s.IdCommessaNavigation)
+                      .Include(s => s.IdContenitoreNavigation)
+                      .Include(s => s.IdStatoNavigation)
+                      .Include(s => s.IdTipoNormalizzazioneNavigation)
+                      .Include(s => s.IdCentroNormalizzazioneNavigation)
+                      .Include(s => s.IdCentroSorterizzazioneNavigation)
+                      .Include(s => s.IdTipologiaNavigation)
+                      .AsQueryable();
 
             LstScatoleView = await lstScatole.Select(m => new ScatolaView
                                 {

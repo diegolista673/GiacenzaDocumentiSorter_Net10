@@ -46,10 +46,13 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
         public List<GiacenzaView> LstGiacenzaView { get; set; }
 
         [BindProperty]
+        [Required(ErrorMessage = "Centro is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Centro is required")]
         public int SelectedCentro { get; set; }
 
-
         [BindProperty]
+        [Required(ErrorMessage = "IdTipo is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "IdTipo is required")]
         public int IdTipo { get; set; }
 
         public string ErrorMessage { get; set; }
@@ -86,16 +89,53 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
 
                 if (ModelState.IsValid)
                 {
+
+
+                    //NB:
+                    //documenti normalizzati IN data selezionata
+                    //documenti sorterizzati IN data selezionata
+                    //totale giacenza FINO ALLA data selezionata
+                    //LstCommesseView = (from p in lstScatole
+                    //                   group p by new { p.IdCommessaNavigation.Commessa, p.IdTipologiaNavigation.Tipologia } into g
+                    //                   select new CommesseView
+                    //                   {
+                    //                       Commessa = g.Key.Commessa,
+                    //                       Tipologia = g.Key.Tipologia,
+                    //                       TotaleDocumentiNormalizzati = g.Where(x => x.DataNormalizzazione == EndDate).Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
+                    //                       TotaleDocumentiSorterizzati = g.Where(z => z.DataSorter == EndDate).Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
+                    //                       TotaleDocumentiMacerati = g.Where(z => z.IdStato == 3).Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
+                    //                       TotaleDocumentiGiacenza = g.Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti) - g.Where(z => z.IdStatoNavigation.Stato == "SORTERIZZATO").Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti) - g.Where(z => z.IdStatoNavigation.Stato == "MACERATO").Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
+                    //                       ScatolaNormalizzataOld = g.Where(p => p.IdCommessaNavigation.Commessa == g.Key.Commessa && p.IdTipologiaNavigation.Tipologia == g.Key.Tipologia && p.DataSorter == null).OrderBy(x => x.DataNormalizzazione).Select(x => x.Scatola).FirstOrDefault(),
+                    //                       DataScatolaOld = g.Where(p => p.IdCommessaNavigation.Commessa == g.Key.Commessa && p.IdTipologiaNavigation.Tipologia == g.Key.Tipologia && p.DataSorter == null).OrderBy(x => x.DataNormalizzazione).Select(x => x.DataNormalizzazione).FirstOrDefault()
+
+                    //                   }).OrderBy(z => z.Commessa).ThenBy(z => z.Tipologia).ToList();
+
+
+
+
+
+
+
                     //se tutti
                     if (CentroID == 5)
                     {
+                        //fatta cosi contiene tutte le commesse anche se a 0 in giacenza
+                        //lstSC = _context.Scatoles
+                        //                .Include(s => s.IdCommessaNavigation)
+                        //                .Include(s => s.IdContenitoreNavigation)
+                        //                .Include(s => s.IdStatoNavigation)
+                        //                .Include(s => s.IdCentroGiacenzaNavigation)
+                        //                .Include(s => s.IdTipologiaNavigation)
+                        //                .Where(x => (x.DataNormalizzazione <= EndDate || x.DataSorter == EndDate ) && x.IdCommessaNavigation.Attiva == true && x.IdStato < 3  )
+                        //                .AsNoTracking().AsQueryable();
+
                         lstSC = _context.Scatoles
                                         .Include(s => s.IdCommessaNavigation)
                                         .Include(s => s.IdContenitoreNavigation)
                                         .Include(s => s.IdStatoNavigation)
                                         .Include(s => s.IdCentroGiacenzaNavigation)
                                         .Include(s => s.IdTipologiaNavigation)
-                                        .Where(x => x.DataNormalizzazione <= EndDate && x.IdCommessaNavigation.Attiva == true && x.IdStato == 1)
+                                        .Where(s => (s.IdStato == 1 || s.DataSorter == EndDate) && s.IdCommessaNavigation.Attiva == true && s.IdStato < 3)
                                         .AsNoTracking().AsQueryable();
                     }
                     else
@@ -106,7 +146,7 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
                                         .Include(s => s.IdStatoNavigation)
                                         .Include(s => s.IdCentroGiacenzaNavigation)
                                         .Include(s => s.IdTipologiaNavigation)
-                                        .Where(x => x.DataNormalizzazione <= EndDate && x.IdCentroGiacenza == CentroID && x.IdCommessaNavigation.Attiva == true && x.IdStato == 1)
+                                        .Where(s => (s.IdStato == 1 || s.DataSorter == EndDate) && s.IdCommessaNavigation.Attiva == true && s.IdStato < 3 && s.IdCentroGiacenza == CentroID)
                                         .AsNoTracking().AsQueryable();
                     }
 
@@ -121,14 +161,30 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
                                              {
                                                  Commessa = g.Key.Commessa,
                                                  Tipologia = g.Key.Tipologia,
-                                                 TotaleDocumentiNormalizzati = g.Where(x => x.DataNormalizzazione == EndDate).Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
-                                                 TotaleDocumentiSorterizzati = g.Where(z => z.DataSorter == EndDate).Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
-                                                 TotaleDocumentiGiacenza = g.Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
-                                                 ScatolaNormalizzataOld = g.Where(p => p.IdCommessaNavigation.Commessa == g.Key.Commessa && p.IdTipologiaNavigation.Tipologia == g.Key.Tipologia).OrderBy(x => x.DataNormalizzazione).Select(x => x.Scatola).FirstOrDefault(),
-                                                 DataScatolaOld = g.Where(p => p.IdCommessaNavigation.Commessa == g.Key.Commessa && p.IdTipologiaNavigation.Tipologia == g.Key.Tipologia).OrderBy(x => x.DataNormalizzazione).Select(x => x.DataNormalizzazione).FirstOrDefault(),
+                                                 TotaleDocumentiNormalizzati = g.Where(x => x.IdStato == 1 && x.DataNormalizzazione == EndDate).Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
+                                                 TotaleDocumentiSorterizzati = g.Where(z => z.IdStato == 2 && z.DataSorter == EndDate).Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
+                                                 TotaleDocumentiGiacenza = g.Where(z => z.IdStato == 1).Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
+                                                 ScatolaNormalizzataOld = g.Where(p => p.IdStato == 1 && p.IdCommessaNavigation.Commessa == g.Key.Commessa && p.IdTipologiaNavigation.Tipologia == g.Key.Tipologia).OrderBy(x => x.DataNormalizzazione).Select(x => x.Scatola).FirstOrDefault(),
+                                                 DataScatolaOld = g.Where(p => p.IdStato == 1 && p.IdCommessaNavigation.Commessa == g.Key.Commessa && p.IdTipologiaNavigation.Tipologia == g.Key.Tipologia).Select(x => x.DataNormalizzazione).Min(),
                                                  CentroGiacenza = g.Key.CentroLavDesc,
                                                  Piattaforma = g.Key.Piattaforma
                                              }).OrderBy(z => z.Commessa).ThenBy(z => z.Tipologia).ToListAsync();
+
+
+                    //LstCommesseView = (from p in lstSC
+                    //                   group p by new { p.IdCommessaNavigation.Commessa, p.IdTipologiaNavigation.Tipologia } into g
+                    //                   select new CommesseView
+                    //                   {
+                    //                       Commessa = g.Key.Commessa,
+                    //                       Tipologia = g.Key.Tipologia,
+                    //                       TotaleDocumentiNormalizzati = g.Where(x => x.DataNormalizzazione == EndDate).Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
+                    //                       TotaleDocumentiSorterizzati = g.Where(z => z.DataSorter == EndDate).Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
+                    //                       TotaleDocumentiGiacenza = g.Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti) - g.Where(z => z.IdStatoNavigation.Stato == "SORTERIZZATO").Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti) - g.Where(z => z.IdStatoNavigation.Stato == "MACERATO").Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
+                    //                       ScatolaNormalizzataOld = g.Where(p => p.IdCommessaNavigation.Commessa == g.Key.Commessa && p.IdTipologiaNavigation.Tipologia == g.Key.Tipologia && p.DataSorter == null).OrderBy(x => x.DataNormalizzazione).Select(x => x.Scatola).FirstOrDefault(),
+                    //                       DataScatolaOld = g.Where(p => p.IdCommessaNavigation.Commessa == g.Key.Commessa && p.IdTipologiaNavigation.Tipologia == g.Key.Tipologia && p.DataSorter == null).OrderBy(x => x.DataNormalizzazione).Select(x => x.DataNormalizzazione).FirstOrDefault()
+
+                    //                   }).OrderBy(z => z.Commessa).ThenBy(z => z.Tipologia).ToList();
+
 
 
 
