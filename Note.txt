@@ -1,0 +1,9 @@
+
+Modificare tutti i button presenti dei datatable per aggiornars alla nuova versione datatable.net
+aggiornare form con fetchers.js e controllare funzionamento form , attenzione a pagine complesse con vue.js e axios
+
+Pagine aggiornate PaginaMacero
+Pagina Normalizzato
+PageSorter
+
+controllare e testare sql con sqlite e sqlserver

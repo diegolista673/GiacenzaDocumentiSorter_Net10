@@ -174,15 +174,7 @@ namespace GiacenzaSorterRm.Pages.PagesSpostaGiacenza
             }
         }
 
-        private async Task<bool> ScatolaExistsAsync(string scatola)
-        {
-            return await _context.Scatoles.AnyAsync(e => e.Scatola == scatola);
-        }
 
-        private async Task<bool> CheckDataSorterAsync(string scatola)
-        {
-            return await _context.Scatoles.AnyAsync(e => e.Scatola == scatola & e.DataSorter != null);
-        }
 
     }
 

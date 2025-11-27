@@ -187,9 +187,6 @@
                         `);
                     }
                     
-                    // Non reinizializzare DataTable dopo macero perché la tabella sarà vuota
-                    // L'utente dovrà fare un nuovo Report per vedere lo stato aggiornato
-                    
                 } else {
                     throw new Error('Errore nella risposta del server');
                 }
@@ -246,53 +243,78 @@
                         FetchHelpers.hideSpinner('divProcessing');
                         document.getElementById('dvReport').style.display = 'block';
                         
+                        // ✅ DEBUG: Verifica disponibilità librerie
+                        console.log('DataTables disponibile:', typeof $.fn.DataTable);
+                        console.log('Buttons disponibile:', typeof $.fn.DataTable.Buttons);
+                        
                         if (document.getElementById('tableProduzione')) {
+                            console.log('✅ Tabella #tableProduzione trovata');
+                            
                             // Distruggi DataTable esistente se presente
                             if ($.fn.DataTable.isDataTable('#tableProduzione')) {
+                                console.log('Distruggo DataTable esistente');
                                 $('#tableProduzione').DataTable().destroy();
                             }
                             
-                            const table = $('#tableProduzione').DataTable({
-                                dom: 'Bflrtip',
-                                buttons: [
-                                    {
-                                        extend: 'excelHtml5',
-                                        autoFilter: true,
-                                        text: '<i class="fas fa-file-excel"></i> Export to Excel',
-                                        exportOptions: {
-                                            columns: ':not(.notexport)'
-                                        },
-                                        className: 'col-auto btn btn-primary',
-                                        title: function () {
-                                            return 'Riepilogo scatole dal ' + $('#StartDate').val() + ' al ' + $('#EndDate').val();
-                                        }
+                            // ✅ SOLUZIONE: Configura tutti i bottoni PRIMA dell'inizializzazione
+                            const buttonsConfig = [
+                                {
+                                    extend: 'excelHtml5',
+                                    autoFilter: true,
+                                    text: '<i class="fas fa-file-excel"></i> Export to Excel',
+                                    exportOptions: {
+                                        columns: ':not(.notexport)'
+                                    },
+                                    className: 'btn btn-primary',
+                                    title: function () {
+                                        return 'Riepilogo scatole dal ' + $('#StartDate').val() + ' al ' + $('#EndDate').val();
                                     }
-                                ],
-                                columnDefs: [
-                                    {
-                                        targets: 0,
-                                        orderable: false,
-                                        searchable: false,
-                                    }
-                                ],
-                                order: [[2, 'asc']],
-                                scrollX: true
-                            });
+                                }
+                            ];
                             
                             @if (Model.Ruolo == "ADMIN" || Model.Ruolo == "SUPERVISOR")
                             {
                                 <text>
-                                table.button().add(1, {
-                                    action: function (e, dt, button, config) {
-                                        $('#confirm-submit').modal('show');
-                                    },
+                                // ✅ Aggiungi bottone Macera condizionalmente
+                                console.log('✅ Utente ADMIN/SUPERVISOR - Aggiungo bottone Macera');
+                                buttonsConfig.push({
                                     text: '<i class="far fa-trash-alt"></i> Macera',
-                                    className: 'col-auto btn btn-danger ml-2'
+                                    className: 'btn btn-danger ml-2',
+                                    action: function (e, dt, button, config) {
+                                        console.log('Click su bottone Macera');
+                                        $('#confirm-submit').modal('show');
+                                    }
                                 });
                                 </text>
                             }
+                            
+                            console.log('Configurazione bottoni:', buttonsConfig);
+                            
+                            // ✅ Inizializza DataTable con array di bottoni completo
+                            try {
+                                const table = $('#tableProduzione').DataTable({
+                                    dom: 'Bfrtip',
+                                    buttons: buttonsConfig,
+                                    columnDefs: [
+                                        {
+                                            targets: 0,
+                                            orderable: false,
+                                            searchable: false,
+                                        }
+                                    ],
+                                    order: [[1, 'asc']],
+                                    scrollX: true
+                                });
+                                
+                                console.log('✅ DataTable inizializzato con successo');
+                                console.log('Numero bottoni:', table.buttons().count());
+                                
+                            } catch (dtError) {
+                                console.error('❌ Errore inizializzazione DataTable:', dtError);
+                            }
+                            
                         } else {
-                            console.warn('Tabella #tableProduzione non trovata nel DOM');
+                            console.warn('❌ Tabella #tableProduzione NON trovata nel DOM');
                         }
                     },
                     (error) => {
