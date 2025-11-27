@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Localization.Routing;
-using GiacenzaSorterRm.AppCode;
 using GiacenzaSorterRm.Models.Database;
 using System;
 
@@ -19,28 +18,84 @@ namespace GiacenzaSorterRm
     public class Startup
     {
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Environment { get; }
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //debug
-            //services.AddDbContext<GiacenzaSorterRmTestContext>(options => options.UseSqlServer(MyConnections.GiacenzaSorterRmContext).EnableSensitiveDataLogging());
-            services.AddDbContext<GiacenzaSorterRmTestContext>(options => options.UseSqlServer(MyConnections.GiacenzaSorterRmContext));
+            // Database Configuration
+            var useSqlite = Configuration.GetValue<bool>("UseSQLite", false);
+            string connectionString;
 
+            if (useSqlite)
+            {
+                // SQLite: usa SQLiteConnection string
+                connectionString = Configuration.GetConnectionString("SQLiteConnection") 
+                                   ?? "Data Source=giacenza_sorter_local.db";
+                
+                // Registra il context SQLite
+                services.AddDbContext<GiacenzaSorterRm.Data.GiacenzaSorterSqliteContext>(options =>
+                    options.UseSqlite(connectionString)
+                           .EnableSensitiveDataLogging(Environment.IsDevelopment()));
+                
+                // Registra l'interfaccia comune puntando al context SQLite
+                services.AddScoped<GiacenzaSorterRm.Data.IAppDbContext>(provider =>
+                    provider.GetRequiredService<GiacenzaSorterRm.Data.GiacenzaSorterSqliteContext>());
+            }
+            else
+            {
+                // SQL Server: usa DefaultConnection
+                connectionString = Configuration.GetConnectionString("DefaultConnection");
+                
+                // Registra il context SQL Server
+                services.AddDbContext<GiacenzaSorterRmTestContext>(options =>
+                    options.UseSqlServer(connectionString)
+                           .EnableSensitiveDataLogging(Environment.IsDevelopment()));
+                
+                // Registra l'interfaccia comune puntando al context SQL Server
+                services.AddScoped<GiacenzaSorterRm.Data.IAppDbContext>(provider =>
+                    provider.GetRequiredService<GiacenzaSorterRmTestContext>());
+            }
+
+            // Memory Cache per rate limiting e lockout
+            services.AddMemoryCache();
+
+            // Configurazione Active Directory Settings
+            services.Configure<GiacenzaSorterRm.Models.ActiveDirectorySettings>(
+                Configuration.GetSection("ActiveDirectory"));
+
+            // Configurazione Authentication Settings
+            services.Configure<GiacenzaSorterRm.Models.AuthenticationSettings>(
+                Configuration.GetSection("Authentication"));
+
+            // Registrazione servizi di autenticazione
+            services.AddScoped<GiacenzaSorterRm.Services.IAuthenticationService, GiacenzaSorterRm.Services.AuthenticationService>();
+            
+            // Registrazione condizionale del servizio Active Directory
+            if (Environment.EnvironmentName == "LocalDev")
+            {
+                // In ambiente LocalDev usa implementazione mock senza AD
+                services.AddScoped<GiacenzaSorterRm.Services.IActiveDirectoryService, GiacenzaSorterRm.Services.MockActiveDirectoryService>();
+            }
+            else
+            {
+                // In altri ambienti usa implementazione reale con AD
+                services.AddScoped<GiacenzaSorterRm.Services.IActiveDirectoryService, GiacenzaSorterRm.Services.ActiveDirectoryService>();
+            }
 
             services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
             services.AddControllers().AddNewtonsoftJson();
 
             CultureInfo[] supportedCultures = new[]
-{
+            {
                 new CultureInfo("it-IT"),
-
             };
 
             services.Configure<RequestLocalizationOptions>(options =>
@@ -54,12 +109,10 @@ namespace GiacenzaSorterRm
                     new RouteDataRequestCultureProvider(),
                     new CookieRequestCultureProvider()
                 };
-
             });
 
             services.Configure<CookiePolicyOptions>(options =>
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.Strict;
             });
@@ -68,25 +121,17 @@ namespace GiacenzaSorterRm
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(cookieOptions =>
             {
-                
                 cookieOptions.LoginPath = "/";
                 cookieOptions.LogoutPath = "/Logout/Index";
 
-
                 cookieOptions.Events.OnRedirectToAccessDenied = async context =>
                 {
-                    //await context.HttpContext.Response.WriteAsync(
-                    //    "Status code page, status code: " +
-                    //    context.HttpContext.Response.StatusCode);
-
                     context.HttpContext.Response.StatusCode = (int)System.Net.HttpStatusCode.Forbidden;
-
                 };
             });
 
             services.AddAuthorization(options =>
             {
-
                 options.AddPolicy("MaximunRequirements", policy =>
                    policy.RequireAssertion(context =>
                        context.User.Identity.Name != null && (context.User.IsInRole("ADMIN") || context.User.IsInRole("SUPERVISOR"))));
@@ -95,17 +140,10 @@ namespace GiacenzaSorterRm
                    policy.RequireAssertion(context =>
                        context.User.Identity.Name != null && (context.User.FindFirst("Azienda").Value == "ESTERNO" || (context.User.IsInRole("ADMIN") || context.User.IsInRole("SUPERVISOR")))));
 
-                
                 options.AddPolicy("SorterRequirements", policy =>
                    policy.RequireAssertion(context =>
-                       context.User.Identity.Name != null && context.User.FindFirst("Azienda").Value == "POSTEL" ));
-
-
+                       context.User.Identity.Name != null && context.User.FindFirst("Azienda").Value == "POSTEL"));
             });
-
-            //services.AddMvc().AddSessionStateTempDataProvider();
-            //services.AddSession();
-            
 
             services.AddMvc().AddRazorPagesOptions(options =>
             {
@@ -120,17 +158,11 @@ namespace GiacenzaSorterRm
                 options.Conventions.AuthorizeFolder("/TipiDocumenti");
                 options.Conventions.AuthorizeFolder("/TipiLavorazioni");
                 options.Conventions.AuthorizeFolder("/TipologiaNormalizzazione");
-              
-
             });
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
         }
-
-
-
-
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -144,17 +176,12 @@ namespace GiacenzaSorterRm
                 app.UseExceptionHandler("/Error");
             }
 
-
             var cookiePolicyOptions = new CookiePolicyOptions
             {
                 MinimumSameSitePolicy = SameSiteMode.Strict
-                
             };
 
-            
-
             app.UseCookiePolicy(cookiePolicyOptions);
-            //app.UseSession();
             app.UseRequestLocalization();
             app.UseStaticFiles();
 

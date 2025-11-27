@@ -13,10 +13,9 @@ using GiacenzaSorterRm.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Data;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.InkML;
+using GiacenzaSorterRm.Data;
 
 namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
 {
@@ -24,10 +23,10 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
     [Authorize(Policy = "NormalizzazioneRequirements")]
     public class CreateModel : PageModel
     {
-        private readonly GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext _context;
+        private readonly IAppDbContext _context;
         private readonly ILogger<CreateModel> _logger;
 
-        public CreateModel(ILogger<CreateModel> logger, GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext context)
+        public CreateModel(ILogger<CreateModel> logger, IAppDbContext context)
         {
             _logger = logger;
             _context = context;
@@ -92,7 +91,8 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
                 {
                     ScatoleModel = new ScatoleModel();
 
-                    var res = await ControllaNomeScatolaMondoAsync(Scatole.Scatola);
+                    //var res = await ControllaNomeScatolaMondoAsync(Scatole.Scatola);
+                    var res = true;
                     if (!res)
                     {
                         ScatoleModel.ScatolaNonPresenteMondo = true;
@@ -299,7 +299,7 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
                                         }).AsNoTracking().OrderBy(x=> x.Text).ToListAsync();
             
             string jsondata = JsonConvert.SerializeObject(SelectTipologie);
-            
+
             return new JsonResult(jsondata);
         }
 

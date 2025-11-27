@@ -12,8 +12,7 @@
             <h2 class="text-center">Sposta Giacenza</h2>
         </div>
     </div>
-
-    <div class="row mt-3">
+        <div class="row mt-3">
 
         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 ">
 
@@ -24,13 +23,7 @@
                 </div>
                 <div class="card-body">
 
-                    <form method="post"
-                          data-ajax="true"
-                          data-ajax-method="post"
-                          data-ajax-update="#resultDiv"
-                          data-ajax-mode="replace"
-                          data-ajax-url="?handler=AggiornaScatola"
-                          data-ajax-success="OnSuccessRequest">
+                    <form method="post" id="formAggiornaScatola">
 
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -59,7 +52,7 @@
                          
 
                         <div class="form-group d-flex justify-content-end">
-                            <input type="submit" value="Aggiorna" class="btn btn-primary" id="btnPost" />
+                            <button type="submit" class="btn btn-primary">Aggiorna</button>
                         </div>
 
                     </form>
@@ -78,34 +71,40 @@
 </div>
 
 
+@section scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script type="module">
 
-@section scripts{
+        import { FetchHelpers } from '/js/fetch-helpers.js';
 
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
+        // Inizializza DataTable
+        $(document).ready(() => {
+            $('#tableProduzione').DataTable({ scrollX: true });
+        });
 
-    <script>
+        // Handler submit
+        document.getElementById('formAggiornaScatola').addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-            $(document).ready(function () {
-                $('#tableProduzione').DataTable({
-                    "scrollX": true
-                });
-            });
+            const formData = new FormData(e.target);
 
-            function OnSuccessRequest() {
-
-                $('#tableProduzione').DataTable({
-                    "scrollX": true,
-                    "order": []
-                });
-
-                document.getElementById('Scatole_Scatola').value = '';
-                document.getElementById('Scatole_NoteCambioGiacenza').value = '';
-                $("#tableProduzione").DataTable().page('last').draw('page');
-
-            };
-
-
+            try {
+                await FetchHelpers.postFormWithUpdate(
+                    '?handler=AggiornaScatola',
+                    formData,
+                    'resultDiv',
+                    () => {
+                        // Success callback
+                        FetchHelpers.reinitDataTable('tableProduzione');
+                        FetchHelpers.clearInputs(['Scatole_Scatola','Scatole_NoteCambioGiacenza']);
+                    }
+                );
+            } catch (error) {
+                console.error('Errore:', error);
+            }
+        });
     </script>
 }
 

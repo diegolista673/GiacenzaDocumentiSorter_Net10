@@ -16,15 +16,16 @@ using GiacenzaSorterRm.Helpers;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 using GiacenzaSorterRm.AppCode;
+using GiacenzaSorterRm.Data;
 
 namespace GiacenzaSorterRm.Pages.PagesNormalizzato
 {
     public class IndexModel : PageModel
     {
-        private readonly GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext _context;
+        private readonly IAppDbContext _context;
         private readonly ILogger<IndexModel> _logger;
 
-        public IndexModel(ILogger<IndexModel> logger, GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext context)
+        public IndexModel(ILogger<IndexModel> logger,IAppDbContext context )
         {
             _logger = logger;
             _context = context;

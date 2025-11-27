@@ -17,24 +17,18 @@
             <div class="col-xs-6 col-xs-offset-6 center">
                 @if (!string.IsNullOrEmpty(Model.Message))
                 {
-                    <div class="alert alert-danger" role="alert">
+                    var isSuccess = Model.Message.Contains("successo", StringComparison.OrdinalIgnoreCase);
+                    var alertClass = isSuccess ? "alert-success" : 
+                                    Model.Message.Contains("Nessuna scatola", StringComparison.OrdinalIgnoreCase) ? "alert-warning" : "alert-danger";
+                    <div class="alert @alertClass" role="alert" id="maceroResultMessage" data-success="@isSuccess.ToString().ToLower()">
                         @Model.Message
                     </div>
                 }
-
-
             </div>
 
-            @if (Model.LstMaceroView.Count > 0)
+            @if (Model.LstMaceroView != null && Model.LstMaceroView.Count > 0)
             {
-
-                <form id="formRiepilogo" method="post" style="width:100%"
-                      data-ajax="true"
-                      data-ajax-method="post"
-                      data-ajax-update="#dvReport"
-                      data-ajax-mode="replace"
-                      data-ajax-url="?handler=macera"
-                      data-ajax-success="OnSuccessRequest">
+                <form id="formRiepilogo" method="post" asp-page-handler="Macera" style="width:100%">
 
                     @if ((User.IsInRole("ADMIN") || User.IsInRole("SUPERVISOR")))
                     {

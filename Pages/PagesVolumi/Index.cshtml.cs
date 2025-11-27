@@ -5,25 +5,26 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using GiacenzaSorterRm.Models.Database;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.Logging;
+using GiacenzaSorterRm.AppCode;
 using GiacenzaSorterRm.Models;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Data.SqlClient;
-using GiacenzaSorterRm.AppCode;
-using GiacenzaSorterRm.Models.Database;
+using System.Security.Claims;
+using GiacenzaSorterRm.Data;
+using Microsoft.Data.SqlClient;
 
 namespace GiacenzaSorterRm.Pages.PagesVolumi
 {
     [Authorize(Policy = "SorterRequirements")]
     public class IndexModel : PageModel
     {
-        private readonly GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext _context;
+        private readonly IAppDbContext _context;
         private readonly ILogger<IndexModel> _logger;
 
-        public IndexModel(ILogger<IndexModel> logger, GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext context)
+        public IndexModel(ILogger<IndexModel> logger, IAppDbContext context)
         {
             _logger = logger;
             _context = context;

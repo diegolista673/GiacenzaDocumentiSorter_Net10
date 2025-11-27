@@ -1,28 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using GiacenzaSorterRm.Data;
+using GiacenzaSorterRm.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.Extensions.Logging;
-using GiacenzaSorterRm.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Security.Claims;
-using System.Data.SqlClient;
-using Microsoft.AspNetCore.Http;
-using System.Data;
+using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 
 namespace GiacenzaSorterRm.Pages.PagesMacero
 {
     
     public class IndexModel : PageModel
     {
-        private readonly GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext _context;
+        private readonly IAppDbContext _context;
         private readonly ILogger<IndexModel> _logger;
 
 
-        public IndexModel(ILogger<IndexModel> logger, GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext context)
+        public IndexModel(ILogger<IndexModel> logger, IAppDbContext context)
         {
             _logger = logger;
             _context = context;
@@ -80,66 +80,118 @@ namespace GiacenzaSorterRm.Pages.PagesMacero
                                                                        
                 if (ModelState.IsValid)
                 {
-                    LstMaceroView = new List<MaceroView>();
-                    string sql = "";
-                    string constr = _context.Database.GetDbConnection().ConnectionString;
-
                     try
                     {
-                        using (SqlConnection con = new SqlConnection(constr))
-                        {
-                            string fromDate = StartDate.Date.ToString("yyyyMMdd");
-                            string toDate = EndDate.Date.ToString("yyyyMMdd");
+                        // FIX per SQLite: Usa Date senza Time per comparazione corretta
+                        var startDate = StartDate.Date;
+                        var endDate = EndDate.Date;
+                        
+                        // Log per debug
+                        _logger.LogInformation($"Query con StartDate={startDate:yyyy-MM-dd}, EndDate={endDate:yyyy-MM-dd}, IdCommessa={IdCommessa}");
 
+                        // Query LINQ - FIX per SQLite: rimuovi la parte time e compara solo le date
+                        var queryResults = await (from s in _context.Scatoles
+                                                  join c in _context.Commesses on s.IdCommessa equals c.IdCommessa
+                                                  join p in _context.Piattaformes on c.IdPiattaforma equals p.IdPiattaforma into piattaformaJoin
+                                                  from p in piattaformaJoin.DefaultIfEmpty()
+                                                  join c0 in _context.Contenitoris on s.IdContenitore equals c0.IdContenitore
+                                                  join s0 in _context.Statis on s.IdStato equals s0.IdStato
+                                                  join c1 in _context.CentriLavs on s.IdCentroGiacenza equals c1.IdCentroLavorazione into centroJoin
+                                                  from c1 in centroJoin.DefaultIfEmpty()
+                                                  join t in _context.Tipologies on s.IdTipologia equals t.IdTipologia
+                                                  where s.IdStato == 1 
+                                                        && s.IdCommessa == IdCommessa
+                                                  select new 
+                                                  {
+                                                      Centro = c1.CentroLavDesc,
+                                                      Piattaforma = p.Piattaforma,
+                                                      Commessa = c.Commessa,
+                                                      TotaleDocumenti = c0.TotaleDocumenti,
+                                                      Scatola = s.Scatola,
+                                                      DataNormalizzazione = s.DataNormalizzazione // Porta la data in memoria
+                                                  }).ToListAsync();
+                        
+                        // Log risultati query
+                        _logger.LogInformation($"Query ha restituito {queryResults.Count} record prima del filtro date");
 
-                            //trova le scatole che sono in stato normalizzato tramite idCommessa e data normalizzazione
-                            sql = @"SELECT c1.CentroLavDesc as Centro,p.Piattaforma,c.Commessa,sum(c0.TotaleDocumenti) as Giacenza_Documenti, count(s.Scatola) as Numero_Scatole
-                                    FROM Scatole AS s
-                                    INNER JOIN Commesse AS c ON s.IdCommessa = c.IdCommessa
-                                    INNER JOIN Piattaforme AS p ON c.IdPiattaforma = p.IdPiattaforma
-                                    INNER JOIN Contenitori AS c0 ON s.IdContenitore = c0.IdContenitore
-                                    INNER JOIN Stati AS s0 ON s.IdStato = s0.IdStato
-                                    INNER JOIN CentriLav AS c1 ON s.IdCentroGiacenza = c1.IdCentroLavorazione
-                                    INNER JOIN Tipologie AS t ON s.IdTipologia = t.IdTipologia
-                                    WHERE s.IdStato = 1 and convert(date,s.DataNormalizzazione) >= {0} and convert(date,s.DataNormalizzazione) <= {1} and s.IdCommessa = {2} 
-                                    group by p.Piattaforma,c1.CentroLavDesc,c.Commessa
-                                    order by c1.CentroLavDesc,p.Piattaforma";
+                        // Filtra le date LATO CLIENT (in memoria) 
+                        var filteredResults = queryResults
+                            .Where(x => x.DataNormalizzazione.Date >= startDate 
+                                        && x.DataNormalizzazione.Date <= endDate)
+                            .ToList();
+                        
+                        _logger.LogInformation($"Dopo filtro date: {filteredResults.Count} record");
 
-
-                            using (SqlCommand cmd = new SqlCommand(sql))
+                        // Raggruppamento lato client
+                        LstMaceroView = filteredResults
+                            .GroupBy(x => new 
+                            { 
+                                Centro = x.Centro ?? "Non Assegnato",
+                                Piattaforma = x.Piattaforma ?? "N/A",
+                                x.Commessa 
+                            })
+                            .Select(g => new MaceroView
                             {
-                                cmd.Connection = con;
-                                cmd.CommandTimeout = 120;
-                                cmd.Parameters.Clear();
+                                Centro = g.Key.Centro,
+                                Piattaforma = g.Key.Piattaforma,
+                                Commessa = g.Key.Commessa,
+                                Giacenza_Documenti = g.Sum(x => x.TotaleDocumenti),
+                                Numero_Scatole = g.Count()
+                            })
+                            .OrderBy(x => x.Centro)
+                            .ThenBy(x => x.Piattaforma)
+                            .ToList();
 
-                                string[] myParams = { fromDate,toDate,IdCommessa.ToString() };
-
-                                LstMaceroView = await _context.Set<MaceroView>().FromSqlRaw(sql, myParams).ToListAsync();
-
-                                if (LstMaceroView.Count == 0)
-                                {
-                                    Message = "Not results found";
-                                }
-
-                                return Partial("_RiepilogoMacero", this);
-                            }
+                        
+                        if (LstMaceroView.Count == 0)
+                        {
+                            Message = "Not results found";
                         }
+
+                        return Partial("_RiepilogoMacero", this);
+                    }
+                    catch (SqlException ex) when (ex.Number == -2)
+                    {
+                        _logger.LogError(ex, "Timeout SQL Server durante il caricamento del report macero");
+                        LstMaceroView = new List<MaceroView>();
+                        Message = "Timeout: Il caricamento del report sta impiegando troppo tempo. Prova a ridurre l'intervallo di date.";
+                        return Partial("_RiepilogoMacero", this);
+                    }
+                    catch (OperationCanceledException ex)
+                    {
+                        _logger.LogError(ex, "Operazione annullata per timeout durante il caricamento del report macero");
+                        LstMaceroView = new List<MaceroView>();
+                        Message = "Timeout: La richiesta è stata annullata. Prova con un intervallo di date più piccolo.";
+                        return Partial("_RiepilogoMacero", this);
+                    }
+                    catch (TimeoutException ex)
+                    {
+                        _logger.LogError(ex, "Timeout durante il caricamento del report macero");
+                        LstMaceroView = new List<MaceroView>();
+                        Message = "Timeout: Il caricamento del report ha superato il tempo massimo.";
+                        return Partial("_RiepilogoMacero", this);
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex.Message);
-                        return Page();
+                        _logger.LogError(ex, "Errore durante il caricamento del report macero");
+                        LstMaceroView = new List<MaceroView>();
+                        Message = "Errore durante il caricamento del report: " + ex.Message;
+                        return Partial("_RiepilogoMacero", this);
                     }
                 }
                 else
                 {
-                    return Page();
+                    LstMaceroView = new List<MaceroView>();
+                    Message = "Dati non validi. Verificare i campi inseriti.";
+                    return Partial("_RiepilogoMacero", this);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
-                return Page();
+                _logger.LogError(ex, "Errore generale nel report macero");
+                LstMaceroView = new List<MaceroView>();
+                Message = "Errore generale: " + ex.Message;
+                return Partial("_RiepilogoMacero", this);
             }
         }
 
@@ -149,81 +201,58 @@ namespace GiacenzaSorterRm.Pages.PagesMacero
             try
             {
                 Utente = User.Identity.Name;
+        
+                var startDate = StartDate.Date;
+                var endDate = EndDate.Date;
 
-                LstMaceroView = new List<MaceroView>();
-                string sql = "";
-                string constr = _context.Database.GetDbConnection().ConnectionString;
-                using (SqlConnection con = new SqlConnection(constr))
+                // Step 1: Carica le scatole da macerare (senza filtro date nel DB)
+                var scatoleDaMacerare = await _context.Scatoles
+                    .Where(s => s.IdCommessa == IdCommessa && s.IdStato == 1)
+                    .ToListAsync();
+
+                // Step 2: Filtra date LATO CLIENT (in memoria)
+                var scatoleFiltrate = scatoleDaMacerare
+                    .Where(s => s.DataNormalizzazione.Date >= startDate 
+                                && s.DataNormalizzazione.Date <= endDate)
+                    .ToList();
+
+                int rowsAffected = scatoleFiltrate.Count;
+
+                // Step 3: Aggiorna solo se ci sono scatole
+                if (rowsAffected > 0)
                 {
-                    con.Open();
-                    string fromDate = StartDate.Date.ToString("yyyyMMdd");
-                    string toDate = EndDate.Date.ToString("yyyyMMdd");
-
-                    //trova le scatole che sono in stato normalizzato tramite idCommessa e data normalizzazione
-                    sql = @"update scatole set IdStato = 3, OperatoreMacero=@operatoreMacero, DataMacero=@dataMacero where DataNormalizzazione >= @fromDate and DataNormalizzazione <= @toDate and IdCommessa = @IdCommessa and IdStato = 1  ";
-
-                    using (SqlCommand cmd = new SqlCommand(sql))
+                    foreach (var scatola in scatoleFiltrate)
                     {
-
-                        cmd.Connection = con;
-                        cmd.Parameters.Clear();
-
-                        SqlParameter param1 = new SqlParameter
-                        {
-                            ParameterName = "@fromDate",
-                            Value = StartDate.Date
-                        };
-                        cmd.Parameters.Add(param1);
-
-                        SqlParameter param2 = new SqlParameter
-                        {
-                            ParameterName = "@toDate",
-                            Value = EndDate.Date
-                        };
-                        cmd.Parameters.Add(param2);
-
-                        SqlParameter param3 = new SqlParameter
-                        {
-                            ParameterName = "@IdCommessa",
-                            Value = IdCommessa
-                        };
-
-                        cmd.Parameters.Add(param3);
-
-
-                        SqlParameter param4 = new SqlParameter
-                        {
-                            ParameterName = "@operatoreMacero",
-                            Value = Utente
-                        };
-
-                        cmd.Parameters.Add(param4);
-
-                        SqlParameter param5 = new SqlParameter
-                        {
-                            ParameterName = "@dataMacero",
-                            Value = DateTime.Now.Date
-                        };
-
-                        cmd.Parameters.Add(param5);
-
-
-                        await cmd.ExecuteNonQueryAsync();
-
-                        _logger.LogInformation("Macerate scatole dal "+ StartDate + " al " + EndDate +  " - da operatore : " + User.Identity.Name);
-
-                        Message = "Scatole Macerate";
-
-                        return Partial("_RiepilogoMacero", this);
+                        scatola.IdStato = 3;
+                        scatola.OperatoreMacero = Utente;
+                        scatola.DataMacero = DateTime.Now.Date;
                     }
+
+                    await _context.SaveChangesAsync();
+
+                    _logger.LogInformation($"Macerate {rowsAffected} scatole dal {StartDate:yyyy-MM-dd} al {EndDate:yyyy-MM-dd} - da operatore: {User.Identity.Name}");
+
+                    Message = $"Operazione completata con successo! {rowsAffected} scatole sono state macerate.";
                 }
+                else
+                {
+                    _logger.LogWarning($"Nessuna scatola trovata per macero - IdCommessa: {IdCommessa}, Date: {StartDate:yyyy-MM-dd} - {EndDate:yyyy-MM-dd}");
+                    Message = "Nessuna scatola trovata per il macero. Potrebbero essere già state macerate.";
+                }
+
+                // Inizializza sempre la lista per evitare null reference
+                LstMaceroView = new List<MaceroView>();
+
+                // Ricarica il report per mostrare lo stato aggiornato (lista vuota dopo macero)
+                return Partial("_RiepilogoMacero", this);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
-                return Page();
+                _logger.LogError(ex, "Errore durante l'operazione di macero");
+                LstMaceroView = new List<MaceroView>();
+                Message = "Errore durante l'operazione di macero: " + ex.Message;
+                return Partial("_RiepilogoMacero", this);
             }
         }
-
     }
 }

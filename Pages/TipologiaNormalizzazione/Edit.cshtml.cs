@@ -8,15 +8,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GiacenzaSorterRm.Models.Database;
 using Microsoft.AspNetCore.Authorization;
+using GiacenzaSorterRm.Data;
 
 namespace GiacenzaSorterRm.Pages.TipologiaNormalizzazione
 {
     [Authorize(Roles = "ADMIN, SUPERVISOR")]
     public class EditModel : PageModel
     {
-        private readonly GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext _context;
+        private readonly IAppDbContext _context;
 
-        public EditModel(GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext context)
+        public EditModel(IAppDbContext context)
         {
             _context = context;
         }

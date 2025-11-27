@@ -361,3 +361,54 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# ========================================
+# Security: Secrets and Sensitive Data
+# ========================================
+
+# User Secrets (già gestiti da .NET ma aggiunti per sicurezza)
+**/Properties/launchSettings.json
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Hardcoded configs (rimossi dal progetto)
+**/AppCode/MyConnections.cs
+
+# IIS Config con secrets
+web.config
+
+# Publish Profiles (possono contenere secrets)
+**/PublishProfiles/
+*.pubxml
+*.pubxml.user
+
+# Certificati e chiavi
+*.pfx
+*.p12
+*.key
+*.pem
+
+# ========================================
+# SQLite Database Files
+# ========================================
+
+# SQLite database files
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Exported CSV data
+Data/Export/
+*.csv
+
+# ========================================
+# EF Core Migrations (Local Dev Only)
+# ========================================
+
+# SQLite migrations (non committare)
+Migrations/SQLite/

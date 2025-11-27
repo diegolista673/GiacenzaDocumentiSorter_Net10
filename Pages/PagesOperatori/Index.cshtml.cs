@@ -7,15 +7,16 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using GiacenzaSorterRm.Models.Database;
 using Microsoft.AspNetCore.Authorization;
+using GiacenzaSorterRm.Data;
 
 namespace GiacenzaSorterRm.Pages.PagesOperatori
 {
     [Authorize(Roles = "ADMIN, SUPERVISOR")]
     public class IndexModel : PageModel
     {
-        private readonly GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext _context;
+        private readonly IAppDbContext _context;
 
-        public IndexModel(GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext context)
+        public IndexModel(IAppDbContext context)
         {
             _context = context;
         }

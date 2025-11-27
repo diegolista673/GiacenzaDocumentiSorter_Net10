@@ -20,13 +20,7 @@
 
         <br />
 
-        <form class="form-inline justify-content-center" method="post" id="formSelected"
-              data-ajax="true"
-              data-ajax-method="post"
-              data-ajax-update="#dvReport"
-              data-ajax-mode="replace"
-              data-ajax-url="?handler=Report"
-              data-ajax-success="OnSuccessRequest">
+        <form class="form-inline justify-content-center" method="post" id="formReport">
 
 
 
@@ -52,7 +46,7 @@
             </div>
 
             <div class="m-2 col-auto px-0">
-                <input type="submit" value="Report" class="col-auto btn btn-primary" asp-page-handler="ReportNormalizzazione" id="btnStartNorm" />
+                <button type="submit" class="col-auto btn btn-primary" id="btnStartNorm">Report</button>
             </div>
 
         </form>
@@ -101,144 +95,219 @@
 
 @section scripts{
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
 
-    <script>
+    <script type="module">
+        import { FetchHelpers } from '/js/fetch-helpers.js';
 
+        // Nascondi spinner inizialmente
+        FetchHelpers.hideSpinner('divProcessing');
 
-        $("#divProcessing").hide();
-
-
-
-        $('#btnStartNorm').click(function () {
-
-            selectElementCommessa = document.querySelector('#selectCommessa');
-
-            if (selectElementCommessa.value != 0) {
-                $("#divProcessing").show();
-                $("#dvReport").hide();
+        // Handler click modale macero - modificato per gestire il risultato
+        $('#submitModal').click(async function () {
+            const modal = $('#confirm-submit');
+            const modalBody = modal.find('.modal-body');
+            const modalFooter = modal.find('.modal-footer');
+            const submitBtn = $('#submitModal');
+            const cancelBtn = modal.find('.btn-secondary');
+            
+            // Disabilita pulsanti durante elaborazione
+            submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm mr-2"></span>Elaborazione...');
+            cancelBtn.prop('disabled', true);
+            
+            // Mostra spinner nella pagina principale
+            FetchHelpers.showSpinner('divProcessing');
+            document.getElementById('dvReport').style.display = 'none';
+            
+            try {
+                // Ottieni i dati dal form nascosto nel partial
+                const formData = new FormData(document.getElementById('formRiepilogo'));
+                
+                // Esegui la chiamata al server
+                const response = await fetch('?handler=Macera', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    }
+                });
+                
+                if (response.ok) {
+                    const html = await response.text();
+                    
+                    // Aggiorna il contenuto della pagina
+                    document.getElementById('dvReport').innerHTML = html;
+                    document.getElementById('dvReport').style.display = 'block';
+                    
+                    // Estrai il messaggio di successo dal partial usando l'attributo data-success
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = html;
+                    const alertDiv = tempDiv.querySelector('#maceroResultMessage');
+                    let message = 'Operazione completata';
+                    let isSuccess = false;
+                    let isWarning = false;
+                    
+                    if (alertDiv) {
+                        message = alertDiv.textContent.trim();
+                        isSuccess = alertDiv.getAttribute('data-success') === 'true';
+                        isWarning = alertDiv.classList.contains('alert-warning');
+                    }
+                    
+                    console.log('Macero result:', { message, isSuccess, isWarning });
+                    
+                    // Aggiorna la modale con il risultato
+                    if (isSuccess) {
+                        modalBody.html(`
+                            <div class="text-center">
+                                <i class="fas fa-check-circle text-success" style="font-size: 3rem;"></i>
+                                <h4 class="mt-3">${message}</h4>
+                            </div>
+                        `);
+                        modalFooter.html(`
+                            <button type="button" class="btn btn-success" data-dismiss="modal">Chiudi</button>
+                        `);
+                    } else if (isWarning) {
+                        modalBody.html(`
+                            <div class="text-center">
+                                <i class="fas fa-info-circle text-warning" style="font-size: 3rem;"></i>
+                                <h4 class="mt-3">${message}</h4>
+                            </div>
+                        `);
+                        modalFooter.html(`
+                            <button type="button" class="btn btn-warning" data-dismiss="modal">Chiudi</button>
+                        `);
+                    } else {
+                        modalBody.html(`
+                            <div class="text-center">
+                                <i class="fas fa-exclamation-circle text-danger" style="font-size: 3rem;"></i>
+                                <h4 class="mt-3">${message}</h4>
+                            </div>
+                        `);
+                        modalFooter.html(`
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Chiudi</button>
+                        `);
+                    }
+                    
+                    // Non reinizializzare DataTable dopo macero perché la tabella sarà vuota
+                    // L'utente dovrà fare un nuovo Report per vedere lo stato aggiornato
+                    
+                } else {
+                    throw new Error('Errore nella risposta del server');
+                }
+                
+            } catch (error) {
+                console.error('Errore durante il macero:', error);
+                modalBody.html(`
+                    <div class="text-center">
+                        <i class="fas fa-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
+                        <h4 class="mt-3">Errore durante l'operazione</h4>
+                        <p>${error.message}</p>
+                    </div>
+                `);
+                modalFooter.html(`
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">Chiudi</button>
+                `);
+                document.getElementById('dvReport').style.display = 'block';
+            } finally {
+                FetchHelpers.hideSpinner('divProcessing');
             }
-
-
         });
 
-
-
-        $('#btnStartSort').click(function () {
-            $("#divProcessing").show();
-            $("#dvReport").hide();
-        });
-
-        $('#submitModal').click(function () {
-            $('#confirm-submit').modal('hide');
-
-            $('#btnElimina').click();
-            $("#divProcessing").show();
-            $("#dvReport").hide();
-
-        });
-
-
-
-    </script>
-
-
-    @if (Model.Ruolo == "ADMIN" || Model.Ruolo == "SUPERVISOR")
-    {
-        <script>
-
-            function OnSuccessRequest() {
-
-                $("#divProcessing").hide();
-                $("#dvReport").show();
-
-
-                var table = $('#tableProduzione').DataTable({
-                    dom: 'Bflrtip',
-                    buttons: [
-                        {
-                            extend: 'excelHtml5',
-                            autoFilter: true,
-                            text: '<i class="fas fa-file-excel"></i> Export to Excel',
-                            exportOptions: {
-                                columns: ':not(.notexport)'
-                            },
-                            className: 'col-auto btn btn-primary',
-                            title: function () {
-                                var str = 'Riepilogo scatole dal ' + $('#StartDate').val() + ' al ' + $('#EndDate').val() 
-                                return str
+        // Handler submit form per report
+        document.getElementById('formReport').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const selectCommessa = document.querySelector('#selectCommessa');
+            
+            // Validazione commessa selezionata
+            if (selectCommessa.value == 0) {
+                alert('Seleziona una commessa');
+                return;
+            }
+            
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            console.log('Form data:', {
+                IdCommessa: formData.get('IdCommessa'),
+                StartDate: formData.get('StartDate'),
+                EndDate: formData.get('EndDate')
+            });
+            
+            FetchHelpers.showSpinner('divProcessing');
+            document.getElementById('dvReport').style.display = 'none';
+            
+            try {
+                const html = await FetchHelpers.postFormWithUpdate(
+                    '?handler=Report',
+                    formData,
+                    'dvReport',
+                    (responseHtml) => {
+                        console.log('Response received:', responseHtml.substring(0, 100));
+                        FetchHelpers.hideSpinner('divProcessing');
+                        document.getElementById('dvReport').style.display = 'block';
+                        
+                        if (document.getElementById('tableProduzione')) {
+                            // Distruggi DataTable esistente se presente
+                            if ($.fn.DataTable.isDataTable('#tableProduzione')) {
+                                $('#tableProduzione').DataTable().destroy();
                             }
-
+                            
+                            const table = $('#tableProduzione').DataTable({
+                                dom: 'Bflrtip',
+                                buttons: [
+                                    {
+                                        extend: 'excelHtml5',
+                                        autoFilter: true,
+                                        text: '<i class="fas fa-file-excel"></i> Export to Excel',
+                                        exportOptions: {
+                                            columns: ':not(.notexport)'
+                                        },
+                                        className: 'col-auto btn btn-primary',
+                                        title: function () {
+                                            return 'Riepilogo scatole dal ' + $('#StartDate').val() + ' al ' + $('#EndDate').val();
+                                        }
+                                    }
+                                ],
+                                columnDefs: [
+                                    {
+                                        targets: 0,
+                                        orderable: false,
+                                        searchable: false,
+                                    }
+                                ],
+                                order: [[2, 'asc']],
+                                scrollX: true
+                            });
+                            
+                            @if (Model.Ruolo == "ADMIN" || Model.Ruolo == "SUPERVISOR")
+                            {
+                                <text>
+                                table.button().add(1, {
+                                    action: function (e, dt, button, config) {
+                                        $('#confirm-submit').modal('show');
+                                    },
+                                    text: '<i class="far fa-trash-alt"></i> Macera',
+                                    className: 'col-auto btn btn-danger ml-2'
+                                });
+                                </text>
+                            }
+                        } else {
+                            console.warn('Tabella #tableProduzione non trovata nel DOM');
                         }
-                    ],
-                    columnDefs: [
-                        {
-                            targets: 0,
-                            orderable: false,
-                            searchable: false,
-                        }
-                    ],
-                    order: [[2, 'asc']],
-                    scrollX: true
-                });
-
-                table.button().add(1, {
-
-                    action: function (e, dt, button, config) {
-                        $('#confirm-submit').modal('show');
                     },
-                    text: '<i class="far fa-trash-alt"></i> Macera',
-                    className: 'col-auto btn btn-danger ml-2'
-                });
-
-            };
-
-        </script>
-    }
-    else
-    {
-        <script>
-
-            function OnSuccessRequest() {
-
-                $("#divProcessing").hide();
-                $("#dvReport").show();
-
-
-                var table = $('#tableProduzione').DataTable({
-                    dom: 'Bflrtip',
-                    buttons: [
-                        {
-                            extend: 'excelHtml5',
-                            exportOptions: {
-                                columns: ':not(.notexport)'
-                            },
-                            className: 'col-auto btn btn-primary',
-                            title: function () {
-                                var str = 'Riepilogo scatole dal ' + $('#StartDate').val() + ' al ' + $('#EndDate').val()
-                                return str
-                            },
-                            autoFilter: true,
-                            text: '<i class="fas fa-file-excel"></i> Export to Excel'
-
-
-                        }
-                    ],
-                    columnDefs: [
-                        {
-                            targets: 0,
-                            orderable: false,
-                            searchable: false,
-                        }
-                    ],
-                    order: [[2, 'asc']],
-                    scrollX: true
-                });
-
-
-            };
-
-        </script>
-    }
+                    (error) => {
+                        console.error('Error callback triggered:', error);
+                        FetchHelpers.hideSpinner('divProcessing');
+                        document.getElementById('dvReport').style.display = 'block';
+                        alert('Errore durante il caricamento del report. Riprova.');
+                    }
+                );
+            } catch (error) {
+                console.error('Errore report:', error);
+                FetchHelpers.hideSpinner('divProcessing');
+                document.getElementById('dvReport').style.display = 'block';
+            }
+        });
+    </script>
 }
 

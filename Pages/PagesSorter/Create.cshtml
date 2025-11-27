@@ -28,14 +28,8 @@
                     </div>
                     <div class="card-body ">
 
-                        <form method="post"
-                              data-ajax="true"
-                              data-ajax-method="post"
-                              data-ajax-update="#resultDiv"
-                              data-ajax-mode="replace"
-                              data-ajax-url="?handler=InsertScatola"
-                              data-ajax-success="OnSuccessRequest">
-
+                        <form method="post" id="formInsertScatola">
+                                                      
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                             <div class="form-group">
@@ -63,7 +57,7 @@
                                 <input type="hidden" asp-for="Scatole.IdTipologia" value="0" />
                                 <input type="hidden" asp-for="Scatole.IdContenitore" value="0" />
 
-                                <input type="submit" value="Save" class="btn btn-primary" />
+                                <button type="submit" class="btn btn-primary">Save</button>
                             </div>
                         </form>
 
@@ -89,32 +83,40 @@
 
 
 
-@section scripts{
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
 
-    
-    <script>
+@section scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script type="module">
 
-        $(document).ready(function () {
-            $('#tableProduzione').DataTable({
-                "scrollX": true
-            });
+        import { FetchHelpers } from '/js/fetch-helpers.js';
+
+        // Inizializza DataTable
+        $(document).ready(() => {
+            $('#tableProduzione').DataTable({ scrollX: true });
         });
 
-        function OnSuccessRequest() {
+        // Handler submit
+        document.getElementById('formInsertScatola').addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-            $('#tableProduzione').DataTable({});
+            const formData = new FormData(e.target);
 
-            document.getElementById('Scatole_Scatola').value = '';
-            document.getElementById('Scatole_Note').value = '';
-        };
-
-        function OnFailureRequest() {
-
-            document.getElementById('resultDiv').innerHTML += '<br>Error!';
-
-        };
-
+            try {
+                await FetchHelpers.postFormWithUpdate(
+                    '?handler=InsertScatola',
+                    formData,
+                    'resultDiv',
+                    () => {
+                        // Success callback
+                        FetchHelpers.reinitDataTable('tableProduzione');
+                        FetchHelpers.clearInputs(['Scatole_Scatola']);
+                    }
+                );
+            } catch (error) {
+                console.error('Errore:', error);
+            }
+        });
     </script>
 }

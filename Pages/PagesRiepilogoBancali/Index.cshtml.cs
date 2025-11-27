@@ -13,21 +13,24 @@ using GiacenzaSorterRm.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
-using System.Data.SqlClient;
+using GiacenzaSorterRm.Data;
+using Microsoft.Data.SqlClient;
 
 namespace GiacenzaSorterRm.Pages.PagesRiepilogoBancali
 {
     
     public class IndexModel : PageModel
     {
-        private readonly GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext _context;
+        private readonly IAppDbContext _context;
+        private readonly DbContext _dbContext;
         private readonly ILogger<IndexModel> _logger;
 
 
-        public IndexModel(ILogger<IndexModel> logger, GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext context)
+        public IndexModel(ILogger<IndexModel> logger, IAppDbContext context)
         {
             _logger = logger;
             _context = context;
+            _dbContext = context as DbContext;
         }
         public List<SelectListItem> LstCentri { get; set; }
 
@@ -139,7 +142,7 @@ namespace GiacenzaSorterRm.Pages.PagesRiepilogoBancali
                                 
                             string[] myParams = { fromDate, toDate };
 
-                            LstBancaliFuoriSlaView = await _context.Set<BancaleFuoriSlaView>().FromSqlRaw(sql, myParams).ToListAsync();
+                            LstBancaliFuoriSlaView = await _dbContext.Set<BancaleFuoriSlaView>().FromSqlRaw(sql, myParams).ToListAsync();
                         }
                     }
                     else
@@ -158,7 +161,7 @@ namespace GiacenzaSorterRm.Pages.PagesRiepilogoBancali
 
                             string[] myParams = { fromDate, toDate, idCentro.ToString() };
 
-                            LstBancaliFuoriSlaView = await _context.Set<BancaleFuoriSlaView>().FromSqlRaw(sql, myParams).ToListAsync();
+                            LstBancaliFuoriSlaView = await _dbContext.Set<BancaleFuoriSlaView>().FromSqlRaw(sql, myParams).ToListAsync();
                         }
                     }
                 }

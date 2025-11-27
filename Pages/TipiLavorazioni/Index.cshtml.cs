@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using GiacenzaSorterRm.Models.Database;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using GiacenzaSorterRm.Data;
 using GiacenzaSorterRm.AppCode;
 
 namespace GiacenzaSorterRm.Pages.TipiLavorazioni
@@ -16,7 +16,7 @@ namespace GiacenzaSorterRm.Pages.TipiLavorazioni
     [Authorize(Roles = "ADMIN, SUPERVISOR")]
     public class IndexModel : PageModel
     {
-        private readonly GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext _context;
+        private readonly IAppDbContext _context;
         private readonly ILogger<IndexModel> _logger;
 
         public string Ruolo { get; set; }
@@ -24,7 +24,7 @@ namespace GiacenzaSorterRm.Pages.TipiLavorazioni
 
         public int CentroID { get; set; }
 
-        public IndexModel(ILogger<IndexModel> logger, GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext context)
+        public IndexModel(ILogger<IndexModel> logger, IAppDbContext context)
         {
             _logger = logger;
             _context = context;

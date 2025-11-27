@@ -7,8 +7,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GiacenzaSorterRm.Models.Database;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
+using GiacenzaSorterRm.Data;
 using GiacenzaSorterRm.AppCode;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
@@ -19,11 +20,11 @@ namespace GiacenzaSorterRm.Pages.PagesOperatori
     [Authorize(Roles = "ADMIN, SUPERVISOR")]
     public class EditModel : PageModel
     {
-        private readonly GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext _context;
+        private readonly IAppDbContext _context;
         private readonly ILogger<EditModel> _logger;
 
 
-        public EditModel(ILogger<EditModel> logger,  GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext context)
+        public EditModel(ILogger<EditModel> logger,  IAppDbContext context)
         {
             _logger = logger;
             _context = context;

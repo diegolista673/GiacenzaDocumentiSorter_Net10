@@ -11,8 +11,9 @@ using Microsoft.Extensions.Logging;
 using GiacenzaSorterRm.AppCode;
 using GiacenzaSorterRm.Models;
 using Microsoft.AspNetCore.Authorization;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Data;
+using GiacenzaSorterRm.Data;
 
 
 
@@ -23,13 +24,14 @@ namespace GiacenzaSorterRm.Pages.PagesSpostaGiacenza
     [Authorize(Policy = "NormalizzazioneRequirements")]
     public class CreateModel : PageModel
     {
-        private readonly GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext _context;
+        private readonly IAppDbContext _context;
         private readonly ILogger<CreateModel> _logger;
 
-        public CreateModel(ILogger<CreateModel> logger, GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext context)
+        public CreateModel(ILogger<CreateModel> logger, IAppDbContext context)
         {
             _logger = logger;
             _context = context;
+            ScatoleModel = new ScatoleModel(); // Inizializzazione di default
         }
 
 

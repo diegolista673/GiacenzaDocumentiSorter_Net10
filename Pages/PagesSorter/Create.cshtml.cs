@@ -6,20 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using GiacenzaSorterRm.Models.Database;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using GiacenzaSorterRm.AppCode;
 using GiacenzaSorterRm.Models;
-using Microsoft.EntityFrameworkCore;
-//using SQLitePCL;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
+using GiacenzaSorterRm.Data;
 
 namespace GiacenzaSorterRm.Pages.PagesSorter
 {
     [Authorize(Policy = "SorterRequirements")]
     public class CreateModel : PageModel
     {
-        private readonly GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext _context;
+        private readonly IAppDbContext _context;
         private readonly ILogger<CreateModel> _logger;
 
         public List<Scatole> ScatoleLst { get; set; }
@@ -32,7 +31,7 @@ namespace GiacenzaSorterRm.Pages.PagesSorter
         public Scatole Scatole { get; set; }
 
 
-        public CreateModel(ILogger<CreateModel> logger, GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext context)
+        public CreateModel(ILogger<CreateModel> logger, IAppDbContext context)
         {
             _logger = logger;
             _context = context;

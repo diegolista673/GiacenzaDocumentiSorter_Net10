@@ -10,13 +10,14 @@ using Microsoft.Extensions.Logging;
 using GiacenzaSorterRm.AppCode;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using GiacenzaSorterRm.Data;
 
 namespace GiacenzaSorterRm.Pages.PagesAssociazione
 {
     [Authorize(Roles = "ADMIN, SUPERVISOR")]
     public class CreateModel : PageModel
     {
-        private readonly GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext _context;
+        private readonly IAppDbContext _context;
         private readonly ILogger<CreateModel> _logger;
 
         public SelectList CommesseSL { get; set; }
@@ -24,7 +25,7 @@ namespace GiacenzaSorterRm.Pages.PagesAssociazione
         public SelectList ContenitoriSL { get; set; }
 
 
-        public CreateModel(ILogger<CreateModel> logger, GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext context)
+        public CreateModel(ILogger<CreateModel> logger, IAppDbContext context)
         {
             _logger = logger;
             _context = context;

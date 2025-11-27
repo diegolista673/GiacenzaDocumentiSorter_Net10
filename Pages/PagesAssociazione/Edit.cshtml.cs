@@ -10,17 +10,17 @@ using GiacenzaSorterRm.Models.Database;
 using Microsoft.Extensions.Logging;
 using GiacenzaSorterRm.AppCode;
 using Microsoft.AspNetCore.Authorization;
+using GiacenzaSorterRm.Data;
 
 namespace GiacenzaSorterRm.Pages.PagesAssociazione
 {
     [Authorize(Roles = "ADMIN, SUPERVISOR")]
     public class EditModel : PageModel
     {
-        private readonly GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext _context;
+        private readonly IAppDbContext _context;
         private readonly ILogger<EditModel> _logger;
 
-
-        public EditModel(ILogger<EditModel> logger, GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext context)
+        public EditModel(ILogger<EditModel> logger, IAppDbContext context)
         {
             _logger = logger;
             _context = context;

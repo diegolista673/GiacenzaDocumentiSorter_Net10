@@ -1,27 +1,29 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using GiacenzaSorterRm.Models.Database;
 using Microsoft.Extensions.Logging;
+using GiacenzaSorterRm.AppCode;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Linq;
+using GiacenzaSorterRm.Data;
 using Microsoft.AspNetCore.Identity;
-using System.IO;
-using System;
 
 namespace GiacenzaSorterRm.Pages.PagesOperatori
 {
     [Authorize(Roles = "ADMIN, SUPERVISOR")]
     public class CreateModel : PageModel
     {
-        private readonly GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext _context;
+        private readonly IAppDbContext _context;
         private readonly ILogger<CreateModel> _logger;
 
 
 
-        public CreateModel(ILogger<CreateModel> logger, GiacenzaSorterRm.Models.Database.GiacenzaSorterRmTestContext context)
+        public CreateModel(ILogger<CreateModel> logger, IAppDbContext context)
         {
             _logger = logger;
             _context = context;

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GiacenzaSorterRm.Models.Database;
 
-public partial class GiacenzaSorterRmTestContext : DbContext
+public partial class GiacenzaSorterRmTestContext : DbContext, GiacenzaSorterRm.Data.IAppDbContext
 {
     public GiacenzaSorterRmTestContext()
     {
