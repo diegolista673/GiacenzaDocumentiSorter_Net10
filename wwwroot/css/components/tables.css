@@ -1,0 +1,79 @@
+/* Components - Tables Styles */
+
+/* Table utilities */
+.table-full-width {
+    width: 100%;
+}
+
+.table-compact th,
+.table-compact td {
+    padding: 0.4rem;
+}
+
+/* DataTables wrapper */
+.datatable-wrapper {
+    width: 100%;
+}
+
+.datatable-responsive {
+    overflow-x: auto;
+}
+
+/* Table headers */
+.table-header-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Table actions column */
+.table-actions {
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* Checkbox column */
+.table-checkbox-col {
+    width: 40px;
+    text-align: center;
+}
+
+/* Not exportable columns */
+.notexport {
+    /* Marker class for DataTables export exclusion */
+}
+
+/* DataTables search input custom width */
+.dataTables_filter input[type="search"] {
+    width: 350px;
+    display: inline-block;
+}
+
+/* Striped tables enhancement */
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Hover effect */
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Compact table variant */
+.table-sm th,
+.table-sm td {
+    padding: 0.3rem;
+}
+
+/* Table scroll container */
+.table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Fixed header table */
+.table-fixed-header thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: white;
+}

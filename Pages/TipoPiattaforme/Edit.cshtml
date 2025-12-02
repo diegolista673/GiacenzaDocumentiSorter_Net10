@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model GiacenzaSorterRm.Pages.TipoPiattaforme.EditModel
 
 @{
@@ -17,7 +17,7 @@
                     <input type="hidden" asp-for="Piattaforme.IdPiattaforma" />
                     <div class="form-group">
                         <label asp-for="Piattaforme.Piattaforma" class="control-label"></label>
-                        <input asp-for="Piattaforme.Piattaforma" class="form-control" oninput="this.value = this.value.toUpperCase()" />
+                        <input asp-for="Piattaforme.Piattaforma" class="form-control" />
                         <span asp-validation-for="Piattaforme.Piattaforma" class="text-danger"></span>
                     </div>
                     <div class="form-group">

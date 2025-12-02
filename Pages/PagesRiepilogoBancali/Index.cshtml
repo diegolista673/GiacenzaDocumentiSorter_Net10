@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model GiacenzaSorterRm.Pages.PagesRiepilogoBancali.IndexModel
 
 @{
@@ -11,7 +11,7 @@
 
     <div class="row">
         <div class="col">
-            <div class="card text-white bg-info mb-3" style="max-width: 100%;">
+            <div class="card text-white bg-info mb-3 max-w-100" >
                 <div class="card-body">
                     <h2 class="text-center">Riepilogo Bancali</h2>
                 </div>
@@ -97,12 +97,12 @@
                             Report
                         </h5>
 
-                        <div id="divProcessing">
+                        <div id="divProcessing" class="d-none" role="status" aria-live="polite" aria-busy="true">
                             <br />
                             <br />
-                            <p class="text-center">Processing data, please wait . . .</p>
+                            <p class="sr-only">Caricamento in corso...</p>`r`n            <p class="text-center" aria-hidden="true">Processing data, please wait . . .</p>
                             <p>
-                                <img class="mx-auto d-block" src="~/images/Spinner.gif" />
+                                <img class="mx-auto d-block" src="~/images/Spinner.gif" alt="Caricamento in corso..." role="presentation">
                             </p>
                         </div>
 

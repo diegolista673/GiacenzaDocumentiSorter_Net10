@@ -1,0 +1,25 @@
+/* Pages - Normalizzato Styles */
+
+/* Card styles */
+.normalizzato-card {
+    max-width: 100%;
+}
+
+.normalizzato-header {
+    background-color: #17a2b8;
+}
+
+/* Form inline center */
+.normalizzato-form {
+    justify-content: center;
+}
+
+/* Report display */
+.normalizzato-report {
+    text-align: center;
+}
+
+/* Processing spinner */
+.normalizzato-processing {
+    display: none;
+}

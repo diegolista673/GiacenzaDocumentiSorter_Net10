@@ -1,4 +1,4 @@
-﻿@page "{handler?}"
+@page "{handler?}"
 @model GiacenzaSorterRm.Pages.PagesNormalizzazione.CreateModel
 @{
     ViewData["Title"] = "Normalizzazione";
@@ -42,7 +42,7 @@
 
 
                         @*<div class="form-group">
-                            <input asp-for="Bancali.Bancale" class="form-control input-scatola" placeholder="Bancale" oninput="this.value = this.value.toUpperCase()" v-on:keyup.enter="enterBancale()" v-on:change="enterBancale()" v-model="bancale" v-bind:disabled="isDisabledBancale" />
+                            <input asp-for="Bancali.Bancale" class="form-control input-scatola" placeholder="Bancale" v-on:keyup.enter="enterBancale()" v-on:change="enterBancale()" v-model="bancale" v-bind:disabled="isDisabledBancale" / data-transform="uppercase">
                             <span asp-validation-for="Bancali.Bancale" class="text-danger"></span>
                           </div> *@
 
@@ -99,7 +99,7 @@
 
 
                         <div class="form-group">
-                            <input asp-for="Scatole.Scatola" class="form-control input-scatola" placeholder="Scatola" oninput="this.value = this.value.toUpperCase()" v-model="scatola" v-bind:disabled="isDisabledScatola" />
+                            <input asp-for="Scatole.Scatola" class="form-control input-scatola" placeholder="Scatola" v-model="scatola" v-bind:disabled="isDisabledScatola" / data-transform="uppercase">
                             <span asp-validation-for="Scatole.Scatola" class="text-danger"></span>
                         </div>
 

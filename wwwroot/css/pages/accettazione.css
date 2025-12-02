@@ -1,0 +1,32 @@
+/* Pages - Accettazione Styles */
+
+/* Card styles */
+.accettazione-card {
+    max-width: 100%;
+}
+
+.accettazione-header {
+    background-color: #17a2b8;
+}
+
+/* Bancale input custom */
+.bancale-input-large {
+    width: 100%;
+    font-size: 48px;
+    color: #0f08b2;
+}
+
+/* Table compact styles */
+.accettazione-table-compact th,
+.accettazione-table-compact td {
+    padding: 0.4rem;
+}
+
+/* Result divs */
+.accettazione-result-dispacci {
+    /* Dispacci result container */
+}
+
+.accettazione-result-main {
+    /* Main result container */
+}

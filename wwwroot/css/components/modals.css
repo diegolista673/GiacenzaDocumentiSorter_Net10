@@ -1,0 +1,97 @@
+/* Components - Modals Styles */
+
+/* Modal customizations */
+.modal-custom {
+    /* Add custom modal styles here */
+}
+
+/* Modal header colors */
+.modal-header-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.modal-header-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.modal-header-info {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.modal-header-success {
+    background-color: #28a745;
+    color: white;
+}
+
+/* Modal title sizing */
+.modal-title-lg {
+    font-size: 1.5rem;
+}
+
+/* Modal body padding */
+.modal-body-padded {
+    padding: 2rem;
+}
+
+/* Modal centered content */
+.modal-body-centered {
+    text-align: center;
+}
+
+/* Modal footer spacing */
+.modal-footer-spaced {
+    justify-content: space-between;
+}
+
+/* Close button enhancement */
+.modal .close {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    opacity: 0.5;
+}
+
+.modal .close:hover {
+    opacity: 0.75;
+}
+
+.modal .close:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* Modal icon styles */
+.modal-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.modal-icon-success {
+    color: #28a745;
+}
+
+.modal-icon-warning {
+    color: #ffc107;
+}
+
+.modal-icon-danger {
+    color: #dc3545;
+}
+
+.modal-icon-info {
+    color: #17a2b8;
+}
+
+/* Accessibility improvements */
+.modal[aria-hidden="true"] {
+    display: none;
+}
+
+.modal[aria-hidden="false"] {
+    display: block;
+}

@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model GiacenzaSorterRm.Pages.TipiContenitori.CreateModel
 
 @{
@@ -19,7 +19,7 @@
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="form-group">
                                 <label asp-for="Contenitori.Contenitore" class="control-label"></label>
-                                <input asp-for="Contenitori.Contenitore" class="form-control" oninput="this.value = this.value.toUpperCase()"/>
+                                <input asp-for="Contenitori.Contenitore" class="form-control" />
                                 <span asp-validation-for="Contenitori.Contenitore" class="text-danger"></span>
                             </div>
 

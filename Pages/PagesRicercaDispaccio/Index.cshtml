@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model GiacenzaSorterRm.Pages.PagesRicercaDispaccio.IndexModel
 @{
     ViewData["Title"] = "Ricerca Dispaccio";
@@ -9,7 +9,7 @@
 <div class="container-fluid">
 
 
-    <div class="card text-white bg-info mb-3" style="max-width: 100%;">
+    <div class="card text-white bg-info mb-3 max-w-100" >
 
         <div class="card-body">
             <h2 class="text-center">Ricerca Dispaccio <-> Bancale</h2>
@@ -29,7 +29,7 @@
 
 
         <div class="m-2 col-xs-9">
-            <input asp-for="ItemRicerca" class="form-control input-dispaccio" style="width:300px" oninput="this.value = this.value.toUpperCase()" />
+            <input asp-for="ItemRicerca" class="form-control input-dispaccio" style="width:300px" / data-transform="uppercase">
             <span asp-validation-for="ItemRicerca" class="text-danger"></span>
         </div>
 
@@ -41,12 +41,12 @@
 
     <br /><br />
 
-    <div id="divProcessing">
+    <div id="divProcessing" class="d-none" role="status" aria-live="polite" aria-busy="true">
         <br />
         <br />
-        <p class="text-center">Processing data, please wait . . .</p>
+        <p class="sr-only">Caricamento in corso...</p>`r`n            <p class="text-center" aria-hidden="true">Processing data, please wait . . .</p>
         <p>
-            <img class="mx-auto d-block" src="~/images/Spinner.gif" />
+            <img class="mx-auto d-block" src="~/images/Spinner.gif" alt="Caricamento in corso..." role="presentation">
         </p>
 
     </div>

@@ -12,6 +12,7 @@
 
     <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
     <link href="~/css/site.css" rel="stylesheet" />
+    <link href="~/css/utilities/custom-utilities.css" asp-append-version="true" rel="stylesheet" />
 
     <!-- font-awesome -->
     <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
@@ -23,17 +24,11 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.5/css/dataTables.bootstrap5.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.2.5/css/buttons.bootstrap5.min.css"  />
 
+    @RenderSection("styles", required: false)
 
 </head>
 
 <body>
-
-    <style>
-        test {
-            margin-right: 0;
-        }
-    </style>
-
 
     <header>
         @if (@User.Identity.Name != null)
@@ -289,6 +284,9 @@
 
     <!-- Moment -->
     <script src="~/lib/moment/moment.js"></script>
+
+    <!-- Input Helpers (ES6 Module) -->
+    <script type="module" src="~/js/input-helpers.js" asp-append-version="true"></script>
 
     @RenderSection("Scripts", required: false)
 

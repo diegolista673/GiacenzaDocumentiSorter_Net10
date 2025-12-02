@@ -1,0 +1,78 @@
+/* Components - Forms Styles */
+
+/* Form utilities */
+.form-full-width {
+    width: 100%;
+}
+
+.input-uppercase {
+    text-transform: uppercase;
+}
+
+/* Form groups spacing */
+.form-group-compact {
+    margin-bottom: 0.5rem;
+}
+
+/* Input groups */
+.input-group-dispaccio {
+    display: flex;
+    align-items: center;
+}
+
+/* Card forms */
+.form-card {
+    max-width: 100%;
+}
+
+.form-card-body {
+    padding: 1.25rem;
+}
+
+/* Inline forms */
+.form-inline-center {
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Form validation */
+.form-validation-error {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #dc3545;
+}
+
+/* Disabled inputs */
+.form-control:disabled,
+.form-control[readonly] {
+    background-color: #e9ecef;
+    opacity: 1;
+}
+
+/* Custom input sizing */
+.input-bancale {
+    width: 100%;
+    font-size: 48px;
+    color: #0f08b2;
+}
+
+.input-scatola {
+    width: 100%;
+}
+
+.input-dispaccio {
+    width: 100%;
+}
+
+/* Form headers */
+.form-header {
+    background-color: #f8f9fa;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.form-header-title {
+    margin: 0;
+    font-size: 1.25rem;
+}

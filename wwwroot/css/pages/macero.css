@@ -1,0 +1,37 @@
+/* Pages - Macero Styles */
+
+/* Card styles */
+.macero-card {
+    max-width: 100%;
+}
+
+.macero-header {
+    background-color: #17a2b8;
+}
+
+/* Form styles */
+.macero-form-inline {
+    justify-content: center;
+}
+
+/* Report container */
+.macero-report-container {
+    text-align: center;
+}
+
+/* Processing indicator */
+.macero-processing {
+    display: none;
+    text-align: center;
+    padding: 2rem 0;
+}
+
+/* Modal styles specific to macero */
+.macero-modal-confirm {
+    /* Custom modal styles */
+}
+
+/* Table production specific */
+#tableProduzione {
+    width: 100%;
+}

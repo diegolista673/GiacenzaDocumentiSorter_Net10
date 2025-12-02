@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model GiacenzaSorterRm.Pages.PagesSorter.CreateModel
 
 @{
@@ -8,7 +8,7 @@
 
     <div class="container-fluid">
 
-        <div class="card text-white bg-info mb-3" style="max-width: 100%;">
+        <div class="card text-white bg-info mb-3 max-w-100" >
 
             <div class="card-body">
                 <h2 class="text-center">Sorter</h2>
@@ -45,7 +45,7 @@
 
 
                             <div class="form-group">
-                                <input asp-for="Scatole.Scatola" class="form-control" placeholder="Scatola" oninput="this.value = this.value.toUpperCase()" />
+                                <input asp-for="Scatole.Scatola" class="form-control" placeholder="Scatola" / data-transform="uppercase">
                                 <span asp-validation-for="Scatole.Scatola" class="text-danger"></span>
                             </div>
 

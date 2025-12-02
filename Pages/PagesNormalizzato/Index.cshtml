@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model GiacenzaSorterRm.Pages.PagesNormalizzato.IndexModel
 
 @{
@@ -8,7 +8,7 @@
 
     <div class="container-fluid">
 
-        <div class="card text-white bg-info mb-1" style="max-width: 100%;">
+        <div class="card text-white bg-info mb-1 max-w-100" >
 
             <div class="card-body">
                 <h2 class="text-center">Commesse Normalizzate</h2>
@@ -29,13 +29,13 @@
             </div>
 
 
-            <label for="Date" class="m-1 col-xs-3 col-form-label mr-2">Normalizzazione Da :</label>
+            <label for="StartDate" class="m-1 col-xs-3 col-form-label mr-2">Normalizzazione Da :</label>
             <div class="m-2 col-xs-9">
                 <input asp-for="StartDate" class="form-control mr-2" />
                 <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
 
-            <label for="Date" class="m-1 col-xs-3 col-form-label mr-2">Normalizzazione A :</label>
+            <label for="EndDate" class="m-1 col-xs-3 col-form-label mr-2">Normalizzazione A :</label>
             <div class="m-2 col-xs-9">
                 <input asp-for="EndDate" class="form-control" />
                 <span asp-validation-for="EndDate" class="text-danger"></span>
@@ -53,12 +53,12 @@
 
         <br />
 
-        <div id="divProcessing">
+        <div id="divProcessing" class="d-none" role="status" aria-live="polite" aria-busy="true">
             <br />
             <br />
-            <p class="text-center">Processing data, please wait . . .</p>
+            <p class="sr-only">Caricamento in corso...</p>`r`n            <p class="text-center" aria-hidden="true">Processing data, please wait . . .</p>
             <p>
-                <img class="mx-auto d-block" src="~/images/Spinner.gif" />
+                <img class="mx-auto d-block" src="~/images/Spinner.gif" alt="Caricamento in corso..." role="presentation">
             </p>
 
         </div>

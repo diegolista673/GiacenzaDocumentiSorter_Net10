@@ -1,0 +1,30 @@
+/* Pages - Sorter Styles */
+
+/* Container styles */
+.sorter-container {
+    /* Full width container */
+}
+
+/* Card styles */
+.sorter-card {
+    max-width: 100%;
+}
+
+.sorter-header {
+    background-color: #17a2b8;
+}
+
+/* Form card body */
+.sorter-form-card {
+    padding: 1.25rem;
+}
+
+/* Result display */
+.sorter-result {
+    /* Result container styles */
+}
+
+/* Table production */
+#tableProduzione {
+    width: 100%;
+}

@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model GiacenzaSorterRm.Pages.TipiDocumenti.CreateModel
 
 @{
@@ -19,7 +19,7 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
                             <label asp-for="Tipologie.Tipologia" class="control-label"></label>
-                            <input asp-for="Tipologie.Tipologia" class="form-control" oninput="this.value = this.value.toUpperCase()"/>
+                            <input asp-for="Tipologie.Tipologia" class="form-control" />
                             <span asp-validation-for="Tipologie.Tipologia" class="text-danger" ></span>
                         </div>
 
