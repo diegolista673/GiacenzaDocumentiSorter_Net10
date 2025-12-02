@@ -111,11 +111,11 @@
                     () => {
                         // Success callback
                         FetchHelpers.reinitDataTable('tableProduzione');
-                        FetchHelpers.clearInputs(['Scatole_Scatola']);
+                        FetchHelpers.clearInputs(['Scatole_Scatola', 'Scatole_Note']);
                     }
                 );
             } catch (error) {
-                console.error('Errore:', error);
+                console.error('Errore inserimento scatola:', error);
             }
         });
     </script>

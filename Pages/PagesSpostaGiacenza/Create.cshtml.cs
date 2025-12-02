@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,7 +13,7 @@ using GiacenzaSorterRm.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using GiacenzaSorterRm.Data;
+using GiacenzaSorterRm.Models.Database;
 
 
 
@@ -24,10 +24,10 @@ namespace GiacenzaSorterRm.Pages.PagesSpostaGiacenza
     [Authorize(Policy = "NormalizzazioneRequirements")]
     public class CreateModel : PageModel
     {
-        private readonly IAppDbContext _context;
+        private readonly GiacenzaSorterContext _context;
         private readonly ILogger<CreateModel> _logger;
 
-        public CreateModel(ILogger<CreateModel> logger, IAppDbContext context)
+        public CreateModel(ILogger<CreateModel> logger, GiacenzaSorterContext context)
         {
             _logger = logger;
             _context = context;
@@ -120,7 +120,7 @@ namespace GiacenzaSorterRm.Pages.PagesSpostaGiacenza
 
                     if (ScatolaGiacenza != null)
                     {
-                        //data Sorter già presente
+                        //data Sorter gi� presente
                         if (ScatolaGiacenza.DataSorter != null)
                         {
                             CentriSL = new SelectList(_context.CentriLavs.Where(x => x.IdCentroLavorazione != 5), "IdCentroLavorazione", "CentroLavDesc");

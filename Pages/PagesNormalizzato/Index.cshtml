@@ -88,7 +88,9 @@
             
             // Mostra spinner, nascondi report
             FetchHelpers.showSpinner('divProcessing');
-            document.getElementById('dvReport').style.display = 'none';
+            const reportDiv = document.getElementById('dvReport');
+            reportDiv.style.display = 'none';
+            reportDiv.innerHTML = ''; // Pulisci contenuto precedente
             
             try {
                 await FetchHelpers.postFormWithUpdate(
@@ -98,10 +100,10 @@
                     () => {
                         // Success callback
                         FetchHelpers.hideSpinner('divProcessing');
-                        document.getElementById('dvReport').style.display = 'block';
+                        reportDiv.style.display = 'block';
                         
                         // Inizializza DataTable con bottone Excel
-                        $('#tableProduzione').DataTable({
+                        FetchHelpers.reinitDataTable('tableProduzione', {
                             dom: 'Bflrtip',
                             buttons: [
                                 {
@@ -120,8 +122,8 @@
                                         }
                                     },
                                     title: function () {
-                                        var str = 'Prodotto normalizzato - data normalizzazione dal ' + $('#StartDate').val() + ' al ' + $('#EndDate').val()
-                                        return str
+                                        return 'Prodotto normalizzato - data normalizzazione dal ' + 
+                                               $('#StartDate').val() + ' al ' + $('#EndDate').val();
                                     }
                                 }
                             ],
@@ -132,14 +134,14 @@
                     (error) => {
                         // Error callback
                         FetchHelpers.hideSpinner('divProcessing');
-                        document.getElementById('dvReport').style.display = 'block';
-                        alert('Errore durante il caricamento del report. Riprova.');
+                        reportDiv.style.display = 'block';
+                        reportDiv.innerHTML = '<div class="alert alert-danger">Errore durante il caricamento del report. Riprova.</div>';
                     }
                 );
             } catch (error) {
-                console.error('Errore report:', error);
+                console.error('Errore report normalizzato:', error);
                 FetchHelpers.hideSpinner('divProcessing');
-                document.getElementById('dvReport').style.display = 'block';
+                reportDiv.style.display = 'block';
             }
         });
     </script>

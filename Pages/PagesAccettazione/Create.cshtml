@@ -24,21 +24,14 @@
                 </div>
                 <div class="card-body">
 
-                    <form  method="post"
-                          data-ajax="true"
-                          data-ajax-method="post"
-                          data-ajax-update="#resultDivDispacci"
-                          data-ajax-mode="replace"
-                          data-ajax-url="?handler=InsertDispacci"
-                          data-ajax-success="OnSuccessRequestDispacci">
-
+                    <form method="post" id="formInsertDispacci">
 
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="input-group ">
                                     <input asp-for="Dispaccio" class="form-control input-dispaccio " placeholder="Dispaccio" oninput="this.value = this.value.toUpperCase()" />
                                     <span class="input-group-btn ml-2">
-                                        <input type="submit" value="Add" class="btn btn-primary" id="btnDispacci" />
+                                        <button type="submit" class="btn btn-primary" id="btnDispacci">Add</button>
                                     </span>
                                 </div>
                                 <span asp-validation-for="Dispaccio" class="text-danger"></span>
@@ -52,13 +45,7 @@
                     </div>
 
 
-                    <form method="post"
-                          data-ajax="true"
-                          data-ajax-method="post"
-                          data-ajax-update="#resultDiv"
-                          data-ajax-mode="replace"
-                          data-ajax-url="?handler=CreaNuovoBancale"
-                          data-ajax-success="OnSuccessRequest">
+                    <form method="post" id="formCreaNuovoBancale">
 
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -68,19 +55,10 @@
                         </div>
 
                         <div class="form-group">
-@*                             <select v-model="selectCommessa" asp-for="Bancali.IdCommessa" class="form-control mr-sm-1">
-                                <option value="">- Commessa -</option>
-                                <option v-for="option in optionsCommesse" v-bind:value="option.value">
-                                    {{ option.text }}
-                                </option>
-                            </select> *@
-                            @* <span asp-validation-for="Bancali.IdCommessa" class="text-danger"></span> *@
                             <select asp-for="Bancali.IdCommessa" class="form-control  mr-sm-1" asp-items="@Model.CommesseSL ">
                                 <option value="">- Commessa -</option>
                             </select>
                             <span asp-validation-for="Bancali.IdCommessa" class="text-danger"></span>
-
-
                         </div>
 
                         <div class="form-group">
@@ -88,15 +66,8 @@
                             <span asp-validation-for="Bancali.Note" class="text-danger"></span>
                         </div>
 
-
-@*                         <div class="form-group">
-                            <input asp-for="Bancali.Bancale" class="form-control input-scatola" placeholder="Bancale" oninput="this.value = this.value.toUpperCase()" v-model="bancale" />
-                            <span asp-validation-for="Bancali.Bancale" class="text-danger"></span>
-                        </div> *@
-
                         <div class="form-group d-flex justify-content-end">
-                            @* <input type="submit" value="Nuovo bancale" class="btn btn-primary" id="btnPost" v-bind:disabled="isFormInvalid" /> *@
-                            <input type="submit" value="Nuovo bancale" class="btn btn-primary" id="btnPost" />
+                            <button type="submit" class="btn btn-primary" id="btnPost">Nuovo bancale</button>
                         </div>
 
                     </form>
@@ -119,97 +90,84 @@
 @section scripts{
 
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
 
-    <script>
+    <script type="module">
+        import { FetchHelpers } from '/js/fetch-helpers.js';
 
-            $(document).ready(function () {
-                $('#tableProduzione').DataTable({
-                    "scrollX": true
-                });
+        // Inizializza DataTables al caricamento
+        $(document).ready(function () {
+            $('#tableProduzione').DataTable({ scrollX: true });
 
-
+            $('#tableProduzioneDispacci').DataTable({
+                scrollY: '20vh',
+                scrollCollapse: true,
+                paging: false,
+                dom: '<<t>i>'
             });
+        });
 
+        // Handler Form 1: Inserimento Dispacci
+        document.getElementById('formInsertDispacci').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            
+            try {
+                await FetchHelpers.postFormWithUpdate(
+                    '?handler=InsertDispacci',
+                    formData,
+                    'resultDivDispacci',
+                    () => {
+                        // Success callback
+                        FetchHelpers.clearInputs(['Dispaccio']);
+                        
+                        // Reinizializza DataTable dispacci
+                        FetchHelpers.reinitDataTable('tableProduzioneDispacci', {
+                            scrollY: '20vh',
+                            scrollCollapse: true,
+                            paging: false,
+                            dom: '<<t>i>'
+                        });
+                    }
+                );
+            } catch (error) {
+                console.error('Errore inserimento dispaccio:', error);
+            }
+        });
 
-            $(document).ready(function () {
-                $('#tableProduzioneDispacci').DataTable({
-                    scrollY: '20vh',
-                    scrollCollapse: true,
-                    paging: false,
-                    "dom": '<<t>i>',
-                });
-            });
-
-
-            function OnSuccessRequest() {
-
-                $('#tableProduzione').DataTable({
-                    "scrollX": true,
-                    "order": []
-                });
-
-                document.getElementById('Dispaccio').value = '';
-                // document.getElementById('Bancali_Bancale').value = '';
-                document.getElementById('Bancali_Note').value = '';
-                $("#tableProduzione").DataTable().page('last').draw('page');
-
-                var table = $('#tableProduzioneDispacci').DataTable();
-                table.clear()
-                table.draw();
-
-            };
-
-
-            // function OnSuccessRequestPDF() {
-            //     $('#tableProduzione').DataTable({
-            //         "scrollX": true
-            //     });
-            // };
-
-
-
-            function OnSuccessRequestDispacci() {
-                
-                document.getElementById('Dispaccio').value = '';
-
-                $('#tableProduzioneDispacci').DataTable({
-                    scrollY: '20vh',
-                    scrollCollapse: true,
-                    paging: false,
-                    "dom": '<<t>i>',
-                });
-            };
-
-
-
-            // var vm = new Vue({
-
-            //     el: '#app',
-            //     data: {
-
-            //         bancale : "",
-            //         selectCommessa: "",
-            //         optionsCommesse: @Json.Serialize(Model.CommesseSL),
-
-            //         newItem: '',
-            //         items: [],
-
-            //     },
-            //     computed: {
-            //         isFormInvalid: function () {
-            //             if (this.selectCommessa != "" &&
-            //                 this.bancale != "") {
-            //                 return false;
-            //             }
-            //             else {
-            //                 return true;
-            //             }
-            //         }
-            //     }
-
-            // });
-
+        // Handler Form 2: Crea Nuovo Bancale
+        document.getElementById('formCreaNuovoBancale').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            
+            try {
+                await FetchHelpers.postFormWithUpdate(
+                    '?handler=CreaNuovoBancale',
+                    formData,
+                    'resultDiv',
+                    () => {
+                        // Success callback
+                        FetchHelpers.clearInputs(['Dispaccio', 'Bancali_Note']);
+                        
+                        // Reinizializza DataTable bancali
+                        FetchHelpers.reinitDataTable('tableProduzione', { 
+                            scrollX: true, 
+                            order: [] 
+                        });
+                        
+                        // Vai all'ultima pagina
+                        FetchHelpers.dataTableGoToLastPage('tableProduzione');
+                        
+                        // Pulisci tabella dispacci
+                        const tableDispacci = $('#tableProduzioneDispacci').DataTable();
+                        tableDispacci.clear().draw();
+                    }
+                );
+            } catch (error) {
+                console.error('Errore creazione bancale:', error);
+            }
+        });
     </script>
 }
 

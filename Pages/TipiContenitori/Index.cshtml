@@ -1,11 +1,9 @@
-﻿@page
+@page
 @model GiacenzaSorterRm.Pages.TipiContenitori.IndexModel
 
 @{
     ViewData["Title"] = "Contenitori";
 }
-
-
 
 <div class="container h-100">
     <div class="row h-100 justify-content-center align-items-center">
@@ -65,19 +63,15 @@
     </div>
 </div>
 
-
 @section scripts{
 
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
 
     <script>
-
 
         $(document).ready(function () {
             $('#tableProduzione').DataTable();
         });
-
 
     </script>
 }

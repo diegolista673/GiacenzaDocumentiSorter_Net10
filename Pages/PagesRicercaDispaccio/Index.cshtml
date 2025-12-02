@@ -20,13 +20,7 @@
     <br />
 
 
-    <form class="form-inline justify-content-center" method="post" id="formSelected"
-          data-ajax="true"
-          data-ajax-method="post"
-          data-ajax-update="#dvReport"
-          data-ajax-mode="replace"
-          data-ajax-url="?handler=Report"
-          data-ajax-success="OnSuccessRequest">
+    <form class="form-inline justify-content-center" method="post" id="formSelected">
 
 
         <select asp-for="SelectedItem" asp-items="Model.LstRicerca" class="m-2 mr-2 col-xs-9 form-control">
@@ -40,7 +34,7 @@
         </div>
 
         <div class="m-2 col-auto px-0">
-            <input type="submit" value="Report" class="col-auto btn btn-primary" asp-page-handler="Report" id="btnStartNorm" />
+            <button type="submit" class="col-auto btn btn-primary" id="btnStartNorm">Report</button>
         </div>
 
     </form>
@@ -73,62 +67,85 @@
 
 @section scripts{
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
 
-    <script>
+    <script type="module">
+        import { FetchHelpers } from '/js/fetch-helpers.js';
 
-        $("#divProcessing").hide();
+        // Nascondi spinner inizialmente
+        FetchHelpers.hideSpinner('divProcessing');
 
-        $('#btnStartNorm').click(function () {
-
-            if(document.getElementById('ItemRicerca').value != ''){
-                $("#divProcessing").show();
-                $("#dvReport").hide();
+        // Handler submit form
+        document.getElementById('formSelected').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const itemRicerca = document.getElementById('ItemRicerca').value;
+            
+            // Validazione campo ricerca
+            if (itemRicerca.trim() === '') {
+                alert('Inserisci un valore per la ricerca');
+                return;
             }
-
+            
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            // Mostra spinner, nascondi risultati
+            FetchHelpers.showSpinner('divProcessing');
+            const reportDiv = document.getElementById('dvReport');
+            reportDiv.style.display = 'none';
+            reportDiv.innerHTML = '';
+            
+            try {
+                await FetchHelpers.postFormWithUpdate(
+                    '?handler=Report',
+                    formData,
+                    'dvReport',
+                    () => {
+                        // Success callback
+                        FetchHelpers.hideSpinner('divProcessing');
+                        reportDiv.style.display = 'block';
+                        
+                        // Inizializza DataTable con Excel export
+                        FetchHelpers.reinitDataTable('tableProduzione', {
+                            dom: 'Bflrtip',
+                            buttons: [
+                                {
+                                    extend: 'excelHtml5',
+                                    exportOptions: {
+                                        columns: ':not(.notexport)'
+                                    },
+                                    className: 'col-auto btn btn-primary',
+                                    title: function () {
+                                        return 'Riepilogo Dispaccio e Bancali';
+                                    },
+                                    autoFilter: true,
+                                    text: '<i class="fas fa-file-excel"></i> Export to Excel'
+                                }
+                            ],
+                            columnDefs: [
+                                {
+                                    targets: 0,
+                                    orderable: false,
+                                    searchable: false,
+                                }
+                            ],
+                            order: [[2, 'asc']],
+                            scrollX: true
+                        });
+                    },
+                    (error) => {
+                        // Error callback
+                        FetchHelpers.hideSpinner('divProcessing');
+                        reportDiv.style.display = 'block';
+                        reportDiv.innerHTML = '<div class="alert alert-danger">Errore durante il caricamento del report. Riprova.</div>';
+                    }
+                );
+            } catch (error) {
+                console.error('Errore report ricerca dispaccio:', error);
+                FetchHelpers.hideSpinner('divProcessing');
+                reportDiv.style.display = 'block';
+            }
         });
-
-
-
-        function OnSuccessRequest() {
-
-                $("#divProcessing").hide();
-                $("#dvReport").show();
-
-                var table = $('#tableProduzione').DataTable({
-                    dom: 'Bflrtip',
-                    buttons: [
-                        {
-                            extend: 'excelHtml5',
-                            exportOptions: {
-                                columns: ':not(.notexport)'
-                            },
-                            className: 'col-auto btn btn-primary',
-                            title: function () {
-                                var str = 'Riepilogo Dispaccio e Bancali'
-                                return str
-                            },
-                            autoFilter: true,
-                            text: '<i class="fas fa-file-excel"></i> Export to Excel'
-
-
-                        }
-                    ],
-                    columnDefs: [
-                        {
-                            targets: 0,
-                            orderable: false,
-                            searchable: false,
-                        }
-                    ],
-                    order: [[2, 'asc']],
-                    scrollX: true
-                });
-
-
-            };
-
-
     </script>
 
 }

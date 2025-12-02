@@ -1,4 +1,4 @@
-ï»¿using GiacenzaSorterRm.Data;
+using GiacenzaSorterRm.Models.Database;
 using GiacenzaSorterRm.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -18,11 +18,11 @@ namespace GiacenzaSorterRm.Pages.PagesMacero
     
     public class IndexModel : PageModel
     {
-        private readonly IAppDbContext _context;
+        private readonly GiacenzaSorterContext _context;
         private readonly ILogger<IndexModel> _logger;
 
 
-        public IndexModel(ILogger<IndexModel> logger, IAppDbContext context)
+        public IndexModel(ILogger<IndexModel> logger, GiacenzaSorterContext context)
         {
             _logger = logger;
             _context = context;
@@ -161,7 +161,7 @@ namespace GiacenzaSorterRm.Pages.PagesMacero
                     {
                         _logger.LogError(ex, "Operazione annullata per timeout durante il caricamento del report macero");
                         LstMaceroView = new List<MaceroView>();
-                        Message = "Timeout: La richiesta Ã¨ stata annullata. Prova con un intervallo di date piÃ¹ piccolo.";
+                        Message = "Timeout: La richiesta è stata annullata. Prova con un intervallo di date più piccolo.";
                         return Partial("_RiepilogoMacero", this);
                     }
                     catch (TimeoutException ex)
@@ -237,7 +237,7 @@ namespace GiacenzaSorterRm.Pages.PagesMacero
                 else
                 {
                     _logger.LogWarning($"Nessuna scatola trovata per macero - IdCommessa: {IdCommessa}, Date: {StartDate:yyyy-MM-dd} - {EndDate:yyyy-MM-dd}");
-                    Message = "Nessuna scatola trovata per il macero. Potrebbero essere giÃ  state macerate.";
+                    Message = "Nessuna scatola trovata per il macero. Potrebbero essere già state macerate.";
                 }
 
                 // Inizializza sempre la lista per evitare null reference

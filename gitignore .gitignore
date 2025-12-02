@@ -1,0 +1,5 @@
+# SQLite database files (non più utilizzati)
+*.db
+*.db-shm
+*.db-wal
+giacenza_sorter_local.db*

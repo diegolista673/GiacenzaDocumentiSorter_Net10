@@ -21,13 +21,7 @@
 
         <br />
 
-        <form class="form-inline justify-content-center" method="post" id="formSelected"
-              data-ajax="true"
-              data-ajax-method="post"
-              data-ajax-update="#dvReport"
-              data-ajax-mode="replace"
-              data-ajax-url="?handler=Report"
-              data-ajax-success="OnSuccessRequest">
+        <form class="form-inline justify-content-center" method="post" id="formSelected">
 
 
 
@@ -72,7 +66,7 @@
             </div>
 
             <div class="m-2 col-auto px-0">
-                <input type="submit" value="Report" class="col-auto btn btn-primary" asp-page-handler="ReportNormalizzazione" id="btnStartNorm" />
+                <button type="submit" class="col-auto btn btn-primary" id="btnStartNorm">Report</button>
             </div>
 
         </form>
@@ -143,220 +137,138 @@
 
 @section scripts{
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
 
-    <script>
+    <script type="module">
+        import { FetchHelpers } from '/js/fetch-helpers.js';
 
-        $("#divProcessing").hide();
+        // Nascondi spinner inizialmente
+        FetchHelpers.hideSpinner('divProcessing');
 
-
-        $('#btnStartSort').click(function () {
-            $("#divProcessing").show();
-            $("#dvReport").hide();
-        });
-
-
+        // Modal handlers
         $('#submitModal').click(function () {
             $('#confirm-submit').modal('hide');
-
             $('#btnElimina').click();
-            $("#divProcessing").show();
-            $("#dvReport").hide();
-
+            FetchHelpers.showSpinner('divProcessing');
+            document.getElementById('dvReport').style.display = 'none';
         });
 
-    </script>
-
-
-    @if (User.FindFirst("Azienda").Value == "POSTEL")
-    {
-        <script>
-            $('#btnStartNorm').click(function () {
-
-                selectElementCentro = document.querySelector('#selectCentro');
-                selectElement = document.querySelector('#select1');
-                selectElementCommessa = document.querySelector('#selectCommessa');
-
-                if (selectElement.value != '' && selectElementCentro.value != 0 && selectElementCommessa.value != 0) {
-                    $("#divProcessing").show();
-                    $("#dvReport").hide();
-                }
-            });
-        </script>
-    }
-    else
-    {
-        <script>
-            $('#btnStartNorm').click(function () {
-
-                selectElement = document.querySelector('#select1');
-                selectElementCommessa = document.querySelector('#selectCommessa');
-
-                if (selectElement.value != '' && selectElementCommessa.value != 0) {
-                    $("#divProcessing").show();
-                    $("#dvReport").hide();
-                }
-            });
-        </script>
-    }
-
-
-
-
-    @if (Model.Ruolo == "ADMIN" || Model.Ruolo == "SUPERVISOR")
-    {
-        <script>
-
-            function OnSuccessRequest() {
-
-                $("#divProcessing").hide();
-                $("#dvReport").show();
-
-                // Check or Uncheck All checkboxes
-                $("#checkAll").change(function () {
-                    var checked = $(this).is(':checked');
-                    if (checked) {
-                        $(".checkbox").each(function () {
-                            $(this).prop("checked", true);
+        // Handler submit form
+        document.getElementById('formSelected').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const selectCentro = document.querySelector('#selectCentro');
+            const selectFase = document.querySelector('#select1');
+            const selectCommessa = document.querySelector('#selectCommessa');
+            const userAzienda = '@User.FindFirst("Azienda").Value';
+            
+            // Validazione form
+            let isValid = false;
+            if (userAzienda === 'POSTEL') {
+                isValid = selectFase.value !== '' && selectCentro.value != '0' && selectCommessa.value != '0';
+            } else {
+                isValid = selectFase.value !== '' && selectCommessa.value != '0';
+            }
+            
+            if (!isValid) {
+                alert('Compila tutti i campi obbligatori');
+                return;
+            }
+            
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            FetchHelpers.showSpinner('divProcessing');
+            const reportDiv = document.getElementById('dvReport');
+            reportDiv.style.display = 'none';
+            reportDiv.innerHTML = '';
+            
+            try {
+                await FetchHelpers.postFormWithUpdate(
+                    '?handler=Report',
+                    formData,
+                    'dvReport',
+                    () => {
+                        // Success callback
+                        FetchHelpers.hideSpinner('divProcessing');
+                        reportDiv.style.display = 'block';
+                        
+                        // Setup checkbox handlers
+                        $("#checkAll").change(function () {
+                            const checked = $(this).is(':checked');
+                            $(".checkbox").prop("checked", checked);
                         });
-                    } else {
-                        $(".checkbox").each(function () {
-                            $(this).prop("checked", false);
-                        });
-                    }
-                });
 
-                // Changing state of CheckAll checkbox
-                $(".checkbox").click(function () {
-
-                    if ($(".checkbox").length == $(".checkbox:checked").length) {
-                        $("#checkall").prop("checked", true);
-                    } else {
-                        $("#checkall").removeAttr("checked");
-                    }
-
-                });
-
-
-                var table = $('#tableProduzione').DataTable({
-                    dom: 'Bflrtip',
-                    buttons: [
-                        {
-                            extend: 'excelHtml5',
-                            autoFilter: true,
-                            text: '<i class="fas fa-file-excel"></i> Export to Excel',
-                            exportOptions: {
-                                columns: ':not(.notexport)'
-                            },
-                            className: 'col-auto btn btn-primary',
-                            title: function () {
-                                var str = 'Riepilogo scatole ' + $('#SelectedFase').val() + ' dal ' + $('#StartDate').val() + ' al ' + $('#EndDate').val() 
-                                return str
+                        $(".checkbox").click(function () {
+                            if ($(".checkbox").length == $(".checkbox:checked").length) {
+                                $("#checkall").prop("checked", true);
+                            } else {
+                                $("#checkall").removeAttr("checked");
                             }
-
+                        });
+                        
+                        // Configurazione DataTable base
+                        const tableConfig = {
+                            dom: 'Bflrtip',
+                            buttons: [
+                                {
+                                    extend: 'excelHtml5',
+                                    autoFilter: true,
+                                    text: '<i class="fas fa-file-excel"></i> Export to Excel',
+                                    exportOptions: {
+                                        columns: ':not(.notexport)'
+                                    },
+                                    className: 'col-auto btn btn-primary',
+                                    title: function () {
+                                        return 'Riepilogo scatole ' + $('#SelectedFase').val() + 
+                                               ' dal ' + $('#StartDate').val() + ' al ' + $('#EndDate').val();
+                                    }
+                                }
+                            ],
+                            columnDefs: [
+                                {
+                                    targets: 0,
+                                    orderable: false,
+                                    searchable: false,
+                                }
+                            ],
+                            order: [[2, 'asc']],
+                            scrollX: true
+                        };
+                        
+                        // Inizializza DataTable
+                        FetchHelpers.reinitDataTable('tableProduzione', tableConfig);
+                        
+                        // Aggiungi bottone Delete solo per ADMIN/SUPERVISOR
+                        const ruolo = '@Model.Ruolo';
+                        if (ruolo === 'ADMIN' || ruolo === 'SUPERVISOR') {
+                            const table = $('#tableProduzione').DataTable();
+                            table.button().add(1, {
+                                action: function (e, dt, button, config) {
+                                    const atLeastOneIsChecked = $('.checkbox').is(':checked');
+                                    if (atLeastOneIsChecked) {
+                                        $('#confirm-submit').modal('show');
+                                    } else {
+                                        $('#modalNoScatole').modal('show');
+                                    }
+                                },
+                                text: '<i class="far fa-trash-alt"></i> Delete',
+                                className: 'col-auto btn btn-danger ml-2'
+                            });
                         }
-                    ],
-                    columnDefs: [
-                        {
-                            targets: 0,
-                            orderable: false,
-                            searchable: false,
-                        }
-                    ],
-                    order: [[2, 'asc']],
-                    scrollX: true
-                });
-
-                table.button().add(1, {
-
-                    action: function (e, dt, button, config) {
-
-
-                        var atLeastOneIsChecked = $('.checkbox').is(':checked');
-                        if (atLeastOneIsChecked) {
-                            $('#confirm-submit').modal('show');
-                        }
-                        else {
-
-                            $('#modalNoScatole').modal('show');
-                        }
-
                     },
-                    text: '<i class="far fa-trash-alt"></i> Delete',
-                    className: 'col-auto btn btn-danger ml-2'
-                });
-
-            };
-
-        </script>
-    }
-    else
-    {
-        <script>
-
-            function OnSuccessRequest() {
-
-                $("#divProcessing").hide();
-                $("#dvReport").show();
-
-                // Check or Uncheck All checkboxes
-                $("#checkAll").change(function () {
-                    var checked = $(this).is(':checked');
-                    if (checked) {
-                        $(".checkbox").each(function () {
-                            $(this).prop("checked", true);
-                        });
-                    } else {
-                        $(".checkbox").each(function () {
-                            $(this).prop("checked", false);
-                        });
+                    (error) => {
+                        // Error callback
+                        FetchHelpers.hideSpinner('divProcessing');
+                        reportDiv.style.display = 'block';
+                        reportDiv.innerHTML = '<div class="alert alert-danger">Errore durante il caricamento del report. Riprova.</div>';
                     }
-                });
-
-                // Changing state of CheckAll checkbox
-                $(".checkbox").click(function () {
-
-                    if ($(".checkbox").length == $(".checkbox:checked").length) {
-                        $("#checkall").prop("checked", true);
-                    } else {
-                        $("#checkall").removeAttr("checked");
-                    }
-
-                });
-                var table = $('#tableProduzione').DataTable({
-                    dom: 'Bflrtip',
-                    buttons: [
-                        {
-                            extend: 'excelHtml5',
-                            exportOptions: {
-                                columns: ':not(.notexport)'
-                            },
-                            className: 'col-auto btn btn-primary',
-                            title: function () {
-                                var str = 'Riepilogo scatole ' + $('#SelectedFase').val() + ' dal ' + $('#StartDate').val() + ' al ' + $('#EndDate').val()
-                                return str
-                            },
-                            autoFilter: true,
-                            text: '<i class="fas fa-file-excel"></i> Export to Excel'
-
-
-                        }
-                    ],
-                    columnDefs: [
-                        {
-                            targets: 0,
-                            orderable: false,
-                            searchable: false,
-                        }
-                    ],
-                    order: [[2, 'asc']],
-                    scrollX: true
-                });
-
-
-            };
-
-        </script>
-    }
+                );
+            } catch (error) {
+                console.error('Errore report riepilogo scatole:', error);
+                FetchHelpers.hideSpinner('divProcessing');
+                reportDiv.style.display = 'block';
+            }
+        });
+    </script>
 }
 

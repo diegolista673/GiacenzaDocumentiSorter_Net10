@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +15,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using GiacenzaSorterRm.Data;
+using GiacenzaSorterRm.Models.Database;
 
 namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
 {
@@ -23,10 +23,10 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
     [Authorize(Policy = "NormalizzazioneRequirements")]
     public class CreateModel : PageModel
     {
-        private readonly IAppDbContext _context;
+        private readonly GiacenzaSorterContext _context;
         private readonly ILogger<CreateModel> _logger;
 
-        public CreateModel(ILogger<CreateModel> logger, IAppDbContext context)
+        public CreateModel(ILogger<CreateModel> logger, GiacenzaSorterContext context)
         {
             _logger = logger;
             _context = context;
@@ -150,7 +150,7 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
 
 
         /// <summary>
-        /// Controlla che il nome scatola non sia ripetuto piÃ¹ volte a causa di un inserimento troppop veloce
+        /// Controlla che il nome scatola non sia ripetuto più volte a causa di un inserimento troppop veloce
         /// conta le occorrenze della parola formata dalle prime 8 lettere all'interno della stringa di input
         /// </summary>
         /// <param name="scatola"></param>
@@ -324,7 +324,7 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
 
 
         /// <summary>
-        /// data scatola non puÃ² essere precedente a data bancale
+        /// data scatola non può essere precedente a data bancale
         /// </summary>
         /// <param name="scatola"></param>
         /// <returns></returns>

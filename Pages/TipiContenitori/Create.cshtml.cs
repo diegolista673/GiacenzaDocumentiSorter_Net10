@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,19 +10,19 @@ using Microsoft.Extensions.Logging;
 using GiacenzaSorterRm.AppCode;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
-using GiacenzaSorterRm.Data;
+using GiacenzaSorterRm.Models.Database;
 
 namespace GiacenzaSorterRm.Pages.TipiContenitori
 {
     [Authorize(Roles = "ADMIN, SUPERVISOR")]
     public class CreateModel : PageModel
     {
-        private readonly IAppDbContext _context;
+        private readonly GiacenzaSorterContext _context;
         private readonly ILogger<CreateModel> _logger;
 
 
 
-        public CreateModel(ILogger<CreateModel> logger, IAppDbContext context)
+        public CreateModel(ILogger<CreateModel> logger, GiacenzaSorterContext context)
         {
             _logger = logger;
             _context = context;

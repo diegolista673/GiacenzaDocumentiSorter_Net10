@@ -73,16 +73,10 @@
                             {
                                 <tr>
                                     <td>
-                                        <form method="post"
-                                              data-ajax="true"
-                                              data-ajax-method="post"
-                                              data-ajax-update="#resulPdf"
-                                              data-ajax-mode="replace"
-                                              data-ajax-url="?handler=PdfBancale" >
-
+                                        <form method="post" class="formPdfBancale" data-id-bancale="@item.IdBancale">
                                             <input type="hidden" name="IdBancale" value="@item.IdBancale">
                                             
-                                            <button class="btn btn-link">@Html.DisplayFor(modelItem => item.Bancale)</button>
+                                            <button type="submit" class="btn btn-link">@Html.DisplayFor(modelItem => item.Bancale)</button>
                                          </form>
 
                                     </td>
@@ -115,6 +109,34 @@
     </div>
 
 </div>
+
+<script type="module">
+    import { FetchHelpers } from '/js/fetch-helpers.js';
+
+    // Gestisci tutti i form PDF Bancale nella tabella
+    document.querySelectorAll('.formPdfBancale').forEach(form => {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const idBancale = e.target.getAttribute('data-id-bancale');
+            
+            try {
+                await FetchHelpers.postFormWithUpdate(
+                    '?handler=PdfBancale',
+                    formData,
+                    'resulPdf',
+                    () => {
+                        // Success callback
+                        console.log('PDF Bancale caricato per ID:', idBancale);
+                    }
+                );
+            } catch (error) {
+                console.error('Errore caricamento PDF bancale:', error);
+            }
+        });
+    });
+</script>
 
 
 

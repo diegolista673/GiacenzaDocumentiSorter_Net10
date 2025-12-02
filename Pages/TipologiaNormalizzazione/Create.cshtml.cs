@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,16 +7,16 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using GiacenzaSorterRm.Models.Database;
 using Microsoft.AspNetCore.Authorization;
-using GiacenzaSorterRm.Data;
+using GiacenzaSorterRm.Models.Database;
 
 namespace GiacenzaSorterRm.Pages.TipologiaNormalizzazione
 {
     [Authorize(Roles = "ADMIN, SUPERVISOR")]
     public class CreateModel : PageModel
     {
-        private readonly IAppDbContext _context;
+        private readonly GiacenzaSorterContext _context;
 
-        public CreateModel(IAppDbContext context)
+        public CreateModel(GiacenzaSorterContext context)
         {
             _context = context;
         }

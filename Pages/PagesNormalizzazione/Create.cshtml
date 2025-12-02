@@ -26,13 +26,7 @@
 
                 <div class="card-body">
 
-                    <form method="post"
-                          data-ajax="true"
-                          data-ajax-method="post"
-                          data-ajax-update="#resultDiv"
-                          data-ajax-mode="replace"
-                          data-ajax-url="?handler=InsertScatola"
-                          data-ajax-success="OnSuccessRequest">
+                    <form method="post" id="formInsertScatola">
 
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -110,7 +104,7 @@
                         </div>
 
                         <div class="form-group d-flex justify-content-end">
-                            <input type="submit" value="Save" class="btn btn-primary w-50" id="btnPost" v-bind:disabled="isFormInvalid"/>
+                            <button type="submit" class="btn btn-primary w-50" id="btnPost" v-bind:disabled="isFormInvalid">Save</button>
                             <button type="button" class="btn btn-outline-primary ml-2 w-50" id="btnReset" v-on:click="resetForm">Clear Form</button>
                         </div>
 
@@ -140,36 +134,55 @@
 @section scripts{
 
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
 
+    <script type="module">
+        import { FetchHelpers } from '/js/fetch-helpers.js';
 
-    <script>
-
+        // Inizializza DataTable al caricamento
         $(document).ready(function () {
-            $('#tableProduzione').DataTable({
-                "scrollX": true
-            });
+            $('#tableProduzione').DataTable({ scrollX: true });
         });
 
+        // Handler form submit con Fetch API
+        document.getElementById('formInsertScatola').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            
+            try {
+                await FetchHelpers.postFormWithUpdate(
+                    '?handler=InsertScatola',
+                    formData,
+                    'resultDiv',
+                    () => {
+                        // Success callback
+                        FetchHelpers.reinitDataTable('tableProduzione', { scrollX: true });
+                        FetchHelpers.dataTableGoToLastPage('tableProduzione');
+                        
+                        // Reset campi Vue (usa i metodi Vue esistenti tramite l'istanza)
+                        if (window.vm && typeof window.vm.resetForm === 'function') {
+                            // Pulisci solo scatola e note, mantieni gli altri campi
+                            document.getElementById('Scatole_Scatola').value = '';
+                            document.getElementById('Scatole_Note').value = '';
+                            window.vm.scatola = '';
+                            window.vm.note = '';
+                        }
+                    }
+                );
+            } catch (error) {
+                console.error('Errore inserimento scatola normalizzazione:', error);
+            }
+        });
 
-        function OnSuccessRequest() {
+        // Modal handler
+        $('#confirm-submit').on('shown.bs.modal', function () { 
+            $('#submitModal').trigger('focus'); 
+            $('#scatola').val(''); 
+        });
+    </script>
 
-            $('#tableProduzione').DataTable({
-                "scrollX": true
-            });
-
-            $("#tableProduzione").DataTable().page('last').draw('page');
-
-            document.getElementById('Scatole_Scatola').value = '';
-            document.getElementById('Scatole_Note').value = '';
-
-        };
-
-
-
-        $('#confirm-submit').on('shown.bs.modal', function () { $('#submitModal').trigger('focus'), $('#scatola').val('') })
-
-
+    <script>
+        // Vue.js instance - INVARIATA (mantiene gestione dinamica form)
         var vm = new Vue({
 
             el: '#app',
@@ -288,7 +301,7 @@
                     }
                     else {
 
-                        //GET Tipologie e contenitori dedicati
+                        //GET Tipologie e contenitori dedicati - AXIOS INVARIATO
 
                         axios({
                             method: 'get',
@@ -360,7 +373,7 @@
                     }
                     else {
 
-                        //GET Contenitori associati alla tipologia
+                        //GET Contenitori associati alla tipologia - AXIOS INVARIATO
 
                         axios({
                             method: 'get',
@@ -444,7 +457,7 @@
                 onChangeScatola: function (event) {
 
                     var self = this;
-                    //GET scatola from Mondo
+                    //GET scatola from Mondo - AXIOS INVARIATO
                     axios({
                         method: 'get',
                         headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
@@ -470,66 +483,12 @@
                     });
 
                 },
-                // enterBancale() {
-                //     var self = this;
-
-                //     if (self.bancale.trim() == "") {
-                //         resetForm()
-                //     }
-                    //  else
-                    //  {
-                        //    axios({
-                            //     method: 'get',
-                            //     headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
-                            //     url: '?handler=FindIdCommessa',
-                            //     params: {
-                                //      bancale: self.bancale
-                            //     }
-                            //    })
-                            //    .then(function (response) {
-
-                //                 if (response.data != '')
-                //                 {
-                //                     self.checkBancale = false
-                //                     var pallet = JSON.parse(response.data)
-                //                     self.selectCommessa = pallet[0]
-                //                     self.dataAccettazioneBancale = moment(pallet[1]).format('L')
-
-                //                     self.isDisabledCommesse = false
-                //                     self.isDisabledTipologie = false
-
-                //                     self.onChangeDataAccettazioneBancale()
-                //                     self.onChangeCommessa()
-                //                 }
-                //                 else{
-                //                     self.resetForm()
-                //                 }
-                            //    })
-                            //    .catch(function (error) {
-                //                 self.resetForm()
-                            //     console.log(error);
-                            //    });
-                    //  }
-                // },
-                // onChangeDataAccettazioneBancale: function () {
-
-                //     var self = this;
-                //     var dataBancale = self.dataAccettazioneBancale
-                //     var dateEntered = moment(self.selectDataNormalizzazione).format("L")
-
-                //     if (dateEntered < dataBancale) {
-                //         self.isDisabledBancale = true
-                //         self.checkDataBancale = true
-                //         self.resetForm()
-                //     }
-                //     else{
-                //        self.checkDataBancale = false
-                //        self.isDisabledBancale = false
-                //     }
-                // },
             }
 
         });
+
+        // Esponi istanza Vue globalmente per accesso dal modulo ES6
+        window.vm = vm;
 
     </script>
 }

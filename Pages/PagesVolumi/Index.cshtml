@@ -18,13 +18,7 @@
 
         <br />
 
-        <form class="form-inline justify-content-center" method="post"
-              data-ajax="true"
-              data-ajax-method="post"
-              data-ajax-update="#dvReport"
-              data-ajax-mode="replace"
-              data-ajax-url="?handler=Report"
-              data-ajax-success="OnSuccessRequest">
+        <form class="form-inline justify-content-center" method="post" id="formReport">
 
 
             <div class="form-group">
@@ -53,7 +47,7 @@
 
 
             <div class="m-2 col-auto px-0">
-                <input type="submit" value="Report" class="col-auto btn btn-primary" asp-page-handler="Report" id="btnStart" />
+                <button type="submit" class="col-auto btn btn-primary" id="btnStart">Report</button>
             </div>
 
             <br />
@@ -82,99 +76,93 @@
 
 @section scripts{
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
 
-    <script>
+    <script type="module">
+        import { FetchHelpers } from '/js/fetch-helpers.js';
 
-        $("#divProcessing").hide();
+        // Nascondi spinner inizialmente
+        FetchHelpers.hideSpinner('divProcessing');
 
-        $('#btnStart').click(function () {
-
-            selectCentro = document.querySelector('#selectCentro');
-            selectType = document.querySelector('#selectType');
-
-            if (selectCentro.value == 0 || selectType.value == 0) {
-                $("#divProcessing").hide();
-                $("#dvReport").show();
+        // Handler submit form
+        document.getElementById('formReport').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const selectCentro = document.querySelector('#selectCentro');
+            const selectType = document.querySelector('#selectType');
+            
+            // Validazione
+            if (selectCentro.value == '0' || selectType.value == '0') {
+                alert('Seleziona Centro e Tipo');
+                return;
             }
-            else{
-                $("#divProcessing").show();
-                $("#dvReport").hide();
+            
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            // Mostra spinner
+            FetchHelpers.showSpinner('divProcessing');
+            const reportDiv = document.getElementById('dvReport');
+            reportDiv.style.display = 'none';
+            reportDiv.innerHTML = '';
+            
+            try {
+                await FetchHelpers.postFormWithUpdate(
+                    '?handler=Report',
+                    formData,
+                    'dvReport',
+                    () => {
+                        // Success callback
+                        FetchHelpers.hideSpinner('divProcessing');
+                        reportDiv.style.display = 'block';
+                        
+                        // Configurazione DataTable basata sul tipo selezionato
+                        const tipoSelezionato = selectType.value;
+                        
+                        const tableConfig = {
+                            dom: 'Bflrtip',
+                            buttons: [
+                                {
+                                    extend: 'excel',
+                                    autoFilter: true,
+                                    text: '<i class="fas fa-file-excel"></i> Export to Excel',
+                                    className: 'col-auto btn btn-primary',
+                                    title: function () {
+                                        const tipoLabel = tipoSelezionato === '1' ? 'Giacenza' : 'Dettaglio';
+                                        return tipoLabel + ' al ' + $('#EndDate').val();
+                                    },
+                                    exportOptions: {
+                                        format: {
+                                            body: function (data, row, column, node) {
+                                                data = $('<p>' + data + '</p>').text();
+                                                if (tipoSelezionato === '1') {
+                                                    return column === 2 ? data.replace(/[.]/g, '') : data;
+                                                } else {
+                                                    return $.isNumeric(column) ? data.replace(/[.]/g, '') : data;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            order: [[0, 'asc']],
+                            scrollX: true
+                        };
+                        
+                        // Inizializza DataTable
+                        FetchHelpers.reinitDataTable('tableProduzione', tableConfig);
+                    },
+                    (error) => {
+                        // Error callback
+                        FetchHelpers.hideSpinner('divProcessing');
+                        reportDiv.style.display = 'block';
+                        reportDiv.innerHTML = '<div class="alert alert-danger">Errore durante il caricamento del report. Riprova.</div>';
+                    }
+                );
+            } catch (error) {
+                console.error('Errore report giacenza:', error);
+                FetchHelpers.hideSpinner('divProcessing');
+                reportDiv.style.display = 'block';
             }
         });
-
-
-
-        function OnSuccessRequest() {
-
-            $("#divProcessing").hide();
-            $("#dvReport").show();
-
-            selectType = document.querySelector('#selectType');
-
-            if (selectType.value == 1) {
-                $('#tableProduzione').DataTable({
-                    dom: 'Bflrtip',
-                    buttons: [
-                        {
-                            extend: 'excel',
-                            autoFilter: true,
-                            text: '<i class="fas fa-file-excel"></i> Export to Excel',
-                            className: 'col-auto btn btn-primary',
-                            title: function () {
-                                var str = 'Giacenza al ' + $('#EndDate').val()
-                                return str
-                            },
-                            exportOptions: {
-                                format: {
-                                    body: function (data, row, column, node) {
-                                        data = $('<p>' + data + '</p>').text();
-                                        return column === 2 ?
-                                            data.replace(/[.]/g, '') :
-                                            data;
-                                    }
-
-                                }
-                            }
-                        }
-                    ],
-                    order: [[0, 'asc']],
-                    scrollX: true
-                });
-            }
-            else {
-                $('#tableProduzione').DataTable({
-                    dom: 'Bflrtip',
-                    buttons: [
-                        {
-                            extend: 'excel',
-                            autoFilter: true,
-                            text: '<i class="fas fa-file-excel"></i> Export to Excel',
-                            className: 'col-auto btn btn-primary',
-                            title: function () {
-                                var str = 'Dettaglio al ' + $('#EndDate').val()
-                                return str
-                            },
-                            exportOptions: {
-                                format: {
-                                    body: function (data, row, column, node) {
-                                        data = $('<p>' + data + '</p>').text();
-                                        return $.isNumeric(column) ?
-                                            data.replace(/[.]/g, '') :
-                                            data;
-                                    }
-
-                                }
-                            }
-                        }
-                    ],
-                    order: [[0, 'asc']],
-                    scrollX: true
-                });
-            }
-
-        };
-
-
     </script>
 }

@@ -30,39 +30,20 @@ namespace GiacenzaSorterRm
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Database Configuration
-            var useSqlite = Configuration.GetValue<bool>("UseSQLite", false);
-            string connectionString;
-
-            if (useSqlite)
+            // Database Configuration - SQL Server only
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            
+            if (string.IsNullOrEmpty(connectionString) || connectionString.Contains("PLACEHOLDER"))
             {
-                // SQLite: usa SQLiteConnection string
-                connectionString = Configuration.GetConnectionString("SQLiteConnection") 
-                                   ?? "Data Source=giacenza_sorter_local.db";
-                
-                // Registra il context SQLite
-                services.AddDbContext<GiacenzaSorterRm.Data.GiacenzaSorterSqliteContext>(options =>
-                    options.UseSqlite(connectionString)
-                           .EnableSensitiveDataLogging(Environment.IsDevelopment()));
-                
-                // Registra l'interfaccia comune puntando al context SQLite
-                services.AddScoped<GiacenzaSorterRm.Data.IAppDbContext>(provider =>
-                    provider.GetRequiredService<GiacenzaSorterRm.Data.GiacenzaSorterSqliteContext>());
+                throw new InvalidOperationException(
+                    "Connection string non configurata. " +
+                    "Configura 'ConnectionStrings:DefaultConnection' in User Secrets (dev) o Environment Variables (prod).");
             }
-            else
-            {
-                // SQL Server: usa DefaultConnection
-                connectionString = Configuration.GetConnectionString("DefaultConnection");
-                
-                // Registra il context SQL Server
-                services.AddDbContext<GiacenzaSorterRmTestContext>(options =>
-                    options.UseSqlServer(connectionString)
-                           .EnableSensitiveDataLogging(Environment.IsDevelopment()));
-                
-                // Registra l'interfaccia comune puntando al context SQL Server
-                services.AddScoped<GiacenzaSorterRm.Data.IAppDbContext>(provider =>
-                    provider.GetRequiredService<GiacenzaSorterRmTestContext>());
-            }
+            
+            // Registra il context SQL Server
+            services.AddDbContext<GiacenzaSorterContext>(options =>
+                options.UseSqlServer(connectionString)
+                       .EnableSensitiveDataLogging(Environment.IsDevelopment()));
 
             // Memory Cache per rate limiting e lockout
             services.AddMemoryCache();
@@ -158,6 +139,8 @@ namespace GiacenzaSorterRm
                 options.Conventions.AuthorizeFolder("/TipiDocumenti");
                 options.Conventions.AuthorizeFolder("/TipiLavorazioni");
                 options.Conventions.AuthorizeFolder("/TipologiaNormalizzazione");
+                options.Conventions.AuthorizeFolder("/PagesSpostaGiacenza");
+                options.Conventions.AuthorizeFolder("/PagesMacero");
             });
 
             services.AddRazorPages();

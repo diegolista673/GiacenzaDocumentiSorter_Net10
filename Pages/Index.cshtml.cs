@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -11,25 +11,25 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using GiacenzaSorterRm.Models.Database;
 using GiacenzaSorterRm.Services;
-using GiacenzaSorterRm.Data;
+using GiacenzaSorterRm.Models.Database;
 using Shyjus.BrowserDetection;
 
 namespace GiacenzaSorterRm.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly IAppDbContext _context;
+        private readonly GiacenzaSorterContext _context;
         private readonly ILogger<IndexModel> _logger;
         private readonly IBrowserDetector browserDetector;
         private readonly GiacenzaSorterRm.Services.IAuthenticationService _authService;
 
         [BindProperty]
-        [Required(ErrorMessage = "Username Ã¨ obbligatorio")]
+        [Required(ErrorMessage = "Username è obbligatorio")]
         [Display(Name = "Username")]
         public string UserName { get; set; }
         
         [BindProperty]
-        [Required(ErrorMessage = "Password Ã¨ obbligatoria")]
+        [Required(ErrorMessage = "Password è obbligatoria")]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
@@ -39,7 +39,7 @@ namespace GiacenzaSorterRm.Pages
 
         public IndexModel(
             ILogger<IndexModel> logger, 
-            IAppDbContext context, 
+            GiacenzaSorterContext context, 
             IBrowserDetector browserDetector,
             GiacenzaSorterRm.Services.IAuthenticationService authService)
         {
@@ -51,7 +51,7 @@ namespace GiacenzaSorterRm.Pages
 
         public IActionResult OnGet()
         {
-            // Redirect se giÃ  autenticato
+            // Redirect se già autenticato
             if (User.Identity?.IsAuthenticated == true)
             {
                 return RedirectToPage("/Home");
@@ -114,7 +114,7 @@ namespace GiacenzaSorterRm.Pages
             {
                 // NON esporre mai dettagli exception all'utente
                 _logger.LogError(ex, "Error during login process for user: {Username}", UserName);
-                Message = "Si Ã¨ verificato un errore. Riprova piÃ¹ tardi.";
+                Message = "Si è verificato un errore. Riprova più tardi.";
                 return Page();
             }
         }

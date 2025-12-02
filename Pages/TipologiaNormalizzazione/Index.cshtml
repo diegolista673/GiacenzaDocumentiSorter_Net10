@@ -1,10 +1,9 @@
-﻿@page
+@page
 @model GiacenzaSorterRm.Pages.TipologiaNormalizzazione.IndexModel
 
 @{
     ViewData["Title"] = "Tipo Prodotto";
 }
-
 
 <div class="container h-100">
     <div class="row h-100 justify-content-center align-items-center">
@@ -47,15 +46,12 @@
 @section scripts{
 
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
 
     <script>
-
 
         $(document).ready(function () {
             $('#tableProduzione').DataTable();
         });
-
 
     </script>
 }

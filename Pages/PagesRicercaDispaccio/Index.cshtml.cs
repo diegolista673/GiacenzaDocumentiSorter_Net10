@@ -14,17 +14,17 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 using Microsoft.Data.SqlClient;
-using GiacenzaSorterRm.Data;
+using GiacenzaSorterRm.Models.Database;
 
 namespace GiacenzaSorterRm.Pages.PagesRicercaDispaccio
 {
     public class IndexModel : PageModel
     {
-        private readonly IAppDbContext _context;
+        private readonly GiacenzaSorterContext _context;
         private readonly ILogger<IndexModel> _logger;
 
 
-        public IndexModel(ILogger<IndexModel> logger, IAppDbContext context)
+        public IndexModel(ILogger<IndexModel> logger, GiacenzaSorterContext context)
         {
             this._logger = logger;
             this._context = context;

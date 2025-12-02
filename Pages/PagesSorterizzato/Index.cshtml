@@ -20,13 +20,7 @@
         <br />
 
 
-        <form class="form-inline justify-content-center" method="post"
-              data-ajax="true"
-              data-ajax-method="post"
-              data-ajax-update="#dvReport"
-              data-ajax-mode="replace"
-              data-ajax-url="?handler=Report"
-              data-ajax-success="OnSuccessRequest">
+        <form class="form-inline justify-content-center" method="post" id="formReport">
 
 
 
@@ -51,7 +45,7 @@
 
             <div class="m-2 col-auto px-0">
 
-                <input type="submit" value="Report" class="col-auto btn btn-primary" asp-page-handler="Report" id="btnStart" />
+                <button type="submit" class="col-auto btn btn-primary" id="btnStart">Report</button>
 
             </div>
 
@@ -84,54 +78,78 @@
 
 @section scripts{
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
 
-    <script>
+    <script type="module">
+        import { FetchHelpers } from '/js/fetch-helpers.js';
 
+        // Nascondi spinner inizialmente
+        FetchHelpers.hideSpinner('divProcessing');
 
-        $("#divProcessing").hide();
-
-        $('#btnStart').click(function () {
-            $("#divProcessing").show();
-            $("#dvReport").hide();
-        });
-
-
-        function OnSuccessRequest() {
-            $("#divProcessing").hide();
-            $("#dvReport").show();
-
-            $('#tableProduzione').DataTable({
-                dom: 'Bflrtip',
-                buttons: [
-                    {
-                        extend: 'excelHtml5',
-                        autoFilter: true,
-                        text: '<i class="fas fa-file-excel"></i> Export To Excel',
-                        className: 'col-auto btn btn-primary',
-                        exportOptions: {
-                            format: {
-                                body: function (data, row, column, node) {
-                                    data = $('<p>' + data + '</p>').text();
-                                    return column === 2 ?
-                                        data.replace(/[.]/g, '') :
-                                        data;
+        // Handler submit form
+        document.getElementById('formReport').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            // Mostra spinner, nascondi report
+            FetchHelpers.showSpinner('divProcessing');
+            const reportDiv = document.getElementById('dvReport');
+            reportDiv.style.display = 'none';
+            reportDiv.innerHTML = '';
+            
+            try {
+                await FetchHelpers.postFormWithUpdate(
+                    '?handler=Report',
+                    formData,
+                    'dvReport',
+                    () => {
+                        // Success callback
+                        FetchHelpers.hideSpinner('divProcessing');
+                        reportDiv.style.display = 'block';
+                        
+                        // Inizializza DataTable con Excel export
+                        FetchHelpers.reinitDataTable('tableProduzione', {
+                            dom: 'Bflrtip',
+                            buttons: [
+                                {
+                                    extend: 'excelHtml5',
+                                    autoFilter: true,
+                                    text: '<i class="fas fa-file-excel"></i> Export To Excel',
+                                    className: 'col-auto btn btn-primary',
+                                    exportOptions: {
+                                        format: {
+                                            body: function (data, row, column, node) {
+                                                data = $('<p>' + data + '</p>').text();
+                                                return column === 2 ?
+                                                    data.replace(/[.]/g, '') :
+                                                    data;
+                                            }
+                                        }
+                                    },
+                                    title: function () {
+                                        return 'Prodotto Sorterizzato - data sorter dal ' + 
+                                               $('#StartDate').val() + ' al ' + $('#EndDate').val();
+                                    }
                                 }
-                            }
-                        },
-                        title: function () {
-                            var str = 'Prodotto Sorterizzato - data sorter dal ' + $('#StartDate').val() + ' al ' + $('#EndDate').val()
-                            return str
-                        }
-
+                            ],
+                            order: [[0, 'asc']],
+                            scrollX: true
+                        });
+                    },
+                    (error) => {
+                        // Error callback
+                        FetchHelpers.hideSpinner('divProcessing');
+                        reportDiv.style.display = 'block';
+                        reportDiv.innerHTML = '<div class="alert alert-danger">Errore durante il caricamento del report. Riprova.</div>';
                     }
-                ],
-                order: [[0, 'asc']],
-                scrollX: true
-            });
-        };
-
-
+                );
+            } catch (error) {
+                console.error('Errore report sorterizzato:', error);
+                FetchHelpers.hideSpinner('divProcessing');
+                reportDiv.style.display = 'block';
+            }
+        });
     </script>
 }
 

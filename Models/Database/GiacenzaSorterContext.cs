@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GiacenzaSorterRm.Models.Database;
 
-public partial class GiacenzaSorterRmTestContext : DbContext, GiacenzaSorterRm.Data.IAppDbContext
+public partial class GiacenzaSorterContext : DbContext
 {
-    public GiacenzaSorterRmTestContext()
+    public GiacenzaSorterContext()
     {
     }
 
-    public GiacenzaSorterRmTestContext(DbContextOptions<GiacenzaSorterRmTestContext> options)
+    public GiacenzaSorterContext(DbContextOptions<GiacenzaSorterContext> options)
         : base(options)
     {
     }
@@ -38,10 +38,6 @@ public partial class GiacenzaSorterRmTestContext : DbContext, GiacenzaSorterRm.D
     public virtual DbSet<TipiNormalizzazione> TipiNormalizzaziones { get; set; }
 
     public virtual DbSet<Tipologie> Tipologies { get; set; }
-
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=GIACENZA_SORTER_RM_TEST;TrustServerCertificate=true;Trusted_Connection=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

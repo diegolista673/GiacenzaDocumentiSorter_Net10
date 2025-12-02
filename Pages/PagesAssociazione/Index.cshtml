@@ -1,11 +1,9 @@
-﻿@page
+@page
 @model GiacenzaSorterRm.Pages.PagesAssociazione.IndexModel
 
 @{
     ViewData["Title"] = "Associazione";
 }
-
-
 
 <div class="container h-100">
     <div class="row h-100 justify-content-center align-items-center">
@@ -29,7 +27,7 @@
                             Contenitore
                         </th>
                         <th style="width: 10%;text-align: center ">
-                            Quantità
+                            Quantit�
                         </th>
                         <th style="width: 10%;text-align: center ">
                             Attiva
@@ -76,20 +74,15 @@
     </div>
 </div>
 
-
-
 @section scripts{
 
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
 
     <script>
-
 
         $(document).ready(function () {
             $('#tableProduzione').DataTable();
         });
-
 
     </script>
 }

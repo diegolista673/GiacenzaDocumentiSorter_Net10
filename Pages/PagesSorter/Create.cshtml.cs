@@ -1,4 +1,4 @@
-Ôªøusing System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,14 +11,14 @@ using Microsoft.Extensions.Logging;
 using GiacenzaSorterRm.AppCode;
 using GiacenzaSorterRm.Models;
 using Microsoft.AspNetCore.Authorization;
-using GiacenzaSorterRm.Data;
+using GiacenzaSorterRm.Models.Database;
 
 namespace GiacenzaSorterRm.Pages.PagesSorter
 {
     [Authorize(Policy = "SorterRequirements")]
     public class CreateModel : PageModel
     {
-        private readonly IAppDbContext _context;
+        private readonly GiacenzaSorterContext _context;
         private readonly ILogger<CreateModel> _logger;
 
         public List<Scatole> ScatoleLst { get; set; }
@@ -31,7 +31,7 @@ namespace GiacenzaSorterRm.Pages.PagesSorter
         public Scatole Scatole { get; set; }
 
 
-        public CreateModel(ILogger<CreateModel> logger, IAppDbContext context)
+        public CreateModel(ILogger<CreateModel> logger, GiacenzaSorterContext context)
         {
             _logger = logger;
             _context = context;
@@ -74,7 +74,7 @@ namespace GiacenzaSorterRm.Pages.PagesSorter
 
                 if (ScatolaGiacenza != null)
                 {
-                    //se scatola √® gi√† stata sorterizzata
+                    //se scatola Ë gi‡ stata sorterizzata
                     if (ScatolaGiacenza.DataSorter != null)
                     {
                         ScatoleModel = new ScatoleModel
@@ -147,7 +147,7 @@ namespace GiacenzaSorterRm.Pages.PagesSorter
                 //}
                 //else
                 //{
-                //    //se scatola √® gi√† stata sorterizzata
+                //    //se scatola Ë gi‡ stata sorterizzata
                 //    if (ScatolaSorterizzataExist(Scatole.Scatola)) {
 
                 //        ScatoleModel = new ScatoleModel

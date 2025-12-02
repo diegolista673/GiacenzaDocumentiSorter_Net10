@@ -7,7 +7,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
 using GiacenzaSorterRm.Models.Database;
-using GiacenzaSorterRm.Data;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,7 +21,7 @@ using PdfSharp.Drawing;
 using PdfSharp;
 using PdfSharp.Drawing.Layout;
 using BarcodeStandard;
-using GiacenzaSorterRm.Data; 
+using GiacenzaSorterRm.Models.Database; 
 
 
 namespace GiacenzaSorterRm.Pages.PagesAccettazione
@@ -30,10 +30,10 @@ namespace GiacenzaSorterRm.Pages.PagesAccettazione
     [Authorize(Policy = "NormalizzazioneRequirements")]
     public class CreateModel : PageModel
     {
-        private readonly IAppDbContext _context;
+        private readonly GiacenzaSorterContext _context;
         private readonly ILogger<CreateModel> _logger;
 
-        public CreateModel(ILogger<CreateModel> logger, IAppDbContext context)
+        public CreateModel(ILogger<CreateModel> logger, GiacenzaSorterContext context)
         {
             _logger = logger;
             _context = context;
@@ -424,7 +424,7 @@ namespace GiacenzaSorterRm.Pages.PagesAccettazione
 
 
         /// <summary>
-        /// Controlla che il nome scatola non sia ripetuto più volte a causa di un inserimento troppop veloce
+        /// Controlla che il nome scatola non sia ripetuto pi� volte a causa di un inserimento troppop veloce
         /// conta le occorrenze della parola formata dalle prime 8 lettere all'interno della stringa di input
         /// </summary>
         /// <param name="scatola"></param>

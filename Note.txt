@@ -6,4 +6,3 @@ Pagine aggiornate PaginaMacero
 Pagina Normalizzato
 PageSorter
 
-controllare e testare sql con sqlite e sqlserver
