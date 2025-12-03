@@ -1,4 +1,4 @@
-﻿@model GiacenzaSorterRm.Models.BancaliModel
+@model GiacenzaSorterRm.Models.BancaliModel
 
 @{
     Layout = null;
@@ -49,19 +49,19 @@
                 <table class="table table-striped table-bordered nowrap display compact  h-100" style="width:100%" id="tableProduzione" tabindex="-1">
                     <thead>
                         <tr>
-                            <th>
+                            <th scope="col">
                                 @Html.DisplayNameFor(model => model.BancaliLst[0].Bancale)
                             </th>
-                            <th>
+                            <th scope="col">
                                 @Html.DisplayNameFor(model => model.BancaliLst[0].IdCommessaNavigation.Commessa)
                             </th>
-                            <th>
+                            <th scope="col">
                                 @Html.DisplayNameFor(model => model.BancaliLst[0].Note)
                             </th>
-                            <th>
+                            <th scope="col">
                                 Data
                             </th>
-                            <th>
+                            <th scope="col">
                                 @Html.DisplayNameFor(model => model.BancaliLst[0].IdCentroArrivoNavigation.CentroLavDesc)
                             </th>
                         </tr>

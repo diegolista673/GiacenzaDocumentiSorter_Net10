@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model GiacenzaSorterRm.Pages.TipiLavorazioni.IndexModel
 
 @{
@@ -19,25 +19,25 @@
             <table class="table table-striped table-bordered display compact table-sm" style="width:100%" id="tableProduzione" tabindex="-1">
                 <thead>
                     <tr>
-                        <th >
+                        <th scope="col" >
                             ID
                         </th>
-                        <th>
+                        <th scope="col">
                             @Html.DisplayNameFor(model => model.Commesse[0].Commessa)
                         </th>
-                        <th style="text-align: center">
+                        <th scope="col" style="text-align: center">
                             @Html.DisplayNameFor(model => model.Commesse[0].Attiva)                             
                         </th>
-                        <th style="text-align: center">
+                        <th scope="col" style="text-align: center">
                             @Html.DisplayNameFor(model => model.Commesse[0].GiorniSla)
                         </th>
-                        <th style="text-align: center">
+                        <th scope="col" style="text-align: center">
                            @Html.DisplayNameFor(model => model.Commesse[0].IdPiattaformaNavigation.Piattaforma)
                         </th>
-                        <th >
+                        <th scope="col" >
                             @Html.DisplayNameFor(model => model.Commesse[0].Note)
                         </th>
-                        <th></th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>

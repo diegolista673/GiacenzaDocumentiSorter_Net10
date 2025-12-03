@@ -1,4 +1,4 @@
-﻿@model GiacenzaSorterRm.Pages.PagesVolumi.IndexModel
+@model GiacenzaSorterRm.Pages.PagesVolumi.IndexModel
 
 @{
     Layout = null;
@@ -59,13 +59,13 @@
 
                         <thead>
                             <tr>
-                                <th>
+                                <th scope="col">
                                     @Html.DisplayNameFor(model => model.LstGiacenzaView[0].Centro)
                                 </th>
-                                <th>
+                                <th scope="col">
                                     @Html.DisplayNameFor(model => model.LstGiacenzaView[0].Piattaforma)
                                 </th>
-                                <th style="text-align: center">
+                                <th scope="col" style="text-align: center">
                                     @Html.DisplayNameFor(model => model.LstGiacenzaView[0].Giacenza)
                                 </th>
                             </tr>

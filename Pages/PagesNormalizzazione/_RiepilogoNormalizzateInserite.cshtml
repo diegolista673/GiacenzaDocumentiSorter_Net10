@@ -1,4 +1,4 @@
-﻿@model GiacenzaSorterRm.Models.ScatoleModel
+@model GiacenzaSorterRm.Models.ScatoleModel
 
 @{
     Layout = null;
@@ -45,26 +45,26 @@
     <table class="table table-striped table-bordered nowrap display compact " style="width:100%" id="tableProduzione" tabindex="-1">
             <thead>
                 <tr>
-                    <th>
+                    <th scope="col">
                         @*@Html.DisplayNameFor(model => model.ScatoleLst[0].DataNormalizzazione)*@
                         Data
                     </th>
-                    <th>
+                    <th scope="col">
                         @Html.DisplayNameFor(model => model.ScatoleLst[0].Scatola)
                     </th>
-                    <th>
+                    <th scope="col">
                         @Html.DisplayNameFor(model => model.ScatoleLst[0].IdCommessaNavigation.Commessa)
                     </th>
-                    <th>
+                    <th scope="col">
                         @Html.DisplayNameFor(model => model.ScatoleLst[0].IdContenitoreNavigation.Contenitore)
                     </th>
-                    <th>
+                    <th scope="col">
                         @Html.DisplayNameFor(model => model.ScatoleLst[0].IdTipologiaNavigation.Tipologia)
                     </th>
-                    <th>
+                    <th scope="col">
                         @Html.DisplayNameFor(model => model.ScatoleLst[0].IdTipoNormalizzazioneNavigation.TipoNormalizzazione)
                     </th>
-                    <th>
+                    <th scope="col">
                         @Html.DisplayNameFor(model => model.ScatoleLst[0].Note)
                     </th>
                 </tr>

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GiacenzaSorterRm 
 {
-    public static class CalcolaSLA
+    public static class CalcolaSla
     {
 
         public static DateTime CalcolaDataJ(DateTime data, int giorni)

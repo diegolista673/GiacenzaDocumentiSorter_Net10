@@ -184,7 +184,7 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
             bool res = false;
             string sql = @"SELECT COD_STAMPA FROM MND_SCATOLE_STAMPATE_LISTA where COD_STAMPA = @scatola";
 
-            using (SqlConnection connection = new SqlConnection(MyConnections.CnxnMondo))
+            using (SqlConnection connection = new SqlConnection(""))
             {
                 SqlCommand cmd = new SqlCommand(sql, connection);
                 cmd.Parameters.AddWithValue("@scatola", nomeScatola);

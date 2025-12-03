@@ -1,4 +1,4 @@
-ï»¿@model GiacenzaSorterRm.Pages.PagesVolumi.IndexModel
+@model GiacenzaSorterRm.Pages.PagesVolumi.IndexModel
 
 @{
     Layout = null;
@@ -57,31 +57,31 @@
 
         <thead>
             <tr>
-                <th>
+                <th scope="col">
                     @Html.DisplayNameFor(model => model.LstCommesseView[0].Commessa)
                 </th>
-                <th>
+                <th scope="col">
                     @Html.DisplayNameFor(model => model.LstCommesseView[0].Tipologia)
                 </th>
-                <th>
+                <th scope="col">
                     @Html.DisplayNameFor(model => model.LstCommesseView[0].Piattaforma)
                 </th>
-                <th>
+                <th scope="col">
                     Normalizzati il <br> @Model.EndDate.ToShortDateString()
                 </th>
-                <th>
+                <th scope="col">
                    Sorterizzati il <br>@Model.EndDate.ToShortDateString()
                 </th>
-                <th>
+                <th scope="col">
                    Totale Giacenza al <br> @Model.EndDate.ToShortDateString()
                  </th>
-                <th>
-                    Scatola piÃ¹ vecchia <br> ancora da sorterizzare 
+                <th scope="col">
+                    Scatola più vecchia <br> ancora da sorterizzare 
                 </th>
-                <th>
-                    Data Scatola <br> piÃ¹ vecchia
+                <th scope="col">
+                    Data Scatola <br> più vecchia
                 </th>
-                <th>
+                <th scope="col">
                     Centro <br> Giacenza
                 </th>
 
