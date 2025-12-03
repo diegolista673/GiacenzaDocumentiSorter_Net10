@@ -11,7 +11,7 @@
   <HasBeginStepCommandLineCredentials>true</HasBeginStepCommandLineCredentials>
   <HasBeginStepCommandLineTruststorePassword>false</HasBeginStepCommandLineTruststorePassword>
   <SonarQubeHostUrl>https://sonarcloud.io</SonarQubeHostUrl>
-  <SonarQubeVersion>8.0.0.76971</SonarQubeVersion>
+  <SonarQubeVersion>8.0.0.77013</SonarQubeVersion>
   <SonarProjectKey>diegolista673_GiacenzaDocumentiSorter_Net10</SonarProjectKey>
   <AdditionalConfig>
     <ConfigSetting Id="BuildUri" />
@@ -210,7 +210,7 @@ Automatic Analysis will not be available between 07:00 CET and 09:00 CET</Proper
     <Property Name="sonar.maintenance_mode.link">https://community.sonarsource.com/t/sonarcloud-autoscan-maintenance-september-28th-07-00-and-09-00-cet/101442</Property>
     <Property Name="sonar.maintenance_mode.start_date">2023-09-28T09:10:00:00.000+01:00</Property>
     <Property Name="sonar.sensor.cache.baseUrl">https://api.sonarcloud.io/analysis</Property>
-    <Property Name="sonar.core.startTime">02/12/2025 15:39:07</Property>
+    <Property Name="sonar.core.startTime">03/12/2025 15:06:03</Property>
   </ServerSettings>
   <LocalSettings>
     <Property Name="sonar.organization">diegolista673</Property>
