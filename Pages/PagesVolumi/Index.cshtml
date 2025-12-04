@@ -20,9 +20,8 @@
 
         <form class="d-flex flex-wrap gap-2 justify-content-center" method="post" id="formReport">
 
-
             <div class="mb-3">
-                <select asp-for="IdTipo" class="m-2 col-xs-12 form-control" id="selectType">
+                <select asp-for="IdTipo" class="form-select" id="selectType">
                     <option value="0">- Seleziona Tipo -</option>
                     <option value="1">Piattaforma</option>
                     <option value="2">Dettaglio</option>
@@ -30,27 +29,17 @@
                 <span asp-validation-for="IdTipo" class="text-danger"></span>
             </div>
 
-
             <div class="mb-3">
-            <select asp-for="SelectedCentro" asp-items="Model.LstCentri" class="m-2 col-xs-12 form-control" id="selectCentro">
+            <select asp-for="SelectedCentro" asp-items="Model.LstCentri" class="form-select" id="selectCentro">
                     <option value="0">- Seleziona Centro -</option>
                 </select>
-                <div><span asp-validation-for="SelectedCentro" class="text-danger"></span></div>
+                <span asp-validation-for="SelectedCentro" class="text-danger"></span>
             </div>
 
 
-@*             <label for="EndDate" class="m-2 col-xs-3 col-form-label mr-2">Giacenza al :</label>
-            <div class="m-2 col-xs-9">
-                <input asp-for="EndDate" class="form-control mr-4" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
-            </div> *@
-
-
-            <div class="m-2 col-auto px-0">
-                <button type="submit" class="col-auto btn btn-primary" id="btnStart">Report</button>
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary" id="btnStart">Report</button>
             </div>
-
-            <br />
 
         </form>
 

@@ -21,7 +21,6 @@ using PdfSharp.Drawing;
 using PdfSharp;
 using PdfSharp.Drawing.Layout;
 using BarcodeStandard;
-using GiacenzaSorterRm.Models.Database; 
 
 
 namespace GiacenzaSorterRm.Pages.PagesAccettazione

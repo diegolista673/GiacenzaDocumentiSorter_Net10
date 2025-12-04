@@ -23,31 +23,27 @@
 
 
             <div class="mb-3">
-                <select asp-for="SelectedCentro" asp-items="Model.LstCentri" class="form-control mr-2">
+                <select asp-for="SelectedCentro" asp-items="Model.LstCentri" class="form-select">
                     <option value="0">- Seleziona Centro -</option>
                 </select>
+                <span asp-validation-for="SelectedCentro" class="text-danger"></span>
             </div>
 
-
-            <label for="StartDate" class="m-1 col-xs-3 col-form-label mr-2">Normalizzazione Da :</label>
-            <div class="m-2 col-xs-9">
-                <input asp-for="StartDate" class="form-control mr-2" />
+            <div class="mb-3">
+                <label for="StartDate" class="form-label visually-hidden">Normalizzazione Da:</label>
+                <input asp-for="StartDate" class="form-control" placeholder="Normalizzazione Da" />
                 <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
 
-            <label for="EndDate" class="m-1 col-xs-3 col-form-label mr-2">Normalizzazione A :</label>
-            <div class="m-2 col-xs-9">
-                <input asp-for="EndDate" class="form-control" />
+            <div class="mb-3">
+                <label for="EndDate" class="form-label visually-hidden">Normalizzazione A:</label>
+                <input asp-for="EndDate" class="form-control" placeholder="Normalizzazione A" />
                 <span asp-validation-for="EndDate" class="text-danger"></span>
             </div>
 
-            <div class="m-2 col-auto px-0">
-
-                <button type="submit" class="col-auto btn btn-primary" id="btnStart">Report</button>
-
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary" id="btnStart">Report</button>
             </div>
-
-            <br />
 
         </form>
 

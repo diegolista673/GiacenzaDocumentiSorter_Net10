@@ -15,7 +15,8 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using GiacenzaSorterRm.Models.Database;
+using Microsoft.Extensions.Configuration;
+
 
 namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
 {
@@ -25,11 +26,13 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
     {
         private readonly GiacenzaSorterContext _context;
         private readonly ILogger<CreateModel> _logger;
+        private readonly IConfiguration _configuration;
 
-        public CreateModel(ILogger<CreateModel> logger, GiacenzaSorterContext context)
+        public CreateModel(ILogger<CreateModel> logger, GiacenzaSorterContext context, IConfiguration configuration)
         {
             _logger = logger;
             _context = context;
+            _configuration = configuration;
         }
 
         public SelectList CommesseSL { get; set; } 
@@ -91,12 +94,12 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
                 {
                     ScatoleModel = new ScatoleModel();
 
-                    //var res = await ControllaNomeScatolaMondoAsync(Scatole.Scatola);
-                    var res = true;
+                    var res = await ControllaNomeScatolaMondoAsync(Scatole.Scatola);
+                    
                     if (!res)
                     {
                         ScatoleModel.ScatolaNonPresenteMondo = true;
-                        //ScatoleModel.IsNotConforme = true;
+                        ScatoleModel.IsNotConforme = true;
 
                         ScatoleModel.LastScatola = Scatole.Scatola;
                         ScatoleModel.ScatoleLst = await GetListScatole(Scatole.DataNormalizzazione);
@@ -104,14 +107,14 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
                     }
 
 
-                    //if (ControllaNomeScatola(Scatole.Scatola))
-                    //{
-                    //    ScatoleModel.IsNotConforme = true;
+                    if (ControllaNomeScatola(Scatole.Scatola))
+                    {
+                        ScatoleModel.IsNotConforme = true;
 
-                    //    ScatoleModel.LastScatola = Scatole.Scatola;
-                    //    ScatoleModel.ScatoleLst = await GetListScatole(Scatole.DataNormalizzazione);
-                    //    return Partial("_RiepilogoNormalizzateInserite", ScatoleModel);
-                    //}
+                        ScatoleModel.LastScatola = Scatole.Scatola;
+                        ScatoleModel.ScatoleLst = await GetListScatole(Scatole.DataNormalizzazione);
+                        return Partial("_RiepilogoNormalizzateInserite", ScatoleModel);
+                    }
 
 
 
@@ -176,32 +179,74 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
 
         /// <summary>
         /// Controlla che il nome scatola esiste su Mondo
+        /// Usa connection string configurata in base all'ambiente:
+        /// - LocalDev/TestDev: Azure SQL Database
+        /// - Production: SQL Server on-premises
         /// </summary>
-        /// <param name="scatola"></param>
-        /// <returns></returns>
+        /// <param name="nomeScatola">Nome della scatola da verificare</param>
+        /// <returns>True se la scatola esiste su Mondo, False altrimenti</returns>
         private async Task<bool> ControllaNomeScatolaMondoAsync(string nomeScatola)
         {
-            bool res = false;
-            string sql = @"SELECT COD_STAMPA FROM MND_SCATOLE_STAMPATE_LISTA where COD_STAMPA = @scatola";
-
-            using (SqlConnection connection = new SqlConnection(""))
+            if (string.IsNullOrWhiteSpace(nomeScatola))
             {
-                SqlCommand cmd = new SqlCommand(sql, connection);
-                cmd.Parameters.AddWithValue("@scatola", nomeScatola);
-             
-                connection.Open();
-                var scatolaMondo = await cmd.ExecuteScalarAsync();
-                if (scatolaMondo != null)
+                _logger.LogWarning("ControllaNomeScatolaMondo: nome scatola vuoto o null");
+                return false;
+            }
+
+            // Recupera connection string da configurazione (User Secrets in dev, Environment Variables in prod)
+            string connectionString = _configuration.GetConnectionString("MondoConnection");
+            
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                _logger.LogError("MondoConnection string non configurata. Configurare in User Secrets (dev) o Environment Variables (prod)");
+                throw new InvalidOperationException("MondoConnection non configurata. Verificare appsettings e User Secrets.");
+            }
+
+            bool res = false;
+            string sql = @"SELECT COD_STAMPA FROM MND_SCATOLE_STAMPATE_LISTA WHERE COD_STAMPA = @scatola";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    if (scatolaMondo.ToString() == nomeScatola)
+                    using (SqlCommand cmd = new SqlCommand(sql, connection))
                     {
-                        res = true;
-                    }
-                    else
-                    {
-                        res = false;
+                        cmd.Parameters.AddWithValue("@scatola", nomeScatola);
+                        cmd.CommandTimeout = 30; // Timeout 30 secondi
+
+                        await connection.OpenAsync();
+                        
+                        var scatolaMondo = await cmd.ExecuteScalarAsync();
+                        
+                        if (scatolaMondo != null)
+                        {
+                            res = scatolaMondo.ToString().Equals(nomeScatola, StringComparison.OrdinalIgnoreCase);
+                            
+                            if (res)
+                            {
+                                _logger.LogDebug($"Scatola {nomeScatola} trovata su Mondo");
+                            }
+                            else
+                            {
+                                _logger.LogWarning($"Scatola {nomeScatola} trovata su Mondo ma con nome diverso: {scatolaMondo}");
+                            }
+                        }
+                        else
+                        {
+                            _logger.LogWarning($"Scatola {nomeScatola} NON trovata su Mondo");
+                        }
                     }
                 }
+            }
+            catch (SqlException sqlEx)
+            {
+                _logger.LogError(sqlEx, $"Errore SQL durante verifica scatola {nomeScatola} su Mondo: {sqlEx.Message}");
+                throw new InvalidOperationException($"Errore connessione database Mondo: {sqlEx.Message}", sqlEx);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Errore generico durante verifica scatola {nomeScatola} su Mondo: {ex.Message}");
+                throw;
             }
 
             return res;

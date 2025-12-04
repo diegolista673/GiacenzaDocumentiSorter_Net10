@@ -15,6 +15,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="AppCode\CalcolaSla.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Modifiche portale Logistica.xlsx" />
     <None Remove="Parametri e cluster portale Logistica.xlsx" />
     <None Remove="password.xlsx" />
@@ -62,7 +66,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
     <Folder Include="Tools\" />
     <Folder Include="wwwroot\pdf\" />
   </ItemGroup>

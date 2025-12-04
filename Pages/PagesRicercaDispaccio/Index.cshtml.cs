@@ -9,12 +9,8 @@ using GiacenzaSorterRm.Models.Database;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.Logging;
 using GiacenzaSorterRm.AppCode;
-using GiacenzaSorterRm.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
-using Microsoft.Data.SqlClient;
-using GiacenzaSorterRm.Models.Database;
 
 namespace GiacenzaSorterRm.Pages.PagesRicercaDispaccio
 {
