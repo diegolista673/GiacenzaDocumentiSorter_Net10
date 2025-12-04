@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model GiacenzaSorterRm.Pages.TipiContenitori.CreateModel
 
 @{
@@ -17,20 +17,20 @@
                     <div class="col-md-12">
                         <form method="post">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <label asp-for="Contenitori.Contenitore" class="control-label"></label>
                                 <input asp-for="Contenitori.Contenitore" class="form-control" />
                                 <span asp-validation-for="Contenitori.Contenitore" class="text-danger"></span>
                             </div>
 
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <label asp-for="Contenitori.TotaleDocumenti" class="control-label"></label>
                                 <input type="number" class="form-control" value="0" min="0" asp-for="Contenitori.TotaleDocumenti" oninput="this.value = Math.abs(this.value)"/>
                                 <span asp-validation-for="Contenitori.TotaleDocumenti" class="text-danger"></span>
                             </div>
 
 
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <input type="submit" value="Create" class="btn btn-primary" />
                             </div>
                         </form>

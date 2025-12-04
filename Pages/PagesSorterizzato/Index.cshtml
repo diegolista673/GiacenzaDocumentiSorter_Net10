@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model GiacenzaSorterRm.Pages.PagesSorterizzato.IndexModel
 
 @{
@@ -20,11 +20,11 @@
         <br />
 
 
-        <form class="form-inline justify-content-center" method="post" id="formReport">
+        <form class="d-flex flex-wrap gap-2 justify-content-center" method="post" id="formReport">
 
 
 
-                <div class="form-group">
+                <div class="mb-3">
                     <select asp-for="SelectedCentro" asp-items="Model.LstCentri" class="form-control mr-2">
                         <option value="0">- Seleziona Centro -</option>
                     </select>

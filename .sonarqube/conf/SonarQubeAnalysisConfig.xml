@@ -11,7 +11,7 @@
   <HasBeginStepCommandLineCredentials>true</HasBeginStepCommandLineCredentials>
   <HasBeginStepCommandLineTruststorePassword>false</HasBeginStepCommandLineTruststorePassword>
   <SonarQubeHostUrl>https://sonarcloud.io</SonarQubeHostUrl>
-  <SonarQubeVersion>8.0.0.77013</SonarQubeVersion>
+  <SonarQubeVersion>8.0.0.77028</SonarQubeVersion>
   <SonarProjectKey>diegolista673_GiacenzaDocumentiSorter_Net10</SonarProjectKey>
   <AdditionalConfig>
     <ConfigSetting Id="BuildUri" />

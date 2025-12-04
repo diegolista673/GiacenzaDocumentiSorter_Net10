@@ -29,12 +29,8 @@
 
               @if ((User.IsInRole("ADMIN") || User.IsInRole("SUPERVISOR")))
               {
-
-                  <input type="submit" id="btnElimina" hidden />
+                  <!-- Hidden input non più necessario - gestito da JS nel parent -->
               }
-
-
-
 
               <table class="table table-striped table-bordered nowrap display compact " style="width:100%" id="tableProduzione" tabindex="-1">
                   <thead>
@@ -170,48 +166,15 @@
               <input asp-for="StartDate" type="hidden" class="form-control" />
 
           </form>
-
-
 }
 
-<script type="module">
-    import { FetchHelpers } from '/js/fetch-helpers.js';
-
+<script>
+    // DataTables styling
     $(document).ready(function () {
         $('.dataTables_filter input[type="search"]').css(
             { 'width': '350px', 'display': 'inline-block' }
         );
     });
-
-    // Handler submit form eliminazione (richiamato dal parent Index.cshtml)
-    const formRiepilogo = document.getElementById('formRiepilogo');
-    if (formRiepilogo) {
-        formRiepilogo.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const formData = new FormData(e.target);
-            
-            // Mostra spinner nel parent
-            if (typeof FetchHelpers !== 'undefined') {
-                FetchHelpers.showSpinner('divProcessing');
-            }
-            document.getElementById('dvReport').style.display = 'none';
-            
-            try {
-                await FetchHelpers.postFormWithUpdate(
-                    '?handler=elimina',
-                    formData,
-                    'dvReport',
-                    () => {
-                        // Success callback - il parent gestisce il resto
-                        console.log('Scatole eliminate con successo');
-                    }
-                );
-            } catch (error) {
-                console.error('Errore eliminazione scatole:', error);
-            }
-        });
-    }
 </script>
 
 

@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model GiacenzaSorterRm.Pages.TipiLavorazioni.EditModel
 
 @{
@@ -15,13 +15,13 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Commesse.IdCommessa" />
 
-                <div class="form-group">
+                <div class="mb-3">
                     <label asp-for="Commesse.Commessa" class="control-label"></label>
                     <input asp-for="Commesse.Commessa" class="form-control" />
                     <span asp-validation-for="Commesse.Commessa" class="text-danger"></span>
                 </div>
 
-                <div class="form-group">
+                <div class="mb-3">
 
                     <select asp-for="Commesse.IdPiattaforma" class="form-control" asp-items="@Model.PiattaformeSL">
                         <option value="">- Piattaforma -</option>
@@ -30,12 +30,12 @@
 
                 </div>
 
-                <div class="form-group">
+                <div class="mb-3">
                     <label asp-for="Commesse.GiorniSla" class="control-label" ></label>
                     <input asp-for="Commesse.GiorniSla" class="form-control" style="width:100px"/>
                 </div>
 
-                <div class="form-group">
+                <div class="mb-3">
                     <label asp-for="Commesse.Attiva" class="control-label"></label>
                     <select asp-for="Commesse.Attiva" class="form-control">
                         <option value="">- Commessa Attiva -</option>
@@ -44,13 +44,13 @@
                     </select>
                 </div>
 
-                <div class="form-group">
+                <div class="mb-3">
                     <label asp-for="Commesse.Note" class="control-label"></label>
                     <textarea asp-for="Commesse.Note" class="form-control"></textarea>
                 </div>
 
 
-                <div class="form-group">
+                <div class="mb-3">
                     <input type="submit" value="Save" class="btn btn-primary" />
                 </div>
 

@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model GiacenzaSorterRm.Pages.PagesRicercaDispaccio.IndexModel
 @{
     ViewData["Title"] = "Ricerca Dispaccio";
@@ -20,7 +20,7 @@
     <br />
 
 
-    <form class="form-inline justify-content-center" method="post" id="formSelected">
+    <form class="d-flex flex-wrap gap-2 justify-content-center" method="post" id="formSelected">
 
 
         <select asp-for="SelectedItem" asp-items="Model.LstRicerca" class="m-2 mr-2 col-xs-9 form-control">

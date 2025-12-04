@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model GiacenzaSorterRm.Pages.PagesMacero.IndexModel
 
 @{
@@ -26,11 +26,11 @@
 
         <br />
 
-        <form class="form-inline justify-content-center" method="post" id="formReport">
+        <form class="d-flex flex-wrap gap-2 justify-content-center" method="post" id="formReport">
 
 
 
-            <div class="form-group">
+            <div class="mb-3">
             <select asp-for="IdCommessa" class=" m-2 mr-2 col-xs-9 form-control" asp-items="@Model.CommesseSL" id="selectCommessa">
                     <option value="0">- Seleziona Commessa -</option>
                 </select>
@@ -256,7 +256,7 @@
                         FetchHelpers.hideSpinner('divProcessing');
                         document.getElementById('dvReport').style.display = 'block';
                         
-                        // ? DEBUG: Verifica disponibilit� librerie
+                        // ? DEBUG: Verifica disponibilità librerie
                         console.log('DataTables disponibile:', typeof $.fn.DataTable);
                         console.log('Buttons disponibile:', typeof $.fn.DataTable.Buttons);
                         

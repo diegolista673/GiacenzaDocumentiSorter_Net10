@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model GiacenzaSorterRm.Pages.PagesSorter.CreateModel
 
 @{
@@ -32,26 +32,26 @@
                                                       
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <label asp-for="Scatole.DataSorter" class="control-label"></label>
                                 <input asp-for="Scatole.DataSorter" class="form-control" />
                                 <span asp-validation-for="Scatole.DataSorter" class="text-danger"></span>
                             </div>
 
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <textarea asp-for="Scatole.Note" class="form-control" cols="40" rows="3" placeholder="Note"></textarea>
                                 <span asp-validation-for="Scatole.Note" class="text-danger"></span>
                             </div>
 
 
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <input asp-for="Scatole.Scatola" class="form-control" placeholder="Scatola" / data-transform="uppercase">
                                 <span asp-validation-for="Scatole.Scatola" class="text-danger"></span>
                             </div>
 
 
 
-                            <div class="form-group">
+                            <div class="mb-3">
 
                                 <input type="hidden" asp-for="Scatole.IdCommessa" value="0" />
                                 <input type="hidden" asp-for="Scatole.IdTipologia" value="0" />

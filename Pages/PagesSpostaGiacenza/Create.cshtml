@@ -1,4 +1,4 @@
-@page "{handler?}"
+﻿@page "{handler?}"
 @model GiacenzaSorterRm.Pages.PagesSpostaGiacenza.CreateModel
 @{
     ViewData["Title"] = "Sposta Giacenza";
@@ -27,13 +27,13 @@
 
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label class="control-label">Data Cambio Giacenza</label>
                             <input asp-for="Scatole.DataCambioGiacenza" class="form-control" />
                             <span asp-validation-for="Scatole.DataCambioGiacenza" class="text-danger"></span>
                         </div>
 
-                        <div class="form-group">
+                        <div class="mb-3">
                             <select asp-for="Scatole.IdCentroGiacenza" class="form-control" asp-items="@Model.CentriSL">
                                 <option value="">- Centro di Destinazione -</option>
                             </select>
@@ -41,17 +41,17 @@
                         </div>
 
 
-                        <div class="form-group">
+                        <div class="mb-3">
                             <textarea asp-for="Scatole.NoteCambioGiacenza" class="form-control" cols="40" rows="3" placeholder="Note"></textarea>
                             <span asp-validation-for="Scatole.NoteCambioGiacenza" class="text-danger"></span>
                         </div>
 
-                        <div class="form-group">
+                        <div class="mb-3">
                             <input asp-for="Scatole.Scatola" class="form-control" />
                         </div>
                          
 
-                        <div class="form-group d-flex justify-content-end">
+                        <div class="mb-3 d-flex justify-content-end">
                             <button type="submit" class="btn btn-primary">Aggiorna</button>
                         </div>
 

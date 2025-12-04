@@ -15,7 +15,7 @@
             <form method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Operatori.IdOperatore" />
-                <div class="form-group">
+                <div class="mb-3">
                     <label asp-for="Operatori.Operatore" class="control-label"></label>
                     <input asp-for="Operatori.Operatore" class="form-control" />
                     <span asp-validation-for="Operatori.Operatore" class="text-danger"></span>
@@ -23,7 +23,7 @@
 
                 @if(User.IsInRole("ADMIN"))
                 {
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label asp-for="Operatori.Ruolo" class="control-label"></label>
                         <select asp-for="Operatori.Ruolo" class="form-control">
                             <option value="">- Ruolo -</option>
@@ -39,7 +39,7 @@
 
                 @if (User.IsInRole("SUPERVISOR"))
                 {
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label asp-for="Operatori.Ruolo" class="control-label"></label>
                         <select asp-for="Operatori.Ruolo" class="form-control" v-model="selectRuolo" >
                             <option value="">- Ruolo -</option>
@@ -51,7 +51,7 @@
                 }
 
 
-                <div class="form-group">
+                <div class="mb-3">
                     <label asp-for="Operatori.Azienda" class="control-label"></label>
                     <select asp-for="Operatori.Azienda" class="form-control" v-model="selectAzienda" v-on:change="onChangeAzienda($event)">
                         <option value="">- Azienda -</option>
@@ -62,7 +62,7 @@
                 </div>
 
 
-                <div class="form-group">
+                <div class="mb-3">
                     <label class="control-label">Centro Lavorazione</label>
                     <select asp-for="Operatori.IdCentroLav" class="form-control" asp-items="@Model.CentriSL">
                         <option value="">- Centro -</option>
@@ -71,7 +71,7 @@
                 </div>
 
 
-                <div class="form-group">
+                <div class="mb-3">
                     <label class="control-label">Password - min 8 char -</label>
                     <input asp-for="Operatori.Password" class="form-control" v-bind:disabled="isDisabledPassword" v-model="Password" />
                     <span asp-validation-for="Operatori.Password" class="text-danger"></span>
@@ -79,7 +79,7 @@
 
 
 
-                <div class="form-group">
+                <div class="mb-3">
                     <input type="submit" value="Save" class="btn btn-primary" />
                 </div>
             </form>

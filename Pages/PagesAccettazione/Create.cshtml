@@ -1,4 +1,4 @@
-@page "{handler?}"
+﻿@page "{handler?}"
 @model GiacenzaSorterRm.Pages.PagesAccettazione.CreateModel
 @{
     ViewData["Title"] = "Accettazione";
@@ -40,7 +40,7 @@
 
                     </form>
 
-                    <div class="form-group" id="resultDivDispacci">
+                    <div class="mb-3" id="resultDivDispacci">
                         <partial name="_RiepilogoDispacci" model="Model.DispacciModel" />
                     </div>
 
@@ -49,24 +49,24 @@
 
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                        <div class="form-group">
+                        <div class="mb-3">
                       
                             <input asp-for="Bancali.DataAccettazioneBancale" class="form-control" />
                         </div>
 
-                        <div class="form-group">
+                        <div class="mb-3">
                             <select asp-for="Bancali.IdCommessa" class="form-control  mr-sm-1" asp-items="@Model.CommesseSL ">
                                 <option value="">- Commessa -</option>
                             </select>
                             <span asp-validation-for="Bancali.IdCommessa" class="text-danger"></span>
                         </div>
 
-                        <div class="form-group">
+                        <div class="mb-3">
                             <textarea asp-for="Bancali.Note" class="form-control" cols="40" rows="3" placeholder="Note"></textarea>
                             <span asp-validation-for="Bancali.Note" class="text-danger"></span>
                         </div>
 
-                        <div class="form-group d-flex justify-content-end">
+                        <div class="mb-3 d-flex justify-content-end">
                             <button type="submit" class="btn btn-primary" id="btnPost">Nuovo bancale</button>
                         </div>
 

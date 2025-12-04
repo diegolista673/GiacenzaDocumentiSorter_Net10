@@ -75,7 +75,7 @@ Durante il fix, ho aggiunto anche gli hash mancanti per altre librerie:
 ```html
 <!-- ? VERSIONE FISSA + HASH AGGIUNTO -->
 <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"
-        integrity="sha384-LvFDBICrmthfWNhXj3CrZhCTPbHLKEMLkhTwkyQwLxHpC3xGLnLJP4qqPLXh5XQl"
+        integrity="sha384-5c/prnUc7MzXF7auiBy6n8cSZk2mqlHCyJ3iE2kdV2JRNAF4vmY7p8e5vso0rSTU"
         crossorigin="anonymous"></script>
 ```
 
@@ -119,6 +119,7 @@ Durante il fix, ho aggiunto anche gli hash mancanti per altre librerie:
 |---------|--------|
 | **Hash SRI** | 10/18 (56%) |
 | **jQuery UI CSS** | ? Bloccato dal browser |
+| **Axios** | ? Hash errato, bloccato |
 | **Axios versione** | `latest` (instabile) |
 | **Sicurezza** | ?? Media |
 
@@ -128,8 +129,10 @@ Durante il fix, ho aggiunto anche gli hash mancanti per altre librerie:
 |---------|--------|
 | **Hash SRI** | 13/18 (72%) |
 | **jQuery UI CSS** | ? Funzionante |
+| **Axios** | ? Funzionante |
 | **Axios versione** | `1.6.7` (fissa) |
 | **Sicurezza** | ? Alta |
+| **Script Automatici** | ? 2 script PowerShell per verifica/update |
 
 ---
 
@@ -283,8 +286,10 @@ with computed SHA-512 integrity 'HASH_CALCOLATO_QUI'
 - [x] ? Hash jQuery UI CSS corretto
 - [x] ? Hash JSZip aggiunto
 - [x] ? Hash Vue.js aggiunto
-- [x] ? Hash Axios aggiunto + versione fissa
+- [x] ? Hash Axios corretto (aggiornato con hash valido)
 - [x] ? Build compilata con successo
+- [x] ? Script verify-sri-hashes.ps1 creato
+- [x] ? Script update-sri-hashes.ps1 creato
 - [ ] ? Testare pagina Normalizzazione in browser
 - [ ] ? Verificare DatePicker funzionante
 - [ ] ? Verificare Export Excel (JSZip)
@@ -310,7 +315,8 @@ with computed SHA-512 integrity 'HASH_CALCOLATO_QUI'
 3. ? **Usa algoritmi sha384 o sha512**
 4. ? **Testa in dev prima di deploy**
 5. ? **Documenta hash in version control**
-6. ? **Rigenera hash dopo update librerie**
+6. ? **Rigenera hash dopo aggiornamento librerie**
+7. ? **Usa script automatici per verificare hash** (vedi `verify-sri-hashes.ps1`)
 
 ### DON'T ?
 
@@ -319,6 +325,58 @@ with computed SHA-512 integrity 'HASH_CALCOLATO_QUI'
 3. ? **Non copiare hash da fonti non verificate**
 4. ? **Non disabilitare SRI per "comodità"**
 5. ? **Non dimenticare `crossorigin="anonymous"`**
+
+---
+
+## ?? Script Automatici
+
+### verify-sri-hashes.ps1
+
+Script PowerShell per **verificare automaticamente** tutti gli hash SRI delle librerie CDN.
+
+**Funzionalità:**
+- ? Scarica ogni libreria CDN
+- ? Calcola hash SHA-256/384/512
+- ? Genera snippet HTML pronti all'uso
+- ? Confronta con `_Layout.cshtml` esistente
+- ? Segnala hash non corrispondenti
+- ? Salva risultati in JSON
+
+**Utilizzo:**
+```powershell
+# Esegui dalla root del progetto
+.\verify-sri-hashes.ps1
+```
+
+**Output:**
+```
+=== Verifica Hash SRI per CDN ===
+
+[jQuery]
+Scaricamento: https://code.jquery.com/jquery-3.7.1.min.js
+? Hash calcolato: sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=
+
+[jQuery UI CSS]
+Scaricamento: https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.1/themes/base/jquery-ui.min.css
+? Hash calcolato: sha512-TFee0335YRJoyiqz8hA8KV3P0tXa5CpRBSoM0Wnkn7JoJx1kaq1yXL/rb8YFpWXkMOjRcv5txv+C6UluttluCQ==
+
+...
+
+=== Verifica _Layout.cshtml ===
+
+? jQuery: Hash corretto
+? jQuery UI CSS: Hash corretto
+? Bootstrap CSS: Hash corretto
+...
+
+? Tutti gli hash in _Layout.cshtml sono corretti!
+```
+
+**Quando usarlo:**
+- ? Prima di ogni deploy in produzione
+- ? Dopo aggiornamento versione librerie
+- ? Durante code review
+- ? Setup CI/CD pipeline
 
 ---
 

@@ -1,4 +1,4 @@
-@page "{handler?}"
+﻿@page "{handler?}"
 @model GiacenzaSorterRm.Pages.PagesNormalizzazione.CreateModel
 @{
     ViewData["Title"] = "Normalizzazione";
@@ -30,7 +30,7 @@
 
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label asp-for="Scatole.DataNormalizzazione" class="control-label"></label>
                             <input asp-for="Scatole.DataNormalizzazione" class="form-control" v-model="selectDataNormalizzazione" v-on:change="onChangeDataNormalizzazione($event)" />
                             <span asp-validation-for="Scatole.DataNormalizzazione" class="text-danger"></span>
@@ -41,13 +41,13 @@
                         </div>
 
 
-                        @*<div class="form-group">
+                        @*<div class="mb-3">
                             <input asp-for="Bancali.Bancale" class="form-control input-scatola" placeholder="Bancale" v-on:keyup.enter="enterBancale()" v-on:change="enterBancale()" v-model="bancale" v-bind:disabled="isDisabledBancale" / data-transform="uppercase">
                             <span asp-validation-for="Bancali.Bancale" class="text-danger"></span>
                           </div> *@
 
 
-                        <div class="form-group">
+                        <div class="mb-3">
                             <select v-model="selectCommessa" asp-for="Scatole.IdCommessa" class="form-control mr-sm-1" v-on:change="onChangeCommessa($event)" v-bind:disabled="isDisabledCommesse">
                                 <option value="">- Commessa -</option>
                                 <option v-for="option in optionsCommesse" v-bind:value="option.value">
@@ -58,7 +58,7 @@
                         </div>
 
 
-                        <div class="form-group">
+                        <div class="mb-3">
                             <select v-model="selectTipologia" asp-for="Scatole.IdTipologia" class="form-control mr-sm-1" v-on:change="onChangeTipologie($event)" v-bind:disabled="isDisabledTipologie">
                                 <option value="">- Tipologia -</option>
                                 <option v-for="option in optionsTipologie" v-bind:value="option.value">
@@ -70,7 +70,7 @@
 
 
 
-                        <div class="form-group">
+                        <div class="mb-3">
                             <select v-model="selectContenitore" asp-for="Scatole.IdContenitore" class="form-control mr-sm-1" v-on:change="onChangeContenitori($event)" v-bind:disabled="isDisabledContenitori">
                                 <option value="">- Contenitori -</option>
                                 <option v-for="option in optionsContenitori" v-bind:value="option.value">
@@ -81,7 +81,7 @@
                         </div>
 
 
-                        <div class="form-group">
+                        <div class="mb-3">
                             <select v-model="selectTipoProdotto" asp-for="Scatole.IdTipoNormalizzazione" class="form-control" v-on:change="onChangeTipoProdotto($event)" v-bind:disabled="isDisabledTipoProdotti">
                                 <option value="">- Tipo Prodotto -</option>
                                 <option v-for="option in optionsTipoProdotti" v-bind:value="option.value">
@@ -92,18 +92,18 @@
                         </div>
 
 
-                        <div class="form-group">
+                        <div class="mb-3">
                             <textarea asp-for="Scatole.Note" class="form-control" cols="40" rows="3" placeholder="Note" v-model="note" v-bind:disabled="isDisabledNote"></textarea>
                             <span asp-validation-for="Scatole.Note" class="text-danger"></span>
                         </div>
 
 
-                        <div class="form-group">
+                        <div class="mb-3">
                             <input asp-for="Scatole.Scatola" class="form-control input-scatola" placeholder="Scatola" v-model="scatola" v-bind:disabled="isDisabledScatola" / data-transform="uppercase">
                             <span asp-validation-for="Scatole.Scatola" class="text-danger"></span>
                         </div>
 
-                        <div class="form-group d-flex justify-content-end">
+                        <div class="mb-3 d-flex justify-content-end">
                             <button type="submit" class="btn btn-primary w-50" id="btnPost" v-bind:disabled="isFormInvalid">Save</button>
                             <button type="button" class="btn btn-outline-primary ml-2 w-50" id="btnReset" v-on:click="resetForm">Clear Form</button>
                         </div>

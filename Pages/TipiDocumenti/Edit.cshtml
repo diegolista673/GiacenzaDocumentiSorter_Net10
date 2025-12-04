@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model GiacenzaSorterRm.Pages.TipiDocumenti.EditModel
 
 @{
@@ -15,17 +15,17 @@
                 <form method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input type="hidden" asp-for="Tipologie.IdTipologia" />
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label asp-for="Tipologie.Tipologia" class="control-label"></label>
                         <input asp-for="Tipologie.Tipologia" class="form-control" />
                         <span asp-validation-for="Tipologie.Tipologia" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label asp-for="Tipologie.Note" class="control-label"></label>
                         <input asp-for="Tipologie.Note" class="form-control" />
                         <span asp-validation-for="Tipologie.Note" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <input type="submit" value="Save" class="btn btn-primary" />
                     </div>
                 </form>

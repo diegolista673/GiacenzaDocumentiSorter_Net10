@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model GiacenzaSorterRm.Pages.PagesRiepilogoBancali.IndexModel
 
 @{
@@ -37,7 +37,7 @@
                                 
                                 @if (User.IsInRole("ADMIN") || User.IsInRole("SUPERVISOR"))
                                 {
-                                    <div class="form-group">
+                                    <div class="mb-3">
                                         <select asp-for="SelectedCentro" asp-items="Model.LstCentri" class="col-xs-12 form-control" >
                                             <option value="0">- Seleziona Centro -</option>
                                         </select>
@@ -45,7 +45,7 @@
                                 }
                                 else
                                 {
-                                    <div class="form-group">
+                                    <div class="mb-3">
                                         <select asp-for="SelectedCentro" class="col-xs-12 form-control" >
                                             <option value="0">@Model.Centro</option>
                                         </select>
@@ -54,7 +54,7 @@
 
 
 
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <select asp-for="Option" onchange="change(this)" class="col-xs-12 form-control" id="selectType">
                                         <option value="0">- Seleziona Tipo -</option>
                                         <option value="1">Data Accettazione</option>
@@ -62,7 +62,7 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group" id="DatePickerID">
+                                <div class="mb-3" id="DatePickerID">
                                     <label for="Date">Da:</label>
                                     <input asp-for="StartDate" class="form-control"  id="StartDate" />
                                     <span asp-validation-for="StartDate" class="text-danger"></span>

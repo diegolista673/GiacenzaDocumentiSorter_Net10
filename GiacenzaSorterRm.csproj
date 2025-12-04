@@ -14,6 +14,12 @@
 	<EnvironmentName>Production</EnvironmentName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Modifiche portale Logistica.xlsx" />
+    <None Remove="Parametri e cluster portale Logistica.xlsx" />
+    <None Remove="password.xlsx" />
+  </ItemGroup>
+
 
 
   <ItemGroup>

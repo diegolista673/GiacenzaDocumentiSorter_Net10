@@ -21,37 +21,37 @@
                     <input type="hidden" asp-for="Scatole.IdCentroNormalizzazione" />
                     <input type="hidden" asp-for="Scatole.IdCentroSorterizzazione" />
 
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label asp-for="Scatole.Scatola" class="control-label"></label>
                         <input asp-for="Scatole.Scatola" class="form-control" />
                         <span asp-validation-for="Scatole.Scatola" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label asp-for="Scatole.OperatoreNormalizzazione" class="control-label"></label>
                         <input asp-for="Scatole.OperatoreNormalizzazione" class="form-control" />
                         <span asp-validation-for="Scatole.OperatoreNormalizzazione" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label asp-for="Scatole.DataNormalizzazione" class="control-label"></label>
                         <input asp-for="Scatole.DataNormalizzazione" class="form-control" />
                         <span asp-validation-for="Scatole.DataNormalizzazione" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label asp-for="Scatole.Note" class="control-label"></label>
                         <input asp-for="Scatole.Note" class="form-control" />
                         <span asp-validation-for="Scatole.Note" class="text-danger"></span>
                     </div>
 
 
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label asp-for="Scatole.DataSorter" class="control-label"></label>
                         <input asp-for="Scatole.DataSorter" class="form-control" />
                         <span asp-validation-for="Scatole.DataSorter" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label class="control-label">Commessa</label>
                         <select asp-for="Scatole.IdCommessa" class="form-control" asp-items="@Model.CommesseSL">
                             <option value="">- Commessa -</option>
@@ -59,7 +59,7 @@
                         <span asp-validation-for="Scatole.IdCommessa" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label class="control-label">Contenitore</label>
                         <select asp-for="Scatole.IdContenitore" class="form-control" asp-items="@Model.ContenitoriSL">
                             <option value="">- Contenitore -</option>
@@ -68,19 +68,19 @@
                     </div>
 
 
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label class="control-label">Tipologia</label>
                         <select asp-for="Scatole.IdTipologia" class="form-control" asp-items="@Model.TipologieSL"></select>
                         <span asp-validation-for="Scatole.IdTipologia" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label class="control-label">Tipologia</label>
                         <select asp-for="Scatole.IdTipoNormalizzazione" class="form-control" asp-items="@Model.TipoNormSL"></select>
                         <span asp-validation-for="Scatole.IdTipoNormalizzazione" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-3">
                         <input type="submit" value="Save" class="btn btn-primary" />
                     </div>
                 </form>

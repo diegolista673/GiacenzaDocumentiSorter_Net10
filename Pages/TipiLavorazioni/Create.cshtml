@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model GiacenzaSorterRm.Pages.TipiLavorazioni.CreateModel
 
 @{
@@ -18,25 +18,25 @@
                         <form method="post">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                                                                   
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <label asp-for="Commesse.Commessa" class="control-label"></label>
                                 <input asp-for="Commesse.Commessa" class="form-control" />
                                 <span asp-validation-for="Commesse.Commessa" class="text-danger"></span>
                             </div>
 
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <select asp-for="Commesse.IdPiattaforma" class="form-control" asp-items="@Model.PiattaformeSL">
                                     <option value="">- Piattaforma -</option>
                                 </select>
                                 <span asp-validation-for="Commesse.IdPiattaforma" class="text-danger"></span>
                             </div>
 
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <label asp-for="Commesse.Note" class="control-label"></label>
                                 <textarea asp-for="Commesse.Note" class="form-control"></textarea>
                             </div>
 
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <input type="submit" value="Create" class="btn btn-primary" />
                             </div>
                         </form>

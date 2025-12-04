@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model GiacenzaSorterRm.Pages.PagesRiepilogo.IndexModel
 
 @{
@@ -6,133 +6,188 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
+<style>
+    /* Stili per validazione form */
+    .is-invalid {
+        border-color: #dc3545 !important;
+        animation: shake 0.4s;
+    }
+    
+    @@keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+    
+    .form-select.is-invalid,
+    .form-control.is-invalid {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right calc(0.375em + 0.1875rem) center;
+        background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        padding-right: calc(1.5em + 0.75rem);
+    }
+    
+    /* Stili modal validazione */
+    #validationErrors {
+        list-style: none;
+        padding-left: 0;
+    }
+    
+    #validationErrors li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #dee2e6;
+    }
+    
+    #validationErrors li:last-child {
+        border-bottom: none;
+    }
+    
+    #validationErrors li i {
+        margin-right: 0.5rem;
+    }
+</style>
 
+<div class="container-fluid">
 
-    <div class="container-fluid">
+    <div class="card text-white bg-info mb-3 max-w-100" >
 
-        <div class="card text-white bg-info mb-3 max-w-100" >
+        <div class="card-body">
+            <h2 class="text-center">Riepilogo Scatole</h2>
 
-            <div class="card-body">
-                <h2 class="text-center">Riepilogo Scatole</h2>
-
-            </div>
         </div>
+    </div>
 
 
-        <br />
+    <br />
 
-        <form class="form-inline justify-content-center" method="post" id="formSelected">
+    <form class="d-flex flex-wrap gap-2 justify-content-center" method="post" id="formSelected">
 
-
-
-            <select asp-for="SelectedCentro" asp-items="Model.LstCentri" class="m-2 mr-2 col-xs-9 form-control" id="selectCentro">
+        <div class="mb-3">
+            <select asp-for="SelectedCentro" asp-items="Model.LstCentri" class="form-select" id="selectCentro">
                 <option value="0">- Seleziona Centro -</option>
             </select>
-            <div><span asp-validation-for="SelectedCentro" class="text-danger"></span></div>
-            
-
-
-            <div class="form-group">
-            <select asp-for="IdCommessa" class=" m-2 mr-2 col-xs-9 form-control" asp-items="@Model.CommesseSL" id="selectCommessa">
-                    <option value="0">- Seleziona Commessa -</option>
-                    <option value="999">TUTTE LE COMMESSE</option>
-                </select>
-                <span asp-validation-for="IdCommessa" class="text-danger"></span>
-            </div>
-
-
-            <div class="form-group">
-                <select asp-for="SelectedFase" class="m-2 mr-2 col-xs-9 form-control" id="select1">
-                    <option value="">- Seleziona Tipo -</option>
-                    <option value="NORMALIZZAZIONE">NORMALIZZAZIONE</option>
-                    <option value="SORTER">SORTER</option>
-                </select>
-                <div><span asp-validation-for="SelectedFase" class="text-danger"></span></div>
-            </div>
-
-
-
-            <label for="StartDate" class="m-1 col-xs-3 col-form-label ml-4 mr-2">Dal :</label>
-            <div class="m-2 col-xs-9">
-                <input asp-for="StartDate" class="form-control mr-4" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
-            </div>
-
-
-            <label for="EndDate" class="m-1 col-xs-3 col-form-label mr-2">Al :</label>
-            <div class="m-2 col-xs-9">
-                <input asp-for="EndDate" class="form-control" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
-            </div>
-
-            <div class="m-2 col-auto px-0">
-                <button type="submit" class="col-auto btn btn-primary" id="btnStartNorm">Report</button>
-            </div>
-
-        </form>
-
-        <br /><br />
-
-        <div id="divProcessing" class="d-none" role="status" aria-live="polite" aria-busy="true">
-            <br />
-            <br />
-            <p class="sr-only">Caricamento in corso...</p>`r`n            <p class="text-center" aria-hidden="true">Processing data, please wait . . .</p>
-            <p>
-                <img class="mx-auto d-block" src="~/images/Spinner.gif" alt="Caricamento in corso..." role="presentation">
-            </p>
-
+            <span asp-validation-for="SelectedCentro" class="text-danger"></span>
+        </div>
+        
+        <div class="mb-3">
+            <select asp-for="IdCommessa" class="form-select" asp-items="@Model.CommesseSL" id="selectCommessa">
+                <option value="0">- Seleziona Commessa -</option>
+                <option value="999">TUTTE LE COMMESSE</option>
+            </select>
+            <span asp-validation-for="IdCommessa" class="text-danger"></span>
         </div>
 
+        <div class="mb-3">
+            <select asp-for="SelectedFase" class="form-select" id="select1">
+                <option value="">- Seleziona Tipo -</option>
+                <option value="NORMALIZZAZIONE">NORMALIZZAZIONE</option>
+                <option value="SORTER">SORTER</option>
+            </select>
+            <span asp-validation-for="SelectedFase" class="text-danger"></span>
+        </div>
 
-        <div class="center-text" id="dvReport"></div>
+        <div class="mb-3">
+            <label for="StartDate" class="form-label visually-hidden">Dal:</label>
+            <input asp-for="StartDate" class="form-control" placeholder="Dal" />
+            <span asp-validation-for="StartDate" class="text-danger"></span>
+        </div>
 
+        <div class="mb-3">
+            <label for="EndDate" class="form-label visually-hidden">Al:</label>
+            <input asp-for="EndDate" class="form-control" placeholder="Al" />
+            <span asp-validation-for="EndDate" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary" id="btnStartNorm">Report</button>
+        </div>
+
+    </form>
+
+    <br /><br />
+
+    <div id="divProcessing" class="d-none" role="status" aria-live="polite" aria-busy="true">
+        <br />
+        <br />
+        <p class="sr-only">Caricamento in corso...</p>`r`n            <p class="text-center" aria-hidden="true">Processing data, please wait . . .</p>
+        <p>
+            <img class="mx-auto d-block" src="~/images/Spinner.gif" alt="Caricamento in corso..." role="presentation">
+        </p>
 
     </div>
+
+
+    <div class="center-text" id="dvReport"></div>
+
+
+</div>
 
 <!-- Modal elimina-->
-<div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="modalEliminaTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Elimina Scatole</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title" id="modalEliminaTitle">Elimina Scatole</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Eliminare le scatole selezionate ?
+                Eliminare le scatole selezionate?
             </div>
             <div class="modal-footer">
-                <button type="button" id="submitModal" class="btn btn-primary"> Elimina</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-
+                <button type="button" id="submitModal" class="btn btn-danger">
+                    <i class="far fa-trash-alt"></i> Elimina
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal no scatole-->
-<div class="modal fade" id="modalNoScatole" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<!-- Modal no scatole selezionate-->
+<div class="modal fade" id="modalNoScatole" tabindex="-1" role="dialog" aria-labelledby="modalNoScatoleTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Elimina Scatole</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title" id="modalNoScatoleTitle">
+                    <i class="fas fa-exclamation-triangle"></i> Attenzione
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Non ci sono scatole selezionate
+                Non ci sono scatole selezionate per l'eliminazione.
             </div>
             <div class="modal-footer">
-
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Modal validazione form -->
+<div class="modal fade" id="modalValidazione" tabindex="-1" role="dialog" aria-labelledby="modalValidazioneTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="modalValidazioneTitle">
+                    <i class="fas fa-exclamation-circle"></i> Campi Obbligatori Mancanti
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-2"><strong>Per generare il report è necessario compilare i seguenti campi:</strong></p>
+                <ul id="validationErrors" class="mb-0">
+                    <!-- Errori inseriti dinamicamente da JavaScript -->
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                    <i class="fas fa-edit"></i> Compila Campi
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 @section scripts{
@@ -143,34 +198,196 @@
 
         // Nascondi spinner inizialmente
         FetchHelpers.hideSpinner('divProcessing');
-
-        // Modal handlers
-        $('#submitModal').click(function () {
-            $('#confirm-submit').modal('hide');
-            $('#btnElimina').click();
-            FetchHelpers.showSpinner('divProcessing');
-            document.getElementById('dvReport').style.display = 'none';
-        });
-
-        // Handler submit form
-        document.getElementById('formSelected').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
+        
+        // Funzione per validare form e mostrare errori specifici
+        function validateFormAndShowErrors() {
             const selectCentro = document.querySelector('#selectCentro');
             const selectFase = document.querySelector('#select1');
             const selectCommessa = document.querySelector('#selectCommessa');
+            const startDate = document.querySelector('#StartDate');
+            const endDate = document.querySelector('#EndDate');
             const userAzienda = '@User.FindFirst("Azienda").Value';
             
-            // Validazione form
-            let isValid = false;
+            const errors = [];
+            
+            // Validazione per utenti POSTEL (devono selezionare anche il centro)
             if (userAzienda === 'POSTEL') {
-                isValid = selectFase.value !== '' && selectCentro.value != '0' && selectCommessa.value != '0';
-            } else {
-                isValid = selectFase.value !== '' && selectCommessa.value != '0';
+                if (!selectCentro.value || selectCentro.value === '0') {
+                    errors.push('Centro di Lavorazione');
+                    selectCentro.classList.add('is-invalid');
+                } else {
+                    selectCentro.classList.remove('is-invalid');
+                }
             }
             
-            if (!isValid) {
-                alert('Compila tutti i campi obbligatori');
+            // Validazione commessa
+            if (!selectCommessa.value || selectCommessa.value === '0') {
+                errors.push('Commessa');
+                selectCommessa.classList.add('is-invalid');
+            } else {
+                selectCommessa.classList.remove('is-invalid');
+            }
+            
+            // Validazione fase
+            if (!selectFase.value || selectFase.value === '') {
+                errors.push('Tipo (Normalizzazione/Sorter)');
+                selectFase.classList.add('is-invalid');
+            } else {
+                selectFase.classList.remove('is-invalid');
+            }
+            
+            // Validazione date
+            if (!startDate.value) {
+                errors.push('Data Dal');
+                startDate.classList.add('is-invalid');
+            } else {
+                startDate.classList.remove('is-invalid');
+            }
+            
+            if (!endDate.value) {
+                errors.push('Data Al');
+                endDate.classList.add('is-invalid');
+            } else {
+                endDate.classList.remove('is-invalid');
+            }
+            
+            // Validazione range date
+            if (startDate.value && endDate.value) {
+                const start = new Date(startDate.value);
+                const end = new Date(endDate.value);
+                
+                if (start > end) {
+                    errors.push('Data Dal deve essere precedente o uguale a Data Al');
+                    startDate.classList.add('is-invalid');
+                    endDate.classList.add('is-invalid');
+                }
+            }
+            
+            return errors;
+        }
+        
+        // Funzione per mostrare modal con errori
+        function showValidationModal(errors) {
+            const errorList = document.getElementById('validationErrors');
+            errorList.innerHTML = '';
+            
+            errors.forEach(error => {
+                const li = document.createElement('li');
+                li.innerHTML = `<i class="fas fa-times-circle text-danger"></i> ${error}`;
+                errorList.appendChild(li);
+            });
+            
+            const modal = new bootstrap.Modal(document.getElementById('modalValidazione'));
+            modal.show();
+        }
+
+        // Modal handler per eliminazione
+        $('#submitModal').click(function () {
+            $('#confirm-submit').modal('hide');
+            
+            // Raccogli checkbox selezionate
+            const formRiepilogo = document.getElementById('formRiepilogo');
+            if (formRiepilogo) {
+                const formData = new FormData(formRiepilogo);
+                
+                // Mostra spinner
+                FetchHelpers.showSpinner('divProcessing');
+                document.getElementById('dvReport').style.display = 'none';
+                
+                // POST eliminazione
+                FetchHelpers.postFormWithUpdate(
+                    '?handler=elimina',
+                    formData,
+                    'dvReport',
+                    () => {
+                        // Success - ricarica report
+                        FetchHelpers.hideSpinner('divProcessing');
+                        document.getElementById('dvReport').style.display = 'block';
+                        
+                        // Setup checkbox handlers
+                        $("#checkAll").change(function () {
+                            const checked = $(this).is(':checked');
+                            $(".checkbox").prop("checked", checked);
+                        });
+
+                        $(".checkbox").click(function () {
+                            if ($(".checkbox").length == $(".checkbox:checked").length) {
+                                $("#checkall").prop("checked", true);
+                            } else {
+                                $("#checkall").removeAttr("checked");
+                            }
+                        });
+                        
+                        // Configurazione DataTable base
+                        const tableConfig = {
+                            dom: 'Bflrtip',
+                            buttons: [
+                                {
+                                    extend: 'excelHtml5',
+                                    autoFilter: true,
+                                    text: '<i class="fas fa-file-excel"></i> Export to Excel',
+                                    exportOptions: {
+                                        columns: ':not(.notexport)'
+                                    },
+                                    className: 'col-auto btn btn-primary',
+                                    title: function () {
+                                        return 'Riepilogo scatole ' + $('#SelectedFase').val() + 
+                                               ' dal ' + $('#StartDate').val() + ' al ' + $('#EndDate').val();
+                                    }
+                                }
+                            ],
+                            columnDefs: [
+                                {
+                                    targets: 0,
+                                    orderable: false,
+                                    searchable: false,
+                                }
+                            ],
+                            order: [[2, 'asc']],
+                            scrollX: true
+                        };
+                        
+                        // Inizializza DataTable
+                        FetchHelpers.reinitDataTable('tableProduzione', tableConfig);
+                        
+                        // Aggiungi bottone Delete solo per ADMIN/SUPERVISOR
+                        const ruolo = '@Model.Ruolo';
+                        if (ruolo === 'ADMIN' || ruolo === 'SUPERVISOR') {
+                            const table = $('#tableProduzione').DataTable();
+                            table.button().add(1, {
+                                action: function (e, dt, button, config) {
+                                    const atLeastOneIsChecked = $('.checkbox').is(':checked');
+                                    if (atLeastOneIsChecked) {
+                                        $('#confirm-submit').modal('show');
+                                    } else {
+                                        $('#modalNoScatole').modal('show');
+                                    }
+                                },
+                                text: '<i class="far fa-trash-alt"></i> Delete',
+                                className: 'col-auto btn btn-danger ml-2'
+                            });
+                        }
+                    },
+                    (error) => {
+                        // Error callback
+                        FetchHelpers.hideSpinner('divProcessing');
+                        document.getElementById('dvReport').style.display = 'block';
+                        console.error('Errore eliminazione:', error);
+                    }
+                );
+            }
+        });
+
+        // Handler submit form Report con validazione migliorata
+        document.getElementById('formSelected').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Validazione form
+            const errors = validateFormAndShowErrors();
+            
+            if (errors.length > 0) {
+                // Mostra modal con errori specifici
+                showValidationModal(errors);
                 return;
             }
             
@@ -260,14 +477,22 @@
                         // Error callback
                         FetchHelpers.hideSpinner('divProcessing');
                         reportDiv.style.display = 'block';
-                        reportDiv.innerHTML = '<div class="alert alert-danger">Errore durante il caricamento del report. Riprova.</div>';
+                        reportDiv.innerHTML = '<div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> Errore durante il caricamento del report. Riprova.</div>';
                     }
                 );
             } catch (error) {
                 console.error('Errore report riepilogo scatole:', error);
                 FetchHelpers.hideSpinner('divProcessing');
                 reportDiv.style.display = 'block';
+                reportDiv.innerHTML = '<div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> Errore imprevisto. Riprova.</div>';
             }
+        });
+        
+        // Rimuovi classe is-invalid quando utente modifica un campo
+        document.querySelectorAll('#selectCentro, #selectCommessa, #select1, #StartDate, #EndDate').forEach(field => {
+            field.addEventListener('change', function() {
+                this.classList.remove('is-invalid');
+            });
         });
     </script>
 }

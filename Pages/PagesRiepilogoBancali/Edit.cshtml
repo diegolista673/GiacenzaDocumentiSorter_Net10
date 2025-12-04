@@ -21,30 +21,30 @@
                     <input type="hidden" asp-for="Bancali.IdOperatoreAccettazione" />
                     
 
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label asp-for="Bancali.Bancale" class="control-label"></label>
                         <input asp-for="Bancali.Bancale" class="form-control" />
                         <span asp-validation-for="Bancali.Bancale" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label asp-for="Bancali.OperatoreAccettazione" class="control-label"></label>
                         <input asp-for="Bancali.OperatoreAccettazione" class="form-control" />
                         <span asp-validation-for="Bancali.OperatoreAccettazione" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label asp-for="Bancali.DataAccettazioneBancale" class="control-label"></label>
                         <input asp-for="Bancali.DataAccettazioneBancale" class="form-control" />
                         <span asp-validation-for="Bancali.DataAccettazioneBancale" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label asp-for="Bancali.Note" class="control-label"></label>
                         <input asp-for="Bancali.Note" class="form-control" />
                         <span asp-validation-for="Bancali.Note" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label class="control-label">Commessa</label>
                         <select asp-for="Bancali.IdCommessa" class="form-control" asp-items="@Model.CommesseSL">
                             <option value="">- Commessa -</option>
@@ -52,7 +52,7 @@
                         <span asp-validation-for="Bancali.IdCommessa" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-3">
                         <input type="submit" value="Save" class="btn btn-primary" />
                     </div>
                 </form>

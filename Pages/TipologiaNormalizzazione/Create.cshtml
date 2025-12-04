@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model GiacenzaSorterRm.Pages.TipologiaNormalizzazione.CreateModel
 
 @{
@@ -17,12 +17,12 @@
                 <div class="col-md-12">
                     <form method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label asp-for="TipiNormalizzazione.TipoNormalizzazione" class="control-label"></label>
                             <input asp-for="TipiNormalizzazione.TipoNormalizzazione" class="form-control" />
                             <span asp-validation-for="TipiNormalizzazione.TipoNormalizzazione" class="text-danger"></span>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <input type="submit" value="Create" class="btn btn-primary" />
                         </div>
                     </form>

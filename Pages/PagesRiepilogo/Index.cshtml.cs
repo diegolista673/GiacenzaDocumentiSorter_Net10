@@ -159,29 +159,48 @@ namespace GiacenzaSorterRm.Pages.PagesRiepilogo
 
         public async Task<IActionResult> OnPostElimina()
         {
-            var lst = LstScatoleView.Where(x => x.Elimina == true).ToList();
-            if(lst.Count > 0)
+            try
             {
-                foreach (var item in lst)
+                var lst = LstScatoleView.Where(x => x.Elimina == true).ToList();
+                
+                if (lst.Count > 0)
                 {
-                    Scatole scatola = await _context.Scatoles.FindAsync(item.IdScatola);
-                    if (scatola != null)
+                    _logger.LogInformation($"Inizio eliminazione di {lst.Count} scatole - operatore: {User.Identity.Name}");
+                    
+                    // Salva parametri per ricaricare la ricerca
+                    int centroID = CentroAppartenenza.SetCentroByRoleADMINSupervisor(User, SelectedCentro);
+                    string fase = SelectedFase == "NORMALIZZAZIONE" ? "normalizzazione" : "sorter";
+                    
+                    // Elimina tutte le scatole selezionate
+                    foreach (var item in lst)
                     {
-                        _context.Scatoles.Remove(scatola);
-
-                        await _context.SaveChangesAsync();
-                        _logger.LogInformation("Delete scatola normalizzata : " + scatola.Scatola + " - operatore : " + User.Identity.Name);
-
-                        await SetSearch(StartDate, EndDate, "sorter", (int)scatola.IdCentroNormalizzazione);
-                        return Partial("_RiepilogoScatole", this);
+                        Scatole scatola = await _context.Scatoles.FindAsync(item.IdScatola);
+                        if (scatola != null)
+                        {
+                            _context.Scatoles.Remove(scatola);
+                            _logger.LogInformation($"Delete scatola: {scatola.Scatola} - operatore: {User.Identity.Name}");
+                        }
                     }
+                    
+                    // Salva tutte le modifiche in una transazione
+                    await _context.SaveChangesAsync();
+                    
+                    // Ricarica la ricerca con i parametri originali
+                    await SetSearch(StartDate, EndDate, fase, centroID);
+                    
+                    Fase = SelectedFase == "NORMALIZZAZIONE" ? "Normalizzate" : "Sorterizzate";
+                    
+                    return Partial("_RiepilogoScatole", this);
                 }
-
+                
+                // Nessuna scatola selezionata
+                return new EmptyResult();
             }
-
-            return new EmptyResult();
-
-
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Errore durante eliminazione scatole");
+                return new EmptyResult();
+            }
         }
 
 
