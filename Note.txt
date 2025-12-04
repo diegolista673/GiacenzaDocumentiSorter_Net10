@@ -1,3 +1,4 @@
 
-controllare tutte le cdn e css
+test in locael con mondo
+test in produzione in collaudo e produzione su IIS
 

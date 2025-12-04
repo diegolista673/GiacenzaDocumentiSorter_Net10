@@ -60,7 +60,7 @@
 
                             @if ((User.IsInRole("ADMIN") || User.IsInRole("SUPERVISOR")))
                             {
-
+                                @* SONAR: role="button" è corretto per Bootstrap 5 navbar dropdown - non cambiare in <button> *@
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLogistica" role="button" data-bs-toggle="dropdown" aria-expanded="false">Logistica</a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownLogistica">
@@ -286,7 +286,8 @@
     <!-- Input Helpers (ES6 Module) -->
     <script type="module" src="~/js/input-helpers.js" asp-append-version="true"></script>
 
-    @RenderSection("Scripts", required: false)
+    @await RenderSectionAsync("Scripts", required: false)
+
 
 </body>
 </html>

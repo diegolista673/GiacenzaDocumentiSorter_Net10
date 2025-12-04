@@ -13,8 +13,6 @@ namespace GiacenzaSorterRm.AppCode
         {
             
         }
-        //AMA RM BUSTE00012364AMA RM BUSTE00012364
-        //public string GetErrorMessage() =>  $"Controllare la scatola inserita";
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {

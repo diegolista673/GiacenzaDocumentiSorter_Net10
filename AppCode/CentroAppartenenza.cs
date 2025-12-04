@@ -74,7 +74,7 @@ namespace GiacenzaSorterRm.AppCode
         /// <returns></returns>
         public static string GetCentroLavorazioneByUser(ClaimsPrincipal user)
         {
-            string centro = user.FindFirst("Centro").Value; ;
+            string centro = user.FindFirst("Centro").Value; 
             return centro;
         }
     }

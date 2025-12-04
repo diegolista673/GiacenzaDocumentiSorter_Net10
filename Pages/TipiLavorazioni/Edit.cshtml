@@ -22,8 +22,8 @@
                 </div>
 
                 <div class="mb-3">
-
-                    <select asp-for="Commesse.IdPiattaforma" class="form-control" asp-items="@Model.PiattaformeSL">
+                    <label asp-for="Commesse.IdPiattaforma" class="control-label">Piattaforma</label>
+                    <select asp-for="Commesse.IdPiattaforma" class="form-select" asp-items="@Model.PiattaformeSL">
                         <option value="">- Piattaforma -</option>
                     </select>
                     <span asp-validation-for="Commesse.IdPiattaforma" class="text-danger"></span>
@@ -37,7 +37,7 @@
 
                 <div class="mb-3">
                     <label asp-for="Commesse.Attiva" class="control-label"></label>
-                    <select asp-for="Commesse.Attiva" class="form-control">
+                    <select asp-for="Commesse.Attiva" class="form-select">
                         <option value="">- Commessa Attiva -</option>
                         <option value="true">SI</option>
                         <option value="false">No</option>

@@ -54,10 +54,10 @@ namespace GiacenzaSorterRm.Pages.PagesAssociazione
 
             try
             {
-                Ctc.DescCommessa = _context.Commesses.Where(p => p.IdCommessa == Ctc.IdCommessa).Select(x=> x.Commessa).First();
-                Ctc.DescTipologia = _context.Tipologies.Where(p => p.IdTipologia == Ctc.IdTipologia).Select(x => x.Tipologia).First();
-                Ctc.DescContenitore = _context.Contenitoris.Where(p => p.IdContenitore == Ctc.IdContenitore).Select(x => x.Contenitore).First();
-                Ctc.Quantita = _context.Contenitoris.Where(p => p.IdContenitore == Ctc.IdContenitore).Select(x => x.TotaleDocumenti).First();
+                Ctc.DescCommessa = await _context.Commesses.Where(p => p.IdCommessa == Ctc.IdCommessa).Select(x=> x.Commessa).FirstAsync();
+                Ctc.DescTipologia = await _context.Tipologies.Where(p => p.IdTipologia == Ctc.IdTipologia).Select(x => x.Tipologia).FirstAsync();
+                Ctc.DescContenitore = await _context.Contenitoris.Where(p => p.IdContenitore == Ctc.IdContenitore).Select(x => x.Contenitore).FirstAsync();
+                Ctc.Quantita = await _context.Contenitoris.Where(p => p.IdContenitore == Ctc.IdContenitore).Select(x => x.TotaleDocumenti).FirstAsync();
 
                 _context.CommessaTipologiaContenitores.Add(Ctc);
 
