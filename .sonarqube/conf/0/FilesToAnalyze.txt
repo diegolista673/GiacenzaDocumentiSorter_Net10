@@ -22,15 +22,12 @@ C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\Contenitori.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\ContenitoriExtensions.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\GiacenzaSorterContext.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\GiacenzaSorterContextExtension.cs
-C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\GiacenzaSorterRmTestContextExtension.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\Operatori.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\OperatoriExtensions.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\Piattaforme.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\Scatole.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\ScatoleExtensions.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\Stati.cs
-C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\Sysdiagram.cs
-C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\Sysdiargam.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\TipiNormalizzazione.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\TipiNormalizzazioneExtensions.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\Tipologie.cs
@@ -232,9 +229,7 @@ C:\Users\SMARTW\source\repos\GiacenzaSorter\DOCS\SPRINT1_FINAL_REPORT.md
 C:\Users\SMARTW\source\repos\GiacenzaSorter\DOCS\SPRINT1_IMPLEMENTATION_REPORT.md
 C:\Users\SMARTW\source\repos\GiacenzaSorter\DOCS\SPRINT1_SUMMARY.md
 C:\Users\SMARTW\source\repos\GiacenzaSorter\DOCS\SPRINT2_FINAL_REPORT.md
-C:\Users\SMARTW\source\repos\GiacenzaSorter\fix-forms-labels-select.ps1
 C:\Users\SMARTW\source\repos\GiacenzaSorter\gitignore .gitignore
-C:\Users\SMARTW\source\repos\GiacenzaSorter\migrate-bootstrap5-forms.ps1
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Note.txt
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Note_GiacenzaSorter.txt
 C:\Users\SMARTW\source\repos\GiacenzaSorter\nuovo 1.txt
@@ -246,9 +241,6 @@ C:\Users\SMARTW\source\repos\GiacenzaSorter\setup-mondo-localdev.bat
 C:\Users\SMARTW\source\repos\GiacenzaSorter\setup-mondo-testdev.bat
 C:\Users\SMARTW\source\repos\GiacenzaSorter\setup-testdev.bat
 C:\Users\SMARTW\source\repos\GiacenzaSorter\setup-user-secrets.bat
-C:\Users\SMARTW\source\repos\GiacenzaSorter\test-sri-automated.ps1
-C:\Users\SMARTW\source\repos\GiacenzaSorter\update-sri-hashes.ps1
 C:\Users\SMARTW\source\repos\GiacenzaSorter\user_secrets_localdev.txt
-C:\Users\SMARTW\source\repos\GiacenzaSorter\verify-sri-hashes.ps1
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Properties\launchSettings.json
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Properties\PublishProfiles\FolderProfile.pubxml

@@ -13,7 +13,6 @@
         </div>
     </div>
 
-
     <div class="row mt-3">
 
         <div class="col-sm-3 col-md-3 col-lg-3 align-self-stretch">
@@ -31,24 +30,14 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                         <div class="mb-3">
-                            <label asp-for="Scatole.DataNormalizzazione" class="control-label"></label>
-                            <input asp-for="Scatole.DataNormalizzazione" class="form-control" v-model="selectDataNormalizzazione" v-on:change="onChangeDataNormalizzazione($event)" />
+                            <label for="Scatole_DataNormalizzazione" class="form-label">Data Normalizzazione</label>
+                            <input asp-for="Scatole.DataNormalizzazione" id="Scatole_DataNormalizzazione" class="form-control" v-model="selectDataNormalizzazione" v-on:change="onChangeDataNormalizzazione($event)" />
                             <span asp-validation-for="Scatole.DataNormalizzazione" class="text-danger"></span>
-
                             <p v-if="check" class="text-danger">Attenzione! Data inserita maggiore della data odierna</p>
-                            @* <p v-if="checkDataBancale" class="text-danger">Attenzione! Data inserita antecedente accettazione bancale  </p> *@
-
                         </div>
 
-
-                        @*<div class="mb-3">
-                            <input asp-for="Bancali.Bancale" class="form-control input-scatola" placeholder="Bancale" v-on:keyup.enter="enterBancale()" v-on:change="enterBancale()" v-model="bancale" v-bind:disabled="isDisabledBancale" / data-transform="uppercase">
-                            <span asp-validation-for="Bancali.Bancale" class="text-danger"></span>
-                          </div> *@
-
-
                         <div class="mb-3">
-                            <select v-model="selectCommessa" asp-for="Scatole.IdCommessa" class="form-control mr-sm-1" v-on:change="onChangeCommessa($event)" v-bind:disabled="isDisabledCommesse">
+                            <select v-model="selectCommessa" asp-for="Scatole.IdCommessa" id="Scatole_IdCommessa" class="form-select" v-on:change="onChangeCommessa($event)" v-bind:disabled="isDisabledCommesse">
                                 <option value="">- Commessa -</option>
                                 <option v-for="option in optionsCommesse" v-bind:value="option.value">
                                     {{ option.text }}
@@ -57,9 +46,8 @@
                             <span asp-validation-for="Scatole.IdCommessa" class="text-danger"></span>
                         </div>
 
-
                         <div class="mb-3">
-                            <select v-model="selectTipologia" asp-for="Scatole.IdTipologia" class="form-control mr-sm-1" v-on:change="onChangeTipologie($event)" v-bind:disabled="isDisabledTipologie">
+                            <select v-model="selectTipologia" asp-for="Scatole.IdTipologia" id="Scatole_IdTipologia" class="form-select" v-on:change="onChangeTipologie($event)" v-bind:disabled="isDisabledTipologie">
                                 <option value="">- Tipologia -</option>
                                 <option v-for="option in optionsTipologie" v-bind:value="option.value">
                                     {{ option.text }}
@@ -68,10 +56,8 @@
                             <span asp-validation-for="Scatole.IdTipologia" class="text-danger"></span>
                         </div>
 
-
-
                         <div class="mb-3">
-                            <select v-model="selectContenitore" asp-for="Scatole.IdContenitore" class="form-control mr-sm-1" v-on:change="onChangeContenitori($event)" v-bind:disabled="isDisabledContenitori">
+                            <select v-model="selectContenitore" asp-for="Scatole.IdContenitore" id="Scatole_IdContenitore" class="form-select" v-on:change="onChangeContenitori($event)" v-bind:disabled="isDisabledContenitori">
                                 <option value="">- Contenitori -</option>
                                 <option v-for="option in optionsContenitori" v-bind:value="option.value">
                                     {{ option.text }}
@@ -80,9 +66,8 @@
                             <span asp-validation-for="Scatole.IdContenitore" class="text-danger"></span>
                         </div>
 
-
                         <div class="mb-3">
-                            <select v-model="selectTipoProdotto" asp-for="Scatole.IdTipoNormalizzazione" class="form-control" v-on:change="onChangeTipoProdotto($event)" v-bind:disabled="isDisabledTipoProdotti">
+                            <select v-model="selectTipoProdotto" asp-for="Scatole.IdTipoNormalizzazione" id="Scatole_IdTipoNormalizzazione" class="form-select" v-on:change="onChangeTipoProdotto($event)" v-bind:disabled="isDisabledTipoProdotti">
                                 <option value="">- Tipo Prodotto -</option>
                                 <option v-for="option in optionsTipoProdotti" v-bind:value="option.value">
                                     {{ option.text }}
@@ -91,27 +76,22 @@
                             <span asp-validation-for="Scatole.IdTipoNormalizzazione" class="text-danger"></span>
                         </div>
 
-
                         <div class="mb-3">
-                            <textarea asp-for="Scatole.Note" class="form-control" cols="40" rows="3" placeholder="Note" v-model="note" v-bind:disabled="isDisabledNote"></textarea>
+                            <textarea asp-for="Scatole.Note" id="Scatole_Note" class="form-control" cols="40" rows="3" placeholder="Note" v-model="note" v-bind:disabled="isDisabledNote"></textarea>
                             <span asp-validation-for="Scatole.Note" class="text-danger"></span>
                         </div>
 
-
                         <div class="mb-3">
-                            <input asp-for="Scatole.Scatola" class="form-control input-scatola" placeholder="Scatola" v-model="scatola" v-bind:disabled="isDisabledScatola" / data-transform="uppercase">
+                            <input asp-for="Scatole.Scatola" id="Scatole_Scatola" class="form-control input-scatola" placeholder="Scatola" v-model="scatola" v-bind:disabled="isDisabledScatola" data-transform="uppercase" />
                             <span asp-validation-for="Scatole.Scatola" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3 d-flex justify-content-end">
                             <button type="submit" class="btn btn-primary w-50" id="btnPost" v-bind:disabled="isFormInvalid">Save</button>
-                            <button type="button" class="btn btn-outline-primary ml-2 w-50" id="btnReset" v-on:click="resetForm">Clear Form</button>
+                            <button type="button" class="btn btn-outline-primary ms-2 w-50" id="btnReset" v-on:click="resetForm">Clear Form</button>
                         </div>
 
-
                     </form>
-
-
 
                 </div>
             </div>
@@ -127,10 +107,6 @@
 
 </div>
 
-
-
-
-
 @section scripts{
 
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
@@ -138,12 +114,10 @@
     <script type="module">
         import { FetchHelpers } from '/js/fetch-helpers.js';
 
-        // Inizializza DataTable al caricamento
         $(document).ready(function () {
             $('#tableProduzione').DataTable({ scrollX: true });
         });
 
-        // Handler form submit con Fetch API
         document.getElementById('formInsertScatola').addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -155,13 +129,10 @@
                     formData,
                     'resultDiv',
                     () => {
-                        // Success callback
                         FetchHelpers.reinitDataTable('tableProduzione', { scrollX: true });
                         FetchHelpers.dataTableGoToLastPage('tableProduzione');
                         
-                        // Reset campi Vue (usa i metodi Vue esistenti tramite l'istanza)
                         if (window.vm && typeof window.vm.resetForm === 'function') {
-                            // Pulisci solo scatola e note, mantieni gli altri campi
                             document.getElementById('Scatole_Scatola').value = '';
                             document.getElementById('Scatole_Note').value = '';
                             window.vm.scatola = '';
@@ -174,7 +145,6 @@
             }
         });
 
-        // Modal handler
         $('#confirm-submit').on('shown.bs.modal', function () { 
             $('#submitModal').trigger('focus'); 
             $('#scatola').val(''); 

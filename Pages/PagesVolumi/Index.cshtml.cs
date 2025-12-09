@@ -114,9 +114,9 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
                                              {
                                                  Commessa = g.Key.Commessa,
                                                  Tipologia = g.Key.Tipologia,
-                                                 TotaleDocumentiNormalizzati = g.Where(x => x.IdStato == 1 && x.DataNormalizzazione == EndDate).Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
-                                                 TotaleDocumentiSorterizzati = g.Where(z => z.IdStato == 2 && z.DataSorter == EndDate).Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
-                                                 TotaleDocumentiGiacenza = g.Where(z => z.IdStato == 1).Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
+                                                 TotaleDocumentiNormalizzati = g.Where(x => x.IdStato == 1 && x.DataNormalizzazione == EndDate).Sum(x => x.IdContenitoreNavigation.TotaleDocumenti ?? 0),
+                                                 TotaleDocumentiSorterizzati = g.Where(z => z.IdStato == 2 && z.DataSorter == EndDate).Sum(x => x.IdContenitoreNavigation.TotaleDocumenti ?? 0),
+                                                 TotaleDocumentiGiacenza = g.Where(z => z.IdStato == 1).Sum(x => x.IdContenitoreNavigation.TotaleDocumenti ?? 0),
                                                  ScatolaNormalizzataOld = g.Where(p => p.IdStato == 1 && p.IdCommessaNavigation.Commessa == g.Key.Commessa && p.IdTipologiaNavigation.Tipologia == g.Key.Tipologia).OrderBy(x => x.DataNormalizzazione).Select(x => x.Scatola).FirstOrDefault(),
                                                  DataScatolaOld = g.Where(p => p.IdStato == 1 && p.IdCommessaNavigation.Commessa == g.Key.Commessa && p.IdTipologiaNavigation.Tipologia == g.Key.Tipologia).Select(x => x.DataNormalizzazione).Min(),
                                                  CentroGiacenza = g.Key.CentroLavDesc,

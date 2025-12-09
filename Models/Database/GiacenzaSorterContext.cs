@@ -166,6 +166,7 @@ public partial class GiacenzaSorterContext : DbContext
             entity.HasIndex(e => e.Commessa, "IX_Commesse").IsUnique();
 
             entity.Property(e => e.Commessa)
+                .IsRequired()
                 .HasMaxLength(200)
                 .IsUnicode(false);
             entity.Property(e => e.DataCreazione).HasColumnType("datetime");

@@ -18,7 +18,7 @@ namespace GiacenzaSorterRm.Models.Database
         //Commesse
         [Required(AllowEmptyStrings = false)]
         [StringLength(200)]
-        public string Commessa { get; set; }
+        public required string Commessa { get; set; }
 
         [Display(Name = "Data Creazione")]
         [DataType(DataType.Date)]

@@ -72,7 +72,6 @@ namespace GiacenzaSorterRm
             }
 
             services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
-            services.AddControllers().AddNewtonsoftJson();
 
             CultureInfo[] supportedCultures = new[]
             {
@@ -141,6 +140,11 @@ namespace GiacenzaSorterRm
                 options.Conventions.AuthorizeFolder("/TipologiaNormalizzazione");
                 options.Conventions.AuthorizeFolder("/PagesSpostaGiacenza");
                 options.Conventions.AuthorizeFolder("/PagesMacero");
+            })
+            .AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
             });
 
             services.AddRazorPages();

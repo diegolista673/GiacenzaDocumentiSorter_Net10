@@ -17,17 +17,19 @@
                 <div class="col-md-12">
                     <form method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
                         <div class="mb-3">
-                            <label asp-for="Tipologie.Tipologia" class="control-label"></label>
-                            <input asp-for="Tipologie.Tipologia" class="form-control" />
+                            <label for="Tipologie_Tipologia" class="form-label">Tipologia</label>
+                            <input asp-for="Tipologie.Tipologia" id="Tipologie_Tipologia" class="form-control" />
                             <span asp-validation-for="Tipologie.Tipologia" class="text-danger" ></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Tipologie.Note" class="control-label"></label>
-                            <textarea asp-for="Tipologie.Note" class="form-control" cols="40" rows="2" placeholder="Note"></textarea>
+                            <label for="Tipologie_Note" class="form-label">Note</label>
+                            <textarea asp-for="Tipologie.Note" id="Tipologie_Note" class="form-control" cols="40" rows="2" placeholder="Note"></textarea>
                             <span asp-validation-for="Tipologie.Note" class="text-danger"></span>
                         </div>
+                        
                         <div class="mb-3">
                             <input type="submit" value="Create" class="btn btn-primary" />
                         </div>

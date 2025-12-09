@@ -7,13 +7,13 @@ public partial class Commesse
 {
     public int IdCommessa { get; set; }
 
-    public string Commessa { get; set; }
+    public string? Commessa { get; set; }
 
     public DateTime? DataCreazione { get; set; }
 
     public int? IdOperatore { get; set; }
 
-    public string Note { get; set; }
+    public string? Note { get; set; }
 
     public int? GiorniSla { get; set; }
 

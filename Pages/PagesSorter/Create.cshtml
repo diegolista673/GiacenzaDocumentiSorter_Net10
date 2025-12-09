@@ -6,83 +6,70 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-    <div class="container-fluid">
+<div class="container-fluid">
 
-        <div class="card text-white bg-info mb-3 max-w-100" >
+    <div class="card text-white bg-info mb-3 max-w-100">
+        <div class="card-body">
+            <h2 class="text-center">Sorter</h2>
+        </div>
+    </div>
 
-            <div class="card-body">
-                <h2 class="text-center">Sorter</h2>
+    <br />
+    <div class="row">
 
+        <div class="col-sm-3 col-md-3 col-lg-3 align-self-stretch">
+
+            <div class="card" id="app">
+
+                <div class="card-header">
+                    <h5 class="card-title">Scatola Sorter</h5>
+                </div>
+                <div class="card-body">
+
+                    <form method="post" id="formInsertScatola">
+                                                  
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="mb-3">
+                            <label for="Scatole_DataSorter" class="form-label">Data Sorter</label>
+                            <input asp-for="Scatole.DataSorter" id="Scatole_DataSorter" class="form-control" />
+                            <span asp-validation-for="Scatole.DataSorter" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Scatole_Note" class="form-label">Note</label>
+                            <textarea asp-for="Scatole.Note" id="Scatole_Note" class="form-control" cols="40" rows="3" placeholder="Note"></textarea>
+                            <span asp-validation-for="Scatole.Note" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Scatole_Scatola" class="form-label">Scatola</label>
+                            <input asp-for="Scatole.Scatola" id="Scatole_Scatola" class="form-control" placeholder="Scatola" data-transform="uppercase" />
+                            <span asp-validation-for="Scatole.Scatola" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <input type="hidden" asp-for="Scatole.IdCommessa" id="Scatole_IdCommessa" value="0" />
+                            <input type="hidden" asp-for="Scatole.IdTipologia" id="Scatole_IdTipologia" value="0" />
+                            <input type="hidden" asp-for="Scatole.IdContenitore" id="Scatole_IdContenitore" value="0" />
+
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+
+                </div>
             </div>
         </div>
 
-        <br />
-        <div class="row">
-
-            <div class="col-sm-3 col-md-3 col-lg-3 align-self-stretch">
-
-                <div class="card" id="app">
-
-                    <div class="card-header">
-                        <h5 class="card-title">Scatola Sorter</h5>
-                    </div>
-                    <div class="card-body ">
-
-                        <form method="post" id="formInsertScatola">
-                                                      
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                            <div class="mb-3">
-                                <label asp-for="Scatole.DataSorter" class="control-label"></label>
-                                <input asp-for="Scatole.DataSorter" class="form-control" />
-                                <span asp-validation-for="Scatole.DataSorter" class="text-danger"></span>
-                            </div>
-
-                            <div class="mb-3">
-                                <textarea asp-for="Scatole.Note" class="form-control" cols="40" rows="3" placeholder="Note"></textarea>
-                                <span asp-validation-for="Scatole.Note" class="text-danger"></span>
-                            </div>
-
-
-                            <div class="mb-3">
-                                <input asp-for="Scatole.Scatola" class="form-control" placeholder="Scatola" / data-transform="uppercase">
-                                <span asp-validation-for="Scatole.Scatola" class="text-danger"></span>
-                            </div>
-
-
-
-                            <div class="mb-3">
-
-                                <input type="hidden" asp-for="Scatole.IdCommessa" value="0" />
-                                <input type="hidden" asp-for="Scatole.IdTipologia" value="0" />
-                                <input type="hidden" asp-for="Scatole.IdContenitore" value="0" />
-
-                                <button type="submit" class="btn btn-primary">Save</button>
-                            </div>
-                        </form>
-
-                    </div>
-                </div>
+        <div class="col-sm-9 col-md-9 col-lg-9 align-self-stretch">
+            <div id="resultDiv">
+                <partial name="_RiepilogoScatoleSorter" model="Model.ScatoleModel" />
             </div>
-
-            <div class="col-sm-9 col-md-9 col-lg-9 align-self-stretch">
-
-
-
-                <div id="resultDiv">
-                    <partial name="_RiepilogoScatoleSorter" model="Model.ScatoleModel" />
-                </div>
-
-
-            </div>
-
         </div>
 
     </div>
 
-
-
-
+</div>
 
 @section scripts {
     @{
@@ -92,12 +79,10 @@
 
         import { FetchHelpers } from '/js/fetch-helpers.js';
 
-        // Inizializza DataTable
         $(document).ready(() => {
             $('#tableProduzione').DataTable({ scrollX: true });
         });
 
-        // Handler submit
         document.getElementById('formInsertScatola').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -109,7 +94,6 @@
                     formData,
                     'resultDiv',
                     () => {
-                        // Success callback
                         FetchHelpers.reinitDataTable('tableProduzione');
                         FetchHelpers.clearInputs(['Scatole_Scatola', 'Scatole_Note']);
                     }

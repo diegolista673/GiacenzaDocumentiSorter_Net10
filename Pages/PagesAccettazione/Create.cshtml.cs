@@ -103,6 +103,11 @@ namespace GiacenzaSorterRm.Pages.PagesAccettazione
 
         public async Task<List<Bancali>> GetListBancali(DateTime? dataLavorazione)
         {
+            if (!dataLavorazione.HasValue)
+            {
+                return new List<Bancali>();
+            }
+
             //elenco tutti i bancali accettati in data odierna 
             if (User.IsInRole("ADMIN"))
             {

@@ -100,7 +100,7 @@ namespace GiacenzaSorterRm.Pages.PagesSorterizzato
                                          {
                                              Commessa = g.Key.Commessa,
                                              Tipologia = g.Key.Tipologia,
-                                             TotaleDocumentiSorterizzati = g.Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti)
+                                             TotaleDocumentiSorterizzati = g.Sum(x => x.IdContenitoreNavigation.TotaleDocumenti ?? 0)
                                          })
                                          .OrderBy(z => z.Commessa)
                                          .ThenBy(z => z.Tipologia)

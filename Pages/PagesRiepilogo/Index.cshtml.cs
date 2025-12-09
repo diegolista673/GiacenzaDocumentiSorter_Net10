@@ -251,12 +251,12 @@ namespace GiacenzaSorterRm.Pages.PagesRiepilogo
                     Commessa = m.IdCommessaNavigation.Commessa,
                     Tipologia = m.IdTipologiaNavigation.Tipologia,
                     TipoProdotto = m.IdTipoNormalizzazioneNavigation.TipoNormalizzazione,
-                    TotaleScatola = (int)m.IdContenitoreNavigation.TotaleDocumenti,
+                    TotaleScatola = m.IdContenitoreNavigation.TotaleDocumenti ?? 0,
                     Elimina = false,
-                    IdCentroNormalizzazione = (int)m.IdCentroNormalizzazione,
+                    IdCentroNormalizzazione = m.IdCentroNormalizzazione ?? 0,
                     IdCentroSorterizzazione = m.IdCentroSorterizzazione,
-                    CentroNormalizzazione = m.IdCentroNormalizzazioneNavigation.CentroLavDesc,
-                    CentroSorterizzazione = m.IdCentroSorterizzazioneNavigation.CentroLavDesc
+                    CentroNormalizzazione = m.IdCentroNormalizzazioneNavigation != null ? m.IdCentroNormalizzazioneNavigation.CentroLavDesc : string.Empty,
+                    CentroSorterizzazione = m.IdCentroSorterizzazioneNavigation != null ? m.IdCentroSorterizzazioneNavigation.CentroLavDesc : string.Empty
                 })
                 .OrderBy(x => x.IdScatola)
                 .ToListAsync();

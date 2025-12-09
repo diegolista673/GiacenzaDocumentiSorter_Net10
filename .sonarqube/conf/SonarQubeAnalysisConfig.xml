@@ -5,7 +5,7 @@
   <SonarBinDir>C:\Users\SMARTW\source\repos\GiacenzaSorter\.sonarqube\bin</SonarBinDir>
   <SonarScannerWorkingDirectory>C:\Users\SMARTW\source\repos\GiacenzaSorter</SonarScannerWorkingDirectory>
   <JavaExePath>C:\Users\SMARTW\.sonar\cache\4bafe2e94439c8193fc8c68247cb0dbaf4e80265b903288f63f128304f129bbe\OpenJDK17U-jre_x64_windows_hotspot_17.0.11_9.zip_extracted\jdk-17.0.11+9-jre/bin/java.exe</JavaExePath>
-  <EngineJarPath>C:\Users\SMARTW\.sonar\cache\807fa690a83fbbf8003c1af254109d23e6135538ad6d84577efcd71a31073c98\sonarcloud-scanner-engine-12.10.0.1268-all.jar</EngineJarPath>
+  <EngineJarPath>C:\Users\SMARTW\.sonar\cache\e28161b2802df2156618d64882119fb07bf4c23768b7cbdddb53e27a89f9a26f\sonarcloud-scanner-engine-12.11.0.2292-all.jar</EngineJarPath>
   <UseSonarScannerCli>false</UseSonarScannerCli>
   <ScanAllAnalysis>true</ScanAllAnalysis>
   <HasBeginStepCommandLineCredentials>true</HasBeginStepCommandLineCredentials>

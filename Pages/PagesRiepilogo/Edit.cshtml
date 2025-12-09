@@ -6,93 +6,89 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
+<div class="container h-100">
+    <div class="row h-100 justify-content-center align-items-center">
+        <div class="col-8 col-md-8 col-lg-8">
 
-    <div class="container h-100">
-        <div class="row h-100 justify-content-center align-items-center">
-            <div class="col-8 col-md-8 col-lg-8">
+            <h1>Modifica Scatola Normalizzata</h1>
+            <br />
+            
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                <h1>Modifica Scatola Normalizzata</h1>
-                <br />
-                <form method="post">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Scatole.IdScatola" id="Scatole_IdScatola" />
+                <input type="hidden" asp-for="Scatole.IdCentroNormalizzazione" id="Scatole_IdCentroNormalizzazione" />
+                <input type="hidden" asp-for="Scatole.IdCentroSorterizzazione" id="Scatole_IdCentroSorterizzazione" />
 
-                    <input type="hidden" asp-for="Scatole.IdScatola" />
-@*                     <input type="hidden" asp-for="Scatole.IdBancale" /> *@
-                    <input type="hidden" asp-for="Scatole.IdCentroNormalizzazione" />
-                    <input type="hidden" asp-for="Scatole.IdCentroSorterizzazione" />
-
-                    <div class="mb-3">
-                        <label asp-for="Scatole.Scatola" class="control-label"></label>
-                        <input asp-for="Scatole.Scatola" class="form-control" />
-                        <span asp-validation-for="Scatole.Scatola" class="text-danger"></span>
-                    </div>
-                    <div class="mb-3">
-                        <label asp-for="Scatole.OperatoreNormalizzazione" class="control-label"></label>
-                        <input asp-for="Scatole.OperatoreNormalizzazione" class="form-control" />
-                        <span asp-validation-for="Scatole.OperatoreNormalizzazione" class="text-danger"></span>
-                    </div>
-
-                    <div class="mb-3">
-                        <label asp-for="Scatole.DataNormalizzazione" class="control-label"></label>
-                        <input asp-for="Scatole.DataNormalizzazione" class="form-control" />
-                        <span asp-validation-for="Scatole.DataNormalizzazione" class="text-danger"></span>
-                    </div>
-
-                    <div class="mb-3">
-                        <label asp-for="Scatole.Note" class="control-label"></label>
-                        <input asp-for="Scatole.Note" class="form-control" />
-                        <span asp-validation-for="Scatole.Note" class="text-danger"></span>
-                    </div>
-
-
-                    <div class="mb-3">
-                        <label asp-for="Scatole.DataSorter" class="control-label"></label>
-                        <input asp-for="Scatole.DataSorter" class="form-control" />
-                        <span asp-validation-for="Scatole.DataSorter" class="text-danger"></span>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="control-label">Commessa</label>
-                        <select asp-for="Scatole.IdCommessa" class="form-control" asp-items="@Model.CommesseSL">
-                            <option value="">- Commessa -</option>
-                        </select>
-                        <span asp-validation-for="Scatole.IdCommessa" class="text-danger"></span>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="control-label">Contenitore</label>
-                        <select asp-for="Scatole.IdContenitore" class="form-control" asp-items="@Model.ContenitoriSL">
-                            <option value="">- Contenitore -</option>
-                        </select>
-                        <span asp-validation-for="Scatole.IdContenitore" class="text-danger"></span>
-                    </div>
-
-
-                    <div class="mb-3">
-                        <label class="control-label">Tipologia</label>
-                        <select asp-for="Scatole.IdTipologia" class="form-control" asp-items="@Model.TipologieSL"></select>
-                        <span asp-validation-for="Scatole.IdTipologia" class="text-danger"></span>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="control-label">Tipologia</label>
-                        <select asp-for="Scatole.IdTipoNormalizzazione" class="form-control" asp-items="@Model.TipoNormSL"></select>
-                        <span asp-validation-for="Scatole.IdTipoNormalizzazione" class="text-danger"></span>
-                    </div>
-
-                    <div class="mb-3">
-                        <input type="submit" value="Save" class="btn btn-primary" />
-                    </div>
-                </form>
-
-                <div>
-                    <a asp-page="./Index">Back to List</a>
+                <div class="mb-3">
+                    <label for="Scatole_Scatola" class="form-label">Scatola</label>
+                    <input asp-for="Scatole.Scatola" id="Scatole_Scatola" class="form-control" />
+                    <span asp-validation-for="Scatole.Scatola" class="text-danger"></span>
                 </div>
+                
+                <div class="mb-3">
+                    <label for="Scatole_OperatoreNormalizzazione" class="form-label">Operatore Normalizzazione</label>
+                    <input asp-for="Scatole.OperatoreNormalizzazione" id="Scatole_OperatoreNormalizzazione" class="form-control" />
+                    <span asp-validation-for="Scatole.OperatoreNormalizzazione" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label for="Scatole_DataNormalizzazione" class="form-label">Data Normalizzazione</label>
+                    <input asp-for="Scatole.DataNormalizzazione" id="Scatole_DataNormalizzazione" class="form-control" />
+                    <span asp-validation-for="Scatole.DataNormalizzazione" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label for="Scatole_Note" class="form-label">Note</label>
+                    <input asp-for="Scatole.Note" id="Scatole_Note" class="form-control" />
+                    <span asp-validation-for="Scatole.Note" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label for="Scatole_DataSorter" class="form-label">Data Sorter</label>
+                    <input asp-for="Scatole.DataSorter" id="Scatole_DataSorter" class="form-control" />
+                    <span asp-validation-for="Scatole.DataSorter" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label for="Scatole_IdCommessa" class="form-label">Commessa</label>
+                    <select asp-for="Scatole.IdCommessa" id="Scatole_IdCommessa" class="form-control" asp-items="@Model.CommesseSL">
+                        <option value="">- Commessa -</option>
+                    </select>
+                    <span asp-validation-for="Scatole.IdCommessa" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label for="Scatole_IdContenitore" class="form-label">Contenitore</label>
+                    <select asp-for="Scatole.IdContenitore" id="Scatole_IdContenitore" class="form-control" asp-items="@Model.ContenitoriSL">
+                        <option value="">- Contenitore -</option>
+                    </select>
+                    <span asp-validation-for="Scatole.IdContenitore" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label for="Scatole_IdTipologia" class="form-label">Tipologia</label>
+                    <select asp-for="Scatole.IdTipologia" id="Scatole_IdTipologia" class="form-control" asp-items="@Model.TipologieSL"></select>
+                    <span asp-validation-for="Scatole.IdTipologia" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label for="Scatole_IdTipoNormalizzazione" class="form-label">Tipo Normalizzazione</label>
+                    <select asp-for="Scatole.IdTipoNormalizzazione" id="Scatole_IdTipoNormalizzazione" class="form-control" asp-items="@Model.TipoNormSL"></select>
+                    <span asp-validation-for="Scatole.IdTipoNormalizzazione" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+
+            <div>
+                <a asp-page="./Index">Back to List</a>
             </div>
         </div>
     </div>
-
-
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

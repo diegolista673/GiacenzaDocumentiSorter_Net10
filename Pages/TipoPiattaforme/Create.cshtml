@@ -3,9 +3,7 @@
 
 @{
     ViewData["Title"] = "Nuova Tipologia";
-
 }
-
 
 <div class="container h-100">
     <div class="row h-100 justify-content-center align-items-center">
@@ -17,17 +15,19 @@
                 <div class="col-md-12">
                     <form method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
                         <div class="mb-3">
-                            <label asp-for="Piattaforme.Piattaforma" class="control-label"></label>
-                            <input asp-for="Piattaforme.Piattaforma" class="form-control" />
+                            <label for="Piattaforme_Piattaforma" class="form-label">Piattaforma</label>
+                            <input asp-for="Piattaforme.Piattaforma" id="Piattaforme_Piattaforma" class="form-control" />
                             <span asp-validation-for="Piattaforme.Piattaforma" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Piattaforme.Note" class="control-label"></label>
-                            <textarea asp-for="Piattaforme.Note" class="form-control" cols="40" rows="2" placeholder="Note"></textarea>
+                            <label for="Piattaforme_Note" class="form-label">Note</label>
+                            <textarea asp-for="Piattaforme.Note" id="Piattaforme_Note" class="form-control" cols="40" rows="2" placeholder="Note"></textarea>
                             <span asp-validation-for="Piattaforme.Note" class="text-danger"></span>
                         </div>
+                        
                         <div class="mb-3">
                             <input type="submit" value="Create" class="btn btn-primary" />
                         </div>
@@ -42,9 +42,6 @@
         </div>
     </div>
 </div>
-
-
-
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

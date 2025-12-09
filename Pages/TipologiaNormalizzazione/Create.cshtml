@@ -6,7 +6,6 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-
 <div class="container h-100">
     <div class="row h-100 justify-content-center align-items-center">
         <div class="col-12 col-md-12 col-lg-6">
@@ -17,11 +16,13 @@
                 <div class="col-md-12">
                     <form method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
                         <div class="mb-3">
-                            <label asp-for="TipiNormalizzazione.TipoNormalizzazione" class="control-label"></label>
-                            <input asp-for="TipiNormalizzazione.TipoNormalizzazione" class="form-control" />
+                            <label for="TipiNormalizzazione_TipoNormalizzazione" class="form-label">Tipo Normalizzazione</label>
+                            <input asp-for="TipiNormalizzazione.TipoNormalizzazione" id="TipiNormalizzazione_TipoNormalizzazione" class="form-control" />
                             <span asp-validation-for="TipiNormalizzazione.TipoNormalizzazione" class="text-danger"></span>
                         </div>
+                        
                         <div class="mb-3">
                             <input type="submit" value="Create" class="btn btn-primary" />
                         </div>
@@ -36,7 +37,6 @@
         </div>
     </div>
 </div>
-
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

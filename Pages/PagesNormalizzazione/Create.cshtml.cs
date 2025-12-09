@@ -225,15 +225,48 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
                 DataNormalizzazione = DateTime.Now
             };
 
-            var sel = await _context.Commesses
+            var commesseList = await _context.Commesses
                 .Where(x => x.Attiva == true)
                 .OrderBy(x => x.Commessa)
+                .Select(x => new SelectListItem
+                {
+                    Value = x.IdCommessa.ToString(),
+                    Text = x.Commessa
+                })
+                .AsNoTracking()
                 .ToListAsync();
 
-            CommesseSL = new SelectList(sel, "IdCommessa", "Commessa");
-            TipologieSL = new SelectList(_context.Tipologies, "IdTipologia", "Tipologia");
-            ContenitoriSL = new SelectList(_context.Contenitoris, "IdContenitore", "Contenitore");
-            TipoNormSL = new SelectList(_context.TipiNormalizzaziones, "IdTipoNormalizzazione", "TipoNormalizzazione");
+            var tipologieList = await _context.Tipologies
+                .Select(x => new SelectListItem
+                {
+                    Value = x.IdTipologia.ToString(),
+                    Text = x.Tipologia
+                })
+                .AsNoTracking()
+                .ToListAsync();
+
+            var contenitoriList = await _context.Contenitoris
+                .Select(x => new SelectListItem
+                {
+                    Value = x.IdContenitore.ToString(),
+                    Text = x.Contenitore
+                })
+                .AsNoTracking()
+                .ToListAsync();
+
+            var tipoNormList = await _context.TipiNormalizzaziones
+                .Select(x => new SelectListItem
+                {
+                    Value = x.IdTipoNormalizzazione.ToString(),
+                    Text = x.TipoNormalizzazione
+                })
+                .AsNoTracking()
+                .ToListAsync();
+
+            CommesseSL = new SelectList(commesseList, "Value", "Text");
+            TipologieSL = new SelectList(tipologieList, "Value", "Text");
+            ContenitoriSL = new SelectList(contenitoriList, "Value", "Text");
+            TipoNormSL = new SelectList(tipoNormList, "Value", "Text");
         }
 
         public async Task<List<Scatole>> GetListScatole(DateTime? dataLavorazione)
