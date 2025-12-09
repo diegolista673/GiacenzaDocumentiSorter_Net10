@@ -81,7 +81,7 @@ namespace GiacenzaSorterRm.Pages.PagesSorter
                     }
                     else
                     {
-                        Scatole? scatola = _context.Scatoles.SingleOrDefault(b => b.Scatola == Scatole.Scatola);
+                        Scatole? scatola = await _context.Scatoles.SingleOrDefaultAsync(b => b.Scatola == Scatole.Scatola);
                         
                         if (scatola != null)
                         {

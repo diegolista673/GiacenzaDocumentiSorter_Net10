@@ -229,6 +229,7 @@ C:\Users\SMARTW\source\repos\GiacenzaSorter\DOCS\SPRINT1_FINAL_REPORT.md
 C:\Users\SMARTW\source\repos\GiacenzaSorter\DOCS\SPRINT1_IMPLEMENTATION_REPORT.md
 C:\Users\SMARTW\source\repos\GiacenzaSorter\DOCS\SPRINT1_SUMMARY.md
 C:\Users\SMARTW\source\repos\GiacenzaSorter\DOCS\SPRINT2_FINAL_REPORT.md
+C:\Users\SMARTW\source\repos\GiacenzaSorter\fix-label-for-attribute.ps1
 C:\Users\SMARTW\source\repos\GiacenzaSorter\gitignore .gitignore
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Note.txt
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Note_GiacenzaSorter.txt
