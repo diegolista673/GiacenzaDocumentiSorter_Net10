@@ -13,7 +13,6 @@ using GiacenzaSorterRm.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
-using GiacenzaSorterRm.Models.Database;
 using Microsoft.Data.SqlClient;
 
 namespace GiacenzaSorterRm.Pages.PagesRiepilogoBancali

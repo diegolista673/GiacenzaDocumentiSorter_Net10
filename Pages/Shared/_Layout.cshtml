@@ -110,7 +110,7 @@
                             else if (User.FindFirst("Azienda").Value == "POSTEL")
                             {
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdownLogisticaPostel" role="button" aria-expanded="false">Logistica</a>
+                                    <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdownLogisticaPostel" role="button" aria-expanded="false" aria-disabled="true" tabindex="-1">Logistica</a>
                                 </li>
 
                                 <li class="nav-item dropdown">
@@ -140,7 +140,7 @@
                                 </li>
 
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdownImpostazioniPostel" role="button" aria-expanded="false">Impostazioni</a>
+                                    <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdownImpostazioniPostel" role="button" aria-expanded="false" aria-disabled="true" tabindex="-1">Impostazioni</a>
                                 </li>
 
                             }
@@ -155,26 +155,26 @@
                                 </li>
 
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdownSorterEsterno" role="button" aria-expanded="false">Sorter</a>
+                                    <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdownSorterEsterno" role="button" aria-expanded="false" aria-disabled="true" tabindex="-1">Sorter</a>
                                 </li>
 
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdownAggiornamentoEsterno" role="button" aria-expanded="false">Aggiornamento</a>
+                                    <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdownAggiornamentoEsterno" role="button" aria-expanded="false" aria-disabled="true" tabindex="-1">Aggiornamento</a>
                                 </li>
 
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownReportsEsterno" role="button" data-bs-toggle="dropdown" aria-expanded="false" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Reports</a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownReportsEsterno">
                                         @* <li><a class="dropdown-item" asp-page="/PagesRiepilogoBancali/Index">Report Bancali</a></li> *@
-                                        <li><a class="dropdown-item disabled">Report Giacenza</a></li>
+                                        <li><a class="dropdown-item disabled" tabindex="-1" aria-disabled="true">Report Giacenza</a></li>
                                         <li><a class="dropdown-item" asp-page="/PagesRiepilogo/Index">Report Scatole</a></li>
                                         <li><a class="dropdown-item" asp-page="/PagesNormalizzato/Index">Report Commesse Normalizzate</a></li>
-                                        <li><a class="dropdown-item disabled">Report Commesse Sorter</a></li>
+                                        <li><a class="dropdown-item disabled" tabindex="-1" aria-disabled="true">Report Commesse Sorter</a></li>
                                     </ul>
                                 </li>
 
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdownImpostazioniEsterno" role="button" aria-expanded="false">Impostazioni</a>
+                                    <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdownImpostazioniEsterno" role="button" aria-expanded="false" aria-disabled="true" tabindex="-1">Impostazioni</a>
                                 </li>
                             }
 
