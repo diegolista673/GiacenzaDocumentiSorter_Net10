@@ -6,17 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using GiacenzaSorterRm.Models.Database;
-using System.IO;
-using ClosedXML.Excel;
-using System.Collections.Concurrent;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.Logging;
 using GiacenzaSorterRm.Models;
-using GiacenzaSorterRm.Helpers;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 using GiacenzaSorterRm.AppCode;
-using GiacenzaSorterRm.Models.Database;
+
 
 namespace GiacenzaSorterRm.Pages.PagesNormalizzato
 {
@@ -90,7 +86,7 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzato
                         .Include(s => s.IdCommessaNavigation)
                         .Include(s => s.IdContenitoreNavigation)
                         .Include(s => s.IdTipoNormalizzazioneNavigation)
-                        .Include(s => s.IdTipologiaNavigation).Where(x => x.DataNormalizzazione >= StartDate && x.DataNormalizzazione <= EndDate & x.IdCentroNormalizzazione == centroID)
+                        .Include(s => s.IdTipologiaNavigation).Where(x => x.DataNormalizzazione >= StartDate && x.DataNormalizzazione <= EndDate && x.IdCentroNormalizzazione == centroID)
                         .AsNoTracking().AsQueryable();
                 }
                 else
@@ -120,6 +116,7 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzato
                     Message = "Not results found";
                 }
 
+                _logger.LogInformation("User {User} generated Normalized Summary Report for IDCentro {Centro} from {StartDate} to {EndDate}", Utente, centroID, StartDate.ToShortDateString(), EndDate.ToShortDateString());
                 return Partial("_RiepilogoNormalizzato", this);
 
             }

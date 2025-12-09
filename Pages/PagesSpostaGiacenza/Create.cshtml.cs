@@ -11,11 +11,7 @@ using Microsoft.Extensions.Logging;
 using GiacenzaSorterRm.AppCode;
 using GiacenzaSorterRm.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Data.SqlClient;
 using System.Data;
-using GiacenzaSorterRm.Models.Database;
-
-
 
 
 namespace GiacenzaSorterRm.Pages.PagesSpostaGiacenza

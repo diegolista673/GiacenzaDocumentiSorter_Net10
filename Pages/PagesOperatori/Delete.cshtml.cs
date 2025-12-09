@@ -1,13 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using GiacenzaSorterRm.Models.Database;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using GiacenzaSorterRm.Models.Database;
-using Microsoft.AspNetCore.Authorization;
-using GiacenzaSorterRm.Models.Database;
+using Microsoft.Extensions.Logging;
+using System.Linq;
+using System.Threading.Tasks;
+
 
 namespace GiacenzaSorterRm.Pages.PagesOperatori
 {
@@ -15,9 +14,11 @@ namespace GiacenzaSorterRm.Pages.PagesOperatori
     public class DeleteModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
+        private readonly ILogger<EditModel> _logger;
 
-        public DeleteModel(GiacenzaSorterContext context)
+        public DeleteModel(ILogger<EditModel> logger,GiacenzaSorterContext context)
         {
+            _logger = logger;
             _context = context;
         }
 
@@ -53,6 +54,7 @@ namespace GiacenzaSorterRm.Pages.PagesOperatori
             {
                 _context.Operatoris.Remove(Operatori);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Operatore Eliminato: {@Operatori} by Utente: {Utente}", Operatori, User.Identity.Name);
             }
 
             return RedirectToPage("./Index");

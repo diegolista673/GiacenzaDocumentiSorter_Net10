@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -9,11 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using GiacenzaSorterRm.Models.Database;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
-using GiacenzaSorterRm.Models.Database;
-using GiacenzaSorterRm.AppCode;
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 
 namespace GiacenzaSorterRm.Pages.PagesOperatori
 {

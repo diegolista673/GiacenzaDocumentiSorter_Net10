@@ -10,8 +10,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using GiacenzaSorterRm.Models.Database;
-using GiacenzaSorterRm.Services;
-using GiacenzaSorterRm.Models.Database;
 using Shyjus.BrowserDetection;
 
 namespace GiacenzaSorterRm.Pages
@@ -22,6 +20,25 @@ namespace GiacenzaSorterRm.Pages
         private readonly ILogger<IndexModel> _logger;
         private readonly IBrowserDetector browserDetector;
         private readonly GiacenzaSorterRm.Services.IAuthenticationService _authService;
+
+        // LoggerMessage definito come campo statico per performance
+        private static readonly Action<ILogger, string, Exception?> _logFailedLogin =
+            LoggerMessage.Define<string>(
+                LogLevel.Warning,
+                new EventId(1, nameof(OnPost)),
+                "Failed login attempt for username: {Username}");
+
+        private static readonly Action<ILogger, string, Exception?> _logSuccessLogin =
+            LoggerMessage.Define<string>(
+                LogLevel.Information,
+                new EventId(2, nameof(OnPost)),
+                "Successful login for user: {Username}");
+
+        private static readonly Action<ILogger, string, Exception> _logErrorLogin =
+            LoggerMessage.Define<string>(
+                LogLevel.Error,
+                new EventId(3, nameof(OnPost)),
+                "Error during login process for user: {Username}");
 
         [BindProperty]
         [Required(ErrorMessage = "Username è obbligatorio")]
@@ -101,19 +118,19 @@ namespace GiacenzaSorterRm.Pages
                     // SOLO DOPO verifica riuscita, crea sessione
                     await CreateAuthenticationSessionAsync(user);
 
-                    _logger.LogInformation("Successful login for user: {Username}", UserName);
+                    _logSuccessLogin(_logger, UserName, null);
                     return RedirectToPage("/Home");
                 }
                 
                 // Messaggio generico per evitare user enumeration
-                _logger.LogWarning("Failed login attempt for username: {Username}", UserName);
+                _logFailedLogin(_logger, UserName, null);
                 Message = "Credenziali non valide. Riprova.";
                 return Page();
             }
             catch (Exception ex)
             {
                 // NON esporre mai dettagli exception all'utente
-                _logger.LogError(ex, "Error during login process for user: {Username}", UserName);
+                _logErrorLogin(_logger, UserName, ex);
                 Message = "Si è verificato un errore. Riprova più tardi.";
                 return Page();
             }

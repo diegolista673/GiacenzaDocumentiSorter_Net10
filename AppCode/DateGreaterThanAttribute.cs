@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GiacenzaSorterRm.AppCode
 {
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
     public class DateGreaterThanAttribute : ValidationAttribute, IClientModelValidator
     {
         private readonly string _comparisonProperty;

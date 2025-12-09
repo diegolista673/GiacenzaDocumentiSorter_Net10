@@ -10,12 +10,9 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.Logging;
 using GiacenzaSorterRm.AppCode;
 using GiacenzaSorterRm.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
-using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using GiacenzaSorterRm.Models.Database;
+
 
 namespace GiacenzaSorterRm.Pages.PagesRiepilogo
 {
@@ -213,21 +210,21 @@ namespace GiacenzaSorterRm.Pages.PagesRiepilogo
 
 
             //tutti i centri and tutte le commesse and flag = "normalizzazione"
-            if (idCentro == 5 & IdCommessa == 999 & flag == "normalizzazione")
+            if (idCentro == 5 && IdCommessa == 999 && flag == "normalizzazione")
             {
                 lstScatole = _context.Scatoles.Where(x => x.DataNormalizzazione >= startDate && x.DataNormalizzazione <= endDate).AsQueryable();
             }
             
             
             //tutti i centri and tutte le commesse and flag = "sorter"
-            if (idCentro == 5 & IdCommessa == 999 & flag == "sorter")
+            if (idCentro == 5 && IdCommessa == 999 && flag == "sorter")
             {
                 lstScatole = _context.Scatoles.Where(x => x.DataSorter >= startDate && x.DataSorter <= endDate).AsQueryable();
             }
 
 
             //Per tutti i centri di lavorazione and 1 commessa e flag = "normalizzazione"
-            if (idCentro == 5 & IdCommessa > 0 & IdCommessa < 999 & flag == "normalizzazione")
+            if (idCentro == 5 && IdCommessa > 0 && IdCommessa < 999 && flag == "normalizzazione")
             {
                 lstScatole = _context.Scatoles.Where(x => x.DataNormalizzazione >= startDate && x.DataNormalizzazione <= endDate && x.IdCommessa == IdCommessa).AsQueryable();
             }
@@ -235,7 +232,7 @@ namespace GiacenzaSorterRm.Pages.PagesRiepilogo
 
 
             //Per tutti i centri di lavorazione and 1 commessa  e flag = "sorter"
-            if (idCentro == 5 & IdCommessa > 0 & IdCommessa < 999 & flag == "sorter")
+            if (idCentro == 5 && IdCommessa > 0 && IdCommessa < 999 && flag == "sorter")
             {
                 lstScatole = _context.Scatoles.Where(x => x.DataSorter >= startDate && x.DataSorter <= endDate && x.IdCommessa == IdCommessa).AsQueryable();
             }
@@ -243,21 +240,21 @@ namespace GiacenzaSorterRm.Pages.PagesRiepilogo
 
 
             //Per 1 centro di lavorazione and tutte le commesse e flag = "normalizzazione"
-            if (idCentro != 5 & IdCommessa == 999 & flag == "normalizzazione")
+            if (idCentro != 5 && IdCommessa == 999 && flag == "normalizzazione")
             {
                 lstScatole = _context.Scatoles.Where(x => x.DataNormalizzazione >= startDate && x.DataNormalizzazione <= endDate && x.IdCentroNormalizzazione == idCentro).AsQueryable();
             }
 
 
             //Per 1 centro di lavorazione and tutte le commesse e flag = "sorter"
-            if (idCentro != 5 & IdCommessa == 999 & flag == "sorter")
+            if (idCentro != 5 && IdCommessa == 999 && flag == "sorter")
             {
                 lstScatole = _context.Scatoles.Where(x => x.DataSorter >= startDate && x.DataSorter <= endDate && x.IdCentroSorterizzazione == idCentro).AsQueryable();
             }
 
 
             //Per centro di lavorazione e per 1 commessa e flag = "normalizzazione"
-            if (idCentro != 5 & IdCommessa > 0 & IdCommessa < 999 & flag == "normalizzazione")
+            if (idCentro != 5 && IdCommessa > 0 && IdCommessa < 999 && flag == "normalizzazione")
             {
                 lstScatole = _context.Scatoles.Where(x => x.DataNormalizzazione >= startDate && x.DataNormalizzazione <= endDate && x.IdCentroNormalizzazione == idCentro && x.IdCommessa == IdCommessa)
                                               .AsQueryable();
@@ -266,7 +263,7 @@ namespace GiacenzaSorterRm.Pages.PagesRiepilogo
                  
             
             //Per centro di lavorazione e per 1 commessa e flag = "sorter"
-            if (idCentro != 5 & IdCommessa > 0 & IdCommessa < 999 & flag == "sorter")
+            if (idCentro != 5 && IdCommessa > 0 && IdCommessa < 999 && flag == "sorter")
             {
                 lstScatole = _context.Scatoles.Where(x => x.DataSorter >= startDate && x.DataSorter <= endDate && x.IdCentroSorterizzazione == idCentro && x.IdCommessa == IdCommessa)
                                     .AsQueryable();
@@ -311,6 +308,5 @@ namespace GiacenzaSorterRm.Pages.PagesRiepilogo
             }
 
         }
-
     }
 }

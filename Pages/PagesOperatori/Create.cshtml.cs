@@ -18,7 +18,6 @@ namespace GiacenzaSorterRm.Pages.PagesOperatori
         private readonly ILogger<CreateModel> _logger;
 
 
-
         public CreateModel(ILogger<CreateModel> logger, GiacenzaSorterContext context)
         {
             _logger = logger;
@@ -60,6 +59,9 @@ namespace GiacenzaSorterRm.Pages.PagesOperatori
 
                 _context.Operatoris.Add(Operatori);
                 await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Operatore created: {Operatore}", Operatori.Operatore);
+
             }
             catch (DbUpdateException)
             {

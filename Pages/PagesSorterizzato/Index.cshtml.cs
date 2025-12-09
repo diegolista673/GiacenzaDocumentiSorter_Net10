@@ -13,7 +13,7 @@ using GiacenzaSorterRm.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
-using GiacenzaSorterRm.Models.Database;
+
 
 namespace GiacenzaSorterRm.Pages.PagesSorterizzato
 {
@@ -116,7 +116,8 @@ namespace GiacenzaSorterRm.Pages.PagesSorterizzato
                 {
                     Message = "Not results found";
                 }
-
+                
+                _logger.LogInformation("Utente {utente} ha generato il report sorterizzato dal {startdate} al {enddate} per il centro {centroID}", Utente, StartDate.ToString("yyyy-MM-dd"), EndDate.ToString("yyyy-MM-dd"), CentroID);
                 return Partial("_RiepilogoSorterizzato", this);
 
             }

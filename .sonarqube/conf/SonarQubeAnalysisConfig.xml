@@ -11,7 +11,7 @@
   <HasBeginStepCommandLineCredentials>true</HasBeginStepCommandLineCredentials>
   <HasBeginStepCommandLineTruststorePassword>false</HasBeginStepCommandLineTruststorePassword>
   <SonarQubeHostUrl>https://sonarcloud.io</SonarQubeHostUrl>
-  <SonarQubeVersion>8.0.0.77067</SonarQubeVersion>
+  <SonarQubeVersion>8.0.0.77146</SonarQubeVersion>
   <SonarProjectKey>diegolista673_GiacenzaDocumentiSorter_Net10</SonarProjectKey>
   <AdditionalConfig>
     <ConfigSetting Id="BuildUri" />
@@ -66,7 +66,7 @@
     <Property Name="sonar.cloudformation.activate">true</Property>
     <Property Name="sonar.pli.marginRight">72</Property>
     <Property Name="sonar.dre.apex.activate">true</Property>
-    <Property Name="sonar.cs.analyzer.architecture.staticResourceName">SonarAnalyzer.Architecture-2.11.0.7399.zip</Property>
+    <Property Name="sonar.cs.analyzer.architecture.staticResourceName">SonarAnalyzer.Architecture-2.12.0.7496.zip</Property>
     <Property Name="sonar.apex.file.suffixes">.cls,.trigger</Property>
     <Property Name="sonaranalyzer-vbnet.ruleNamespace">SonarAnalyzer.Enterprise.VisualBasic</Property>
     <Property Name="sonar.cloudformation.file.identifier">AWSTemplateFormatVersion</Property>
@@ -94,14 +94,14 @@
     <Property Name="sonar.abap.file.suffixes">.abap,.ab4,.flow,.asprog</Property>
     <Property Name="sonar.cobol.adaprep.activation">false</Property>
     <Property Name="sonar.cfamily.ignoreHeaderComments">true</Property>
-    <Property Name="sonar.vbnet.analyzer.dotnet.pluginVersion">10.16.0.128591</Property>
+    <Property Name="sonar.vbnet.analyzer.dotnet.pluginVersion">10.16.1.129956</Property>
     <Property Name="sonar.technicalDebt.developmentCost">30</Property>
     <Property Name="sonar.python.file.suffixes">py</Property>
     <Property Name="sonar.cs.file.suffixes">.cs,.razor</Property>
     <Property Name="sonar.plsql.file.suffixes">sql,tab,pkb</Property>
     <Property Name="sonaranalyzer.security.cs.ruleNamespace">SonarAnalyzer.Security.CSharp</Property>
     <Property Name="sonar.cobol.tab.width">8</Property>
-    <Property Name="sonaranalyzer-vbnet.staticResourceName">SonarAnalyzer-vbnetenterprise-10.16.0.128591.zip</Property>
+    <Property Name="sonaranalyzer-vbnet.staticResourceName">SonarAnalyzer-vbnetenterprise-10.16.1.129956.zip</Property>
     <Property Name="sonar.rust.clippy.offline">false</Property>
     <Property Name="sonar.text.inclusions.activate">true</Property>
     <Property Name="sonar.githubactions.activate">true</Property>
@@ -145,9 +145,9 @@
     <Property Name="sonar.php.frameworkDetection">true</Property>
     <Property Name="sonar.enableAiPrSummary">false</Property>
     <Property Name="sonar.architecture.config.model">Model is not configured.</Property>
-    <Property Name="sonar.cs.analyzer.dotnet.pluginVersion">10.16.0.128591</Property>
+    <Property Name="sonar.cs.analyzer.dotnet.pluginVersion">10.16.1.129956</Property>
     <Property Name="email.from">noreply@sonarcloud.io</Property>
-    <Property Name="sonaranalyzer-vbnet.pluginVersion">10.16.0.128591</Property>
+    <Property Name="sonaranalyzer-vbnet.pluginVersion">10.16.1.129956</Property>
     <Property Name="sonaranalyzer.security.cs.analyzerId">SonarAnalyzer.Security.CSharp</Property>
     <Property Name="sonar.dbcleaner.weeksBeforeKeepingOnlyOneSnapshotByWeek">1</Property>
     <Property Name="sonaranalyzer-vbnet.analyzerId">SonarAnalyzer.Enterprise.VisualBasic</Property>
@@ -158,7 +158,7 @@
     <Property Name="sonar.kubernetes.activate">true</Property>
     <Property Name="sonar.cpd.cobol.minimumTokens">100</Property>
     <Property Name="sonar.java.ignoreUnnamedModuleForSplitPackage">False</Property>
-    <Property Name="sonar.vbnet.analyzer.dotnet.staticResourceName">SonarAnalyzer-vbnetenterprise-10.16.0.128591.zip</Property>
+    <Property Name="sonar.vbnet.analyzer.dotnet.staticResourceName">SonarAnalyzer-vbnetenterprise-10.16.1.129956.zip</Property>
     <Property Name="sonar.json.file.suffixes">.json</Property>
     <Property Name="sonaranalyzer.security.cs.pluginKey">securitycsharpfrontend</Property>
     <Property Name="sonar.sca.enabled">true</Property>
@@ -171,20 +171,20 @@
     <Property Name="sonar.text.inclusions">**/*.sh,**/*.bash,**/*.zsh,**/*.ksh,**/*.ps1,**/*.properties,**/*.conf,**/*.pem,**/*.config,.env,.aws/config,**/*.key</Property>
     <Property Name="rp.entitlements.api.enabled">true</Property>
     <Property Name="sonar.qualityProfiles.allowDisableInheritedRules">true</Property>
-    <Property Name="sonaranalyzer-cs.staticResourceName">SonarAnalyzer-csharpenterprise-10.16.0.128591.zip</Property>
+    <Property Name="sonaranalyzer-cs.staticResourceName">SonarAnalyzer-csharpenterprise-10.16.1.129956.zip</Property>
     <Property Name="sonar.cpd.cobol.ignoreLiteral">true</Property>
-    <Property Name="sonar.cs.analyzer.dotnet.staticResourceName">SonarAnalyzer-csharpenterprise-10.16.0.128591.zip</Property>
+    <Property Name="sonar.cs.analyzer.dotnet.staticResourceName">SonarAnalyzer-csharpenterprise-10.16.1.129956.zip</Property>
     <Property Name="sonar.authenticator.downcase">false</Property>
     <Property Name="sonaranalyzer-cs.analyzerId">SonarAnalyzer.Enterprise.CSharp</Property>
     <Property Name="sonar.cs.analyzer.dotnet.pluginKey">csharpenterprise</Property>
     <Property Name="sonar.cs.analyzer.security.pluginKey">securitycsharpfrontend</Property>
     <Property Name="sonar.organizations.anyoneCanCreate">true</Property>
     <Property Name="sonar.technicalDebt.ratingGrid">0.05,0.1,0.2,0.5</Property>
-    <Property Name="sonar.cs.analyzer.architecture.pluginVersion">2.11.0.7399</Property>
+    <Property Name="sonar.cs.analyzer.architecture.pluginVersion">2.12.0.7496</Property>
     <Property Name="sonar.lf.enableGravatar">true</Property>
     <Property Name="sonar.dre.baselineTimeout">90000</Property>
     <Property Name="sonar.docker.activate">true</Property>
-    <Property Name="sonaranalyzer-cs.pluginVersion">10.16.0.128591</Property>
+    <Property Name="sonaranalyzer-cs.pluginVersion">10.16.1.129956</Property>
     <Property Name="sonaranalyzer.security.cs.staticResourceName">SonarAnalyzer.Security.CSharp-11.12.0.40973.zip</Property>
     <Property Name="sonar.azureresourcemanager.file.suffixes">.bicep</Property>
     <Property Name="sonar.javascript.file.suffixes">.js,.jsx,.cjs,.mjs,.vue</Property>
@@ -210,7 +210,7 @@ Automatic Analysis will not be available between 07:00 CET and 09:00 CET</Proper
     <Property Name="sonar.maintenance_mode.link">https://community.sonarsource.com/t/sonarcloud-autoscan-maintenance-september-28th-07-00-and-09-00-cet/101442</Property>
     <Property Name="sonar.maintenance_mode.start_date">2023-09-28T09:10:00:00.000+01:00</Property>
     <Property Name="sonar.sensor.cache.baseUrl">https://api.sonarcloud.io/analysis</Property>
-    <Property Name="sonar.core.startTime">04/12/2025 16:24:32</Property>
+    <Property Name="sonar.core.startTime">08/12/2025 18:23:01</Property>
   </ServerSettings>
   <LocalSettings>
     <Property Name="sonar.organization">diegolista673</Property>
@@ -224,9 +224,10 @@ Automatic Analysis will not be available between 07:00 CET and 09:00 CET</Proper
       <RulesetPath>C:\Users\SMARTW\source\repos\GiacenzaSorter\.sonarqube\conf\Sonar-cs.ruleset</RulesetPath>
       <DeactivatedRulesetPath>C:\Users\SMARTW\source\repos\GiacenzaSorter\.sonarqube\conf\Sonar-cs-none.ruleset</DeactivatedRulesetPath>
       <AnalyzerPlugins>
-        <AnalyzerPlugin Key="architecturecsharpfrontend" Version="2.11.0.7399" StaticResourceName="SonarAnalyzer.Architecture-2.11.0.7399.zip">
+        <AnalyzerPlugin Key="architecturecsharpfrontend" Version="2.12.0.7496" StaticResourceName="SonarAnalyzer.Architecture-2.12.0.7496.zip">
           <AssemblyPaths>
-            <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\0\SonarAnalyzer.Architecture.CSharp.dll</Path>
+            <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\7\Google.Protobuf.License.txt</Path>
+            <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\7\SonarAnalyzer.Architecture.CSharp.dll</Path>
           </AssemblyPaths>
         </AnalyzerPlugin>
         <AnalyzerPlugin Key="securitycsharpfrontend" Version="11.12.0.40973" StaticResourceName="SonarAnalyzer.Security.CSharp-11.12.0.40973.zip">
@@ -234,10 +235,13 @@ Automatic Analysis will not be available between 07:00 CET and 09:00 CET</Proper
             <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\1\SonarAnalyzer.Security.CSharp.dll</Path>
           </AssemblyPaths>
         </AnalyzerPlugin>
-        <AnalyzerPlugin Key="csharpenterprise" Version="10.16.0.128591" StaticResourceName="SonarAnalyzer-csharpenterprise-10.16.0.128591.zip">
+        <AnalyzerPlugin Key="csharpenterprise" Version="10.16.1.129956" StaticResourceName="SonarAnalyzer-csharpenterprise-10.16.1.129956.zip">
           <AssemblyPaths>
-            <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\2\SonarAnalyzer.CSharp.dll</Path>
-            <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\2\SonarAnalyzer.Enterprise.CSharp.dll</Path>
+            <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\5\SonarAnalyzer.CSharp.dll</Path>
+            <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\5\SonarAnalyzer.Enterprise.CSharp.dll</Path>
+            <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\5\licenses\LICENSE.txt</Path>
+            <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\5\licenses\THIRD_PARTY_LICENSES\Google.Protobuf-LICENSE.txt</Path>
+            <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\5\licenses\THIRD_PARTY_LICENSES\StyleCop.Analyzers-LICENSE.txt</Path>
           </AssemblyPaths>
         </AnalyzerPlugin>
       </AnalyzerPlugins>
@@ -256,13 +260,13 @@ Automatic Analysis will not be available between 07:00 CET and 09:00 CET</Proper
             <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\3\SonarAnalyzer.Security.VisualBasic.dll</Path>
           </AssemblyPaths>
         </AnalyzerPlugin>
-        <AnalyzerPlugin Key="vbnetenterprise" Version="10.16.0.128591" StaticResourceName="SonarAnalyzer-vbnetenterprise-10.16.0.128591.zip">
+        <AnalyzerPlugin Key="vbnetenterprise" Version="10.16.1.129956" StaticResourceName="SonarAnalyzer-vbnetenterprise-10.16.1.129956.zip">
           <AssemblyPaths>
-            <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\4\SonarAnalyzer.Enterprise.VisualBasic.dll</Path>
-            <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\4\SonarAnalyzer.VisualBasic.dll</Path>
-            <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\4\licenses\LICENSE.txt</Path>
-            <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\4\licenses\THIRD_PARTY_LICENSES\Google.Protobuf-LICENSE.txt</Path>
-            <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\4\licenses\THIRD_PARTY_LICENSES\StyleCop.Analyzers-LICENSE.txt</Path>
+            <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\6\SonarAnalyzer.Enterprise.VisualBasic.dll</Path>
+            <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\6\SonarAnalyzer.VisualBasic.dll</Path>
+            <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\6\licenses\LICENSE.txt</Path>
+            <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\6\licenses\THIRD_PARTY_LICENSES\Google.Protobuf-LICENSE.txt</Path>
+            <Path>C:\Users\SMARTW\AppData\Local\Temp\.sonarqube\resources\6\licenses\THIRD_PARTY_LICENSES\StyleCop.Analyzers-LICENSE.txt</Path>
           </AssemblyPaths>
         </AnalyzerPlugin>
       </AnalyzerPlugins>

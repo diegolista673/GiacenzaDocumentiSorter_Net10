@@ -1,16 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GiacenzaSorterRm.Models.Database;
 using Microsoft.Extensions.Logging;
-using GiacenzaSorterRm.AppCode;
 using Microsoft.AspNetCore.Authorization;
-using GiacenzaSorterRm.Models.Database;
+
 
 namespace GiacenzaSorterRm.Pages.PagesAssociazione
 {
@@ -75,6 +71,8 @@ namespace GiacenzaSorterRm.Pages.PagesAssociazione
                     throw;
                 }
             }
+
+            _logger.LogInformation("Utente {User} ha modificato l'associazione ID {IdRiepilogo}", User.Identity.Name, Ctc.IdRiepilogo);
 
             return RedirectToPage("./Index");
         }

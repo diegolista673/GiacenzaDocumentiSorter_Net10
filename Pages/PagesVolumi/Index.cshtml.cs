@@ -13,7 +13,6 @@ using GiacenzaSorterRm.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
-using GiacenzaSorterRm.Models.Database;
 using Microsoft.Data.SqlClient;
 
 namespace GiacenzaSorterRm.Pages.PagesVolumi
@@ -30,10 +29,6 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
             _context = context;
         }
 
-        //[BindProperty]
-        //[Required]
-        //[DataType(DataType.Date)]
-        //public DateTime EndDate { get; set; } = DateTime.Now;
 
         public DateTime EndDate { get; set; } = DateTime.Now.Date;
 

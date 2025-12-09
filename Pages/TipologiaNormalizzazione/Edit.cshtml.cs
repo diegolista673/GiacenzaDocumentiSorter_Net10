@@ -1,14 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using GiacenzaSorterRm.Models.Database;
 using Microsoft.AspNetCore.Authorization;
-using GiacenzaSorterRm.Models.Database;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System.Linq;
+using System.Threading.Tasks;
+
 
 namespace GiacenzaSorterRm.Pages.TipologiaNormalizzazione
 {
@@ -16,9 +14,11 @@ namespace GiacenzaSorterRm.Pages.TipologiaNormalizzazione
     public class EditModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
+        private readonly ILogger<EditModel> _logger;
 
-        public EditModel(GiacenzaSorterContext context)
+        public EditModel(ILogger<EditModel> logger,GiacenzaSorterContext context)
         {
+            _logger = logger;
             _context = context;
         }
 
@@ -68,6 +68,7 @@ namespace GiacenzaSorterRm.Pages.TipologiaNormalizzazione
                 }
             }
 
+            _logger.LogInformation("Tipologia Normalizzazione Modificata: {@TipiNormalizzazione} by Utente: {Utente}", TipiNormalizzazione, User.Identity.Name);
             return RedirectToPage("./Index");
         }
 

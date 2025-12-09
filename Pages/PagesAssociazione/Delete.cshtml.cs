@@ -1,14 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using GiacenzaSorterRm.Models.Database;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using GiacenzaSorterRm.Models.Database;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Data.SqlClient;
-using GiacenzaSorterRm.Models.Database;
+using Microsoft.Extensions.Logging;
+using System.Linq;
+using System.Threading.Tasks;
+
 
 namespace GiacenzaSorterRm.Pages.PagesAssociazione
 {
@@ -16,9 +14,11 @@ namespace GiacenzaSorterRm.Pages.PagesAssociazione
     public class DeleteModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
+        private readonly ILogger<IndexModel> _logger;
 
-        public DeleteModel(GiacenzaSorterContext context)
+        public DeleteModel(ILogger<IndexModel> logger, GiacenzaSorterContext context)
         {
+            _logger = logger;
             _context = context;
         }
 
@@ -57,6 +57,7 @@ namespace GiacenzaSorterRm.Pages.PagesAssociazione
                 {
                     _context.CommessaTipologiaContenitores.Remove(Ctc);
                     await _context.SaveChangesAsync();
+                    _logger.LogInformation("Associazione Eliminata: {@Ctc} by Utente: {Utente}", Ctc, User.Identity.Name);
                 }
 
                 return RedirectToPage("./Index");

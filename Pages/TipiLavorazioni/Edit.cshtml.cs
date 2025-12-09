@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using GiacenzaSorterRm.Models.Database;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
-using GiacenzaSorterRm.Models.Database;
+
 
 namespace GiacenzaSorterRm.Pages.TipiLavorazioni
 {
@@ -88,6 +87,7 @@ namespace GiacenzaSorterRm.Pages.TipiLavorazioni
                 }
             }
 
+            _logger.LogInformation("Commessa modificata: {Commessa}", Commesse.Commessa);
             return RedirectToPage("./Index");
         }
 

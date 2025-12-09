@@ -1,13 +1,12 @@
-using System;
+using GiacenzaSorterRm.Models.Database;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using GiacenzaSorterRm.Models.Database;
-using Microsoft.AspNetCore.Authorization;
-using GiacenzaSorterRm.Models.Database;
+
 
 namespace GiacenzaSorterRm.Pages.TipoPiattaforme
 {
@@ -15,17 +14,20 @@ namespace GiacenzaSorterRm.Pages.TipoPiattaforme
     public class IndexModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
+        private readonly ILogger<EditModel> _logger;
 
-        public IndexModel(GiacenzaSorterContext context)
+        public IndexModel(ILogger<EditModel> logger, GiacenzaSorterContext context)
         {
+            _logger = logger;
             _context = context;
         }
 
-        public IList<Piattaforme> Piattaforme { get;set; }
+        public IList<Piattaforme> Piattaforme { get; set; }
 
         public async Task OnGetAsync()
         {
             Piattaforme = await _context.Piattaformes.ToListAsync();
+            _logger.LogInformation("Visualizzate Piattaforme da Utente: {Utente}", User.Identity.Name);
         }
     }
 }

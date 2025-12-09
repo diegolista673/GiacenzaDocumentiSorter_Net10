@@ -21,7 +21,6 @@ namespace GiacenzaSorterRm.Pages.PagesMacero
         private readonly GiacenzaSorterContext _context;
         private readonly ILogger<IndexModel> _logger;
 
-
         public IndexModel(ILogger<IndexModel> logger, GiacenzaSorterContext context)
         {
             _logger = logger;

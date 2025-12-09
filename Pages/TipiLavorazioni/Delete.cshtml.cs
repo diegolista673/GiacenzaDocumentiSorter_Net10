@@ -1,13 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using GiacenzaSorterRm.Models.Database;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using GiacenzaSorterRm.Models.Database;
-using Microsoft.AspNetCore.Authorization;
-using GiacenzaSorterRm.Models.Database;
+using Microsoft.Extensions.Logging;
+using NLog;
+using System.Linq;
+using System.Threading.Tasks;
+
 
 namespace GiacenzaSorterRm.Pages.TipiLavorazioni
 {
@@ -15,9 +15,11 @@ namespace GiacenzaSorterRm.Pages.TipiLavorazioni
     public class DeleteModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
+        private readonly ILogger<CreateModel> _logger;
 
-        public DeleteModel(GiacenzaSorterContext context)
+        public DeleteModel(ILogger<CreateModel> logger,GiacenzaSorterContext context)
         {
+            _logger = logger;
             _context = context;
         }
 
@@ -56,6 +58,7 @@ namespace GiacenzaSorterRm.Pages.TipiLavorazioni
                 await _context.SaveChangesAsync();
             }
 
+            _logger.LogInformation("Commessa eliminata: {Commessa}", Commesse.Commessa);
             return RedirectToPage("./Index");
         }
     }

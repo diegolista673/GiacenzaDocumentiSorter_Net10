@@ -1,16 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using GiacenzaSorterRm.Models.Database;
 using Microsoft.Extensions.Logging;
-using GiacenzaSorterRm.AppCode;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
-using GiacenzaSorterRm.Models.Database;
+
 
 namespace GiacenzaSorterRm.Pages.TipoPiattaforme
 {
@@ -53,6 +49,7 @@ namespace GiacenzaSorterRm.Pages.TipoPiattaforme
                 Piattaforme.IdOperatoreCreazione = Int32.Parse(User.FindFirst("IdOperatore").Value);
                 _context.Piattaformes.Add(Piattaforme);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Piattaforma Creata: {@Piattaforme} by Utente: {Utente}", Piattaforme, User.Identity.Name);
             }
             catch (DbUpdateException)
             {

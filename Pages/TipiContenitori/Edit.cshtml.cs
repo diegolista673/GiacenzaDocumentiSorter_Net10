@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using GiacenzaSorterRm.Models.Database;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
-using GiacenzaSorterRm.Models.Database;
 
 namespace GiacenzaSorterRm.Pages.TipiContenitori
 {
@@ -76,6 +74,7 @@ namespace GiacenzaSorterRm.Pages.TipiContenitori
                 }
             }
 
+            _logger.LogInformation("Contenitore modificato: {Contenitore}", Contenitori.Contenitore);
             return RedirectToPage("./Index");
         }
 

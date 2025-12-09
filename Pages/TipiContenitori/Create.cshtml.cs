@@ -1,16 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using GiacenzaSorterRm.Models.Database;
 using Microsoft.Extensions.Logging;
-using GiacenzaSorterRm.AppCode;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
-using GiacenzaSorterRm.Models.Database;
+
 
 namespace GiacenzaSorterRm.Pages.TipiContenitori
 {
@@ -19,7 +15,6 @@ namespace GiacenzaSorterRm.Pages.TipiContenitori
     {
         private readonly GiacenzaSorterContext _context;
         private readonly ILogger<CreateModel> _logger;
-
 
 
         public CreateModel(ILogger<CreateModel> logger, GiacenzaSorterContext context)
@@ -61,7 +56,7 @@ namespace GiacenzaSorterRm.Pages.TipiContenitori
                 return Page();
             }
 
-
+            _logger.LogInformation("Contenitore creato: {Contenitore}", Contenitori.Contenitore);
             return RedirectToPage("./Index");
         }
     }
