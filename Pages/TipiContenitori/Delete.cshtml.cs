@@ -14,9 +14,9 @@ namespace GiacenzaSorterRm.Pages.TipiContenitori
     public class DeleteModel : PageModel    
     {
         private readonly GiacenzaSorterContext _context;
-        private readonly ILogger<EditModel> _logger;
+        private readonly ILogger<DeleteModel> _logger;
 
-        public DeleteModel(ILogger<EditModel> logger,GiacenzaSorterContext context)
+        public DeleteModel(ILogger<DeleteModel> logger,GiacenzaSorterContext context)
         {
             _logger = logger;
             _context = context;
