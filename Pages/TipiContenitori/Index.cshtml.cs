@@ -1,15 +1,13 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using GiacenzaSorterRm.Models.Database;
 using Microsoft.AspNetCore.Authorization;
 
-
 namespace GiacenzaSorterRm.Pages.TipiContenitori
 {
-    [Authorize(Roles = "ADMIN, SUPERVISOR")]
+    [Authorize(Roles = "ADMIN,SUPERVISOR")]
     public class IndexModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
@@ -19,13 +17,13 @@ namespace GiacenzaSorterRm.Pages.TipiContenitori
             _context = context;
         }
 
-        public IList<Contenitori> Contenitori { get;set; }
+        public IList<Contenitori> Contenitori { get; set; } = new List<Contenitori>();
 
         public async Task OnGetAsync()
         {
-
-            Contenitori = await _context.Contenitoris.Include(d => d.IdOperatoreCreazioneNavigation ).ToListAsync();
-
+            Contenitori = await _context.Contenitoris
+                .Include(d => d.IdOperatoreCreazioneNavigation)
+                .ToListAsync();
         }
     }
 }

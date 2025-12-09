@@ -11,21 +11,20 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace GiacenzaSorterRm.Pages.TipiContenitori
 {
-    [Authorize(Roles = "ADMIN, SUPERVISOR")]
+    [Authorize(Roles = "ADMIN,SUPERVISOR")]
     public class EditModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
         private readonly ILogger<EditModel> _logger;
 
-
-        public EditModel(ILogger<EditModel> logger,  GiacenzaSorterContext context)
+        public EditModel(ILogger<EditModel> logger, GiacenzaSorterContext context)
         {
             _logger = logger;
             _context = context;
         }
 
         [BindProperty]
-        public Contenitori Contenitori { get; set; }
+        public Contenitori Contenitori { get; set; } = new Contenitori();
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -34,19 +33,20 @@ namespace GiacenzaSorterRm.Pages.TipiContenitori
                 return NotFound();
             }
 
-            Contenitori = await _context.Contenitoris
-                .Include(c => c.IdOperatoreCreazioneNavigation).FirstOrDefaultAsync(m => m.IdContenitore == id);
+            Contenitori? contenitori = await _context.Contenitoris
+                .Include(c => c.IdOperatoreCreazioneNavigation)
+                .FirstOrDefaultAsync(m => m.IdContenitore == id);
 
-            if (Contenitori == null)
+            if (contenitori == null)
             {
                 return NotFound();
             }
-           ViewData["IdOperatoreCreazione"] = new SelectList(_context.Operatoris, "IdOperatore", "IdOperatore");
+
+            Contenitori = contenitori;
+            ViewData["IdOperatoreCreazione"] = new SelectList(_context.Operatoris, "IdOperatore", "IdOperatore");
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -55,12 +55,20 @@ namespace GiacenzaSorterRm.Pages.TipiContenitori
             }
 
             Contenitori.DataCreazione = DateTime.Now.Date;
-            Contenitori.IdOperatoreCreazione = Int32.Parse(User.FindFirst("IdOperatore").Value);
+            
+            string? idOperatoreValue = User.FindFirst("IdOperatore")?.Value;
+            if (int.TryParse(idOperatoreValue, out int idOperatore))
+            {
+                Contenitori.IdOperatoreCreazione = idOperatore;
+            }
+
             _context.Attach(Contenitori).State = EntityState.Modified;
 
             try
             {
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Contenitore modificato: {Contenitore}", Contenitori.Contenitore);
+                return RedirectToPage("./Index");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -73,9 +81,6 @@ namespace GiacenzaSorterRm.Pages.TipiContenitori
                     throw;
                 }
             }
-
-            _logger.LogInformation("Contenitore modificato: {Contenitore}", Contenitori.Contenitore);
-            return RedirectToPage("./Index");
         }
 
         private bool ContenitoriExists(int id)

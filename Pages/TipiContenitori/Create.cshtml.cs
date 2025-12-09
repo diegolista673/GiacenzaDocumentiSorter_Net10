@@ -7,22 +7,19 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 
-
 namespace GiacenzaSorterRm.Pages.TipiContenitori
 {
-    [Authorize(Roles = "ADMIN, SUPERVISOR")]
+    [Authorize(Roles = "ADMIN,SUPERVISOR")]
     public class CreateModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
         private readonly ILogger<CreateModel> _logger;
-
 
         public CreateModel(ILogger<CreateModel> logger, GiacenzaSorterContext context)
         {
             _logger = logger;
             _context = context;
         }
-
 
         public IActionResult OnGet()
         {
@@ -31,10 +28,8 @@ namespace GiacenzaSorterRm.Pages.TipiContenitori
         }
 
         [BindProperty]
-        public Contenitori Contenitori { get; set; }
+        public Contenitori Contenitori { get; set; } = new Contenitori();
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -45,19 +40,24 @@ namespace GiacenzaSorterRm.Pages.TipiContenitori
             try
             {
                 Contenitori.DataCreazione = DateTime.Now.Date;
-                Contenitori.IdOperatoreCreazione = Int32.Parse(User.FindFirst("IdOperatore").Value);
+                
+                string? idOperatoreValue = User.FindFirst("IdOperatore")?.Value;
+                if (int.TryParse(idOperatoreValue, out int idOperatore))
+                {
+                    Contenitori.IdOperatoreCreazione = idOperatore;
+                }
+
                 _context.Contenitoris.Add(Contenitori);
                 await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Contenitore creato: {Contenitore}", Contenitori.Contenitore);
+                return RedirectToPage("./Index");
             }
             catch (DbUpdateException)
             {
-                ModelState.AddModelError(string.Empty, "Unable to save. " +
-                            "The name is already in use.");
+                ModelState.AddModelError(string.Empty, "Unable to save. The name is already in use.");
                 return Page();
             }
-
-            _logger.LogInformation("Contenitore creato: {Contenitore}", Contenitori.Contenitore);
-            return RedirectToPage("./Index");
         }
     }
 }

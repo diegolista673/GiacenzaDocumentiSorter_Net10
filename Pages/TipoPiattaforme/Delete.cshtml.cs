@@ -4,25 +4,24 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace GiacenzaSorterRm.Pages.TipoPiattaforme
 {
-    [Authorize(Roles = "ADMIN, SUPERVISOR")]
+    [Authorize(Roles = "ADMIN,SUPERVISOR")]
     public class DeleteModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
-        private readonly ILogger<CreateModel> _logger;
+        private readonly ILogger<DeleteModel> _logger;
 
-        public DeleteModel(ILogger<CreateModel> logger,GiacenzaSorterContext context)
+        public DeleteModel(ILogger<DeleteModel> logger, GiacenzaSorterContext context)
         {
             _logger = logger;
             _context = context;
         }
 
         [BindProperty]
-        public Piattaforme Piattaforme { get; set; }
+        public Piattaforme Piattaforme { get; set; } = new Piattaforme();
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -31,12 +30,14 @@ namespace GiacenzaSorterRm.Pages.TipoPiattaforme
                 return NotFound();
             }
 
-            Piattaforme = await _context.Piattaformes.FirstOrDefaultAsync(m => m.IdPiattaforma == id);
+            Piattaforme? piattaforme = await _context.Piattaformes.FirstOrDefaultAsync(m => m.IdPiattaforma == id);
 
-            if (Piattaforme == null)
+            if (piattaforme == null)
             {
                 return NotFound();
             }
+
+            Piattaforme = piattaforme;
             return Page();
         }
 
@@ -47,13 +48,14 @@ namespace GiacenzaSorterRm.Pages.TipoPiattaforme
                 return NotFound();
             }
 
-            Piattaforme = await _context.Piattaformes.FindAsync(id);
+            Piattaforme? piattaforme = await _context.Piattaformes.FindAsync(id);
 
-            if (Piattaforme != null)
+            if (piattaforme != null)
             {
-                _context.Piattaformes.Remove(Piattaforme);
+                _context.Piattaformes.Remove(piattaforme);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation("Piattaforma Eliminata: {@Piattaforme} by Utente: {Utente}", Piattaforme, User.Identity.Name);
+                _logger.LogInformation("Piattaforma eliminata: {Piattaforma} by Utente: {Utente}", 
+                    piattaforme.Piattaforma, User.Identity?.Name ?? "Unknown");
             }
 
             return RedirectToPage("./Index");

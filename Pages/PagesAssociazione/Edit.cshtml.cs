@@ -7,10 +7,9 @@ using GiacenzaSorterRm.Models.Database;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 
-
 namespace GiacenzaSorterRm.Pages.PagesAssociazione
 {
-    [Authorize(Roles = "ADMIN, SUPERVISOR")]
+    [Authorize(Roles = "ADMIN,SUPERVISOR")]
     public class EditModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
@@ -22,10 +21,8 @@ namespace GiacenzaSorterRm.Pages.PagesAssociazione
             _context = context;
         }
 
-
         [BindProperty]
-        public CommessaTipologiaContenitore Ctc { get; set; }
-
+        public CommessaTipologiaContenitore Ctc { get; set; } = new CommessaTipologiaContenitore();
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -34,16 +31,17 @@ namespace GiacenzaSorterRm.Pages.PagesAssociazione
                 return NotFound();
             }
 
-            Ctc = await _context.CommessaTipologiaContenitores.FirstOrDefaultAsync(m => m.IdRiepilogo == id);
+            CommessaTipologiaContenitore? ctc = await _context.CommessaTipologiaContenitores
+                .FirstOrDefaultAsync(m => m.IdRiepilogo == id);
 
-            if (Ctc == null)
+            if (ctc == null)
             {
                 return NotFound();
             }
+
+            Ctc = ctc;
             return Page();
         }
-
-
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -52,13 +50,14 @@ namespace GiacenzaSorterRm.Pages.PagesAssociazione
                 return Page();
             }
 
-
-
             _context.Attach(Ctc).State = EntityState.Modified;
 
             try
             {
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Utente {User} ha modificato l'associazione ID {IdRiepilogo}", 
+                    User.Identity?.Name ?? "Unknown", Ctc.IdRiepilogo);
+                return RedirectToPage("./Index");
             }
             catch (DbUpdateException)
             {
@@ -71,15 +70,11 @@ namespace GiacenzaSorterRm.Pages.PagesAssociazione
                     throw;
                 }
             }
-
-            _logger.LogInformation("Utente {User} ha modificato l'associazione ID {IdRiepilogo}", User.Identity.Name, Ctc.IdRiepilogo);
-
-            return RedirectToPage("./Index");
         }
 
         private bool CommessaTipologiaContenitoreExists(int id)
         {
-            return _context.CommessaTipologiaContenitores.Any(e => e.IdTipologia == id);
+            return _context.CommessaTipologiaContenitores.Any(e => e.IdRiepilogo == id);
         }
     }
 }

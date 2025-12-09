@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace GiacenzaSorterRm.AppCode
 {
@@ -16,7 +13,7 @@ namespace GiacenzaSorterRm.AppCode
         /// <returns></returns>
         public static int SetCentroByRoleADMIN(ClaimsPrincipal user, int selectedCentro)
         {
-            int CentroID = 0;
+            int CentroID;
 
             if (user.IsInRole("ADMIN"))
             {
@@ -30,7 +27,6 @@ namespace GiacenzaSorterRm.AppCode
             return CentroID;
         }
 
-
         /// <summary>
         /// return idCentro by role ADMIN or Supervisor and centro selected by select list
         /// </summary>
@@ -39,7 +35,7 @@ namespace GiacenzaSorterRm.AppCode
         /// <returns></returns>
         public static int SetCentroByRoleADMINSupervisor(ClaimsPrincipal user, int selectedCentro)
         {
-            int CentroID = 0;
+            int CentroID;
 
             if (user.IsInRole("ADMIN") || user.IsInRole("SUPERVISOR"))
             {
@@ -53,8 +49,6 @@ namespace GiacenzaSorterRm.AppCode
             return CentroID;
         }
 
-
-
         /// <summary>
         /// Return idCentro by user
         /// </summary>
@@ -66,7 +60,6 @@ namespace GiacenzaSorterRm.AppCode
             return CentroID;
         }
 
-
         /// <summary>
         /// Get Centro bu user
         /// </summary>
@@ -74,7 +67,7 @@ namespace GiacenzaSorterRm.AppCode
         /// <returns></returns>
         public static string GetCentroLavorazioneByUser(ClaimsPrincipal user)
         {
-            string centro = user.FindFirst("Centro").Value; 
+            string centro = user.FindFirst("Centro")?.Value ?? string.Empty; 
             return centro;
         }
     }

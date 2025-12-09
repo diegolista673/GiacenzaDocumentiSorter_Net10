@@ -4,27 +4,24 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using NLog;
-using System.Linq;
 using System.Threading.Tasks;
-
 
 namespace GiacenzaSorterRm.Pages.TipiLavorazioni
 {
-    [Authorize(Roles = "ADMIN, SUPERVISOR")]
+    [Authorize(Roles = "ADMIN,SUPERVISOR")]
     public class DeleteModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
-        private readonly ILogger<CreateModel> _logger;
+        private readonly ILogger<DeleteModel> _logger;
 
-        public DeleteModel(ILogger<CreateModel> logger,GiacenzaSorterContext context)
+        public DeleteModel(ILogger<DeleteModel> logger, GiacenzaSorterContext context)
         {
             _logger = logger;
             _context = context;
         }
 
         [BindProperty]
-        public Commesse Commesse { get; set; }
+        public Commesse Commesse { get; set; } = new Commesse();
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -33,12 +30,16 @@ namespace GiacenzaSorterRm.Pages.TipiLavorazioni
                 return NotFound();
             }
 
-            Commesse = await _context.Commesses.Include(c => c.IdOperatoreNavigation).FirstOrDefaultAsync(m => m.IdCommessa == id);
+            Commesse? commesse = await _context.Commesses
+                .Include(c => c.IdOperatoreNavigation)
+                .FirstOrDefaultAsync(m => m.IdCommessa == id);
 
-            if (Commesse == null)
+            if (commesse == null)
             {
                 return NotFound();
             }
+
+            Commesse = commesse;
             return Page();
         }
 
@@ -49,16 +50,15 @@ namespace GiacenzaSorterRm.Pages.TipiLavorazioni
                 return NotFound();
             }
 
-            Commesse = await _context.Commesses.FirstOrDefaultAsync(x=> x.IdCommessa == id);
+            Commesse? commesse = await _context.Commesses.FirstOrDefaultAsync(x => x.IdCommessa == id);
 
-            if (Commesse != null)
+            if (commesse != null)
             {
-                
-                _context.Commesses.Remove(Commesse);
+                _context.Commesses.Remove(commesse);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Commessa eliminata: {Commessa}", commesse.Commessa);
             }
 
-            _logger.LogInformation("Commessa eliminata: {Commessa}", Commesse.Commessa);
             return RedirectToPage("./Index");
         }
     }

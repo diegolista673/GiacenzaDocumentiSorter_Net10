@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Linq;
 using System.Threading.Tasks;
-
 
 namespace GiacenzaSorterRm.Pages.TipiContenitori
 {
@@ -16,14 +14,14 @@ namespace GiacenzaSorterRm.Pages.TipiContenitori
         private readonly GiacenzaSorterContext _context;
         private readonly ILogger<DeleteModel> _logger;
 
-        public DeleteModel(ILogger<DeleteModel> logger,GiacenzaSorterContext context)
+        public DeleteModel(ILogger<DeleteModel> logger, GiacenzaSorterContext context)
         {
             _logger = logger;
             _context = context;
         }
 
         [BindProperty]
-        public Contenitori Contenitori { get; set; }
+        public Contenitori Contenitori { get; set; } = new Contenitori();
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -32,12 +30,14 @@ namespace GiacenzaSorterRm.Pages.TipiContenitori
                 return NotFound();
             }
 
-            Contenitori = await _context.Contenitoris.FirstOrDefaultAsync(m => m.IdContenitore == id);
+            Contenitori? contenitori = await _context.Contenitoris.FirstOrDefaultAsync(m => m.IdContenitore == id);
 
-            if (Contenitori == null)
+            if (contenitori == null)
             {
                 return NotFound();
             }
+
+            Contenitori = contenitori;
             return Page();
         }
 
@@ -48,15 +48,15 @@ namespace GiacenzaSorterRm.Pages.TipiContenitori
                 return NotFound();
             }
 
-            Contenitori = await _context.Contenitoris.FindAsync(id);
+            Contenitori? contenitori = await _context.Contenitoris.FindAsync(id);
 
-            if (Contenitori != null)
+            if (contenitori != null)
             {
-                _context.Contenitoris.Remove(Contenitori);
+                _context.Contenitoris.Remove(contenitori);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Contenitore eliminato: {Contenitore}", contenitori.Contenitore);
             }
 
-            _logger.LogInformation("Contenitore eliminato: {Contenitore}", Contenitori.Contenitore);
             return RedirectToPage("./Index");
         }
     }

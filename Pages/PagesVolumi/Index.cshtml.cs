@@ -29,19 +29,21 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
             _context = context;
         }
 
-
         public DateTime EndDate { get; set; } = DateTime.Now.Date;
 
-        public string Message { get; set; }
-        public List<CommesseView> LstCommesseView { get; set; }
+        public string Message { get; set; } = string.Empty;
+        
+        public List<CommesseView> LstCommesseView { get; set; } = new List<CommesseView>();
+        
         public int TotaleGiacenza { get; set; }
 
-        public List<SelectListItem> LstCentri { get; set; }
+        public List<SelectListItem> LstCentri { get; set; } = new List<SelectListItem>();
 
-        public string Ruolo { get; set; }
-        public string Utente { get; set; }
+        public string Ruolo { get; set; } = string.Empty;
+        
+        public string Utente { get; set; } = string.Empty;
 
-        public List<GiacenzaView> LstGiacenzaView { get; set; }
+        public List<GiacenzaView> LstGiacenzaView { get; set; } = new List<GiacenzaView>();
 
         [BindProperty]
         [Required(ErrorMessage = "Centro is required")]
@@ -53,81 +55,59 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
         [Range(1, int.MaxValue, ErrorMessage = "IdTipo is required")]
         public int IdTipo { get; set; }
 
-        public string ErrorMessage { get; set; }
-
+        public string ErrorMessage { get; set; } = string.Empty;
 
         public async Task<IActionResult> OnGet()
         {
-            Ruolo = User.FindFirstValue("Ruolo");
-            Utente = User.Identity.Name;
+            Ruolo = User.FindFirstValue("Ruolo") ?? string.Empty;
+            Utente = User.Identity?.Name ?? string.Empty;
 
             LstCentri = await _context.CentriLavs.Select(a => new SelectListItem
-                                                          {
-                                                              Value = a.IdCentroLavorazione.ToString(),
-                                                              Text = a.CentroLavDesc
-                                                          }).OrderBy(x => x.Value).ToListAsync();
+            {
+                Value = a.IdCentroLavorazione.ToString(),
+                Text = a.CentroLavDesc
+            }).OrderBy(x => x.Value).ToListAsync();
 
-            return Page();                                   
-
+            return Page();
         }
 
-
-
-        
         public async Task<IActionResult> ReportDettaglioAsync()
         {
-            
-
             try
             {
-                Ruolo = User.FindFirstValue("Ruolo");
-                Utente = User.Identity.Name;
+                Ruolo = User.FindFirstValue("Ruolo") ?? string.Empty;
+                Utente = User.Identity?.Name ?? string.Empty;
                 int CentroID = CentroAppartenenza.SetCentroByRoleADMINSupervisor(User, SelectedCentro);
-                IQueryable<Scatole> lstSC;
 
                 _context.Database.SetCommandTimeout(120);
 
                 if (ModelState.IsValid)
                 {
+                    IQueryable<Scatole> lstSC;
 
-                    //se tutti
                     if (CentroID == 5)
                     {
-                        //fatta cosi contiene tutte le commesse anche se a 0 in giacenza
-                        //lstSC = _context.Scatoles
-                        //                .Include(s => s.IdCommessaNavigation)
-                        //                .Include(s => s.IdContenitoreNavigation)
-                        //                .Include(s => s.IdStatoNavigation)
-                        //                .Include(s => s.IdCentroGiacenzaNavigation)
-                        //                .Include(s => s.IdTipologiaNavigation)
-                        //                .Where(x => (x.DataNormalizzazione <= EndDate || x.DataSorter == EndDate ) && x.IdCommessaNavigation.Attiva == true && x.IdStato < 3  )
-                        //                .AsNoTracking().AsQueryable();
-
                         lstSC = _context.Scatoles
-                                        .Include(s => s.IdCommessaNavigation)
-                                        .Include(s => s.IdContenitoreNavigation)
-                                        .Include(s => s.IdStatoNavigation)
-                                        .Include(s => s.IdCentroGiacenzaNavigation)
-                                        .Include(s => s.IdTipologiaNavigation)
-                                        .Where(s => (s.IdStato == 1 || s.DataSorter == EndDate) && s.IdCommessaNavigation.Attiva == true && s.IdStato < 3)
-                                        .AsNoTracking().AsQueryable();
+                            .Include(s => s.IdCommessaNavigation)
+                            .Include(s => s.IdContenitoreNavigation)
+                            .Include(s => s.IdStatoNavigation)
+                            .Include(s => s.IdCentroGiacenzaNavigation)
+                            .Include(s => s.IdTipologiaNavigation)
+                            .Where(s => (s.IdStato == 1 || s.DataSorter == EndDate) && s.IdCommessaNavigation.Attiva == true && s.IdStato < 3)
+                            .AsNoTracking();
                     }
                     else
                     {
                         lstSC = _context.Scatoles
-                                        .Include(s => s.IdCommessaNavigation)
-                                        .Include(s => s.IdContenitoreNavigation)
-                                        .Include(s => s.IdStatoNavigation)
-                                        .Include(s => s.IdCentroGiacenzaNavigation)
-                                        .Include(s => s.IdTipologiaNavigation)
-                                        .Where(s => (s.IdStato == 1 || s.DataSorter == EndDate) && s.IdCommessaNavigation.Attiva == true && s.IdStato < 3 && s.IdCentroGiacenza == CentroID)
-                                        .AsNoTracking().AsQueryable();
+                            .Include(s => s.IdCommessaNavigation)
+                            .Include(s => s.IdContenitoreNavigation)
+                            .Include(s => s.IdStatoNavigation)
+                            .Include(s => s.IdCentroGiacenzaNavigation)
+                            .Include(s => s.IdTipologiaNavigation)
+                            .Where(s => (s.IdStato == 1 || s.DataSorter == EndDate) && s.IdCommessaNavigation.Attiva == true && s.IdStato < 3 && s.IdCentroGiacenza == CentroID)
+                            .AsNoTracking();
                     }
 
-                    //NB:
-                    //documenti normalizzati IN data selezionata
-                    //documenti sorterizzati IN data selezionata
-                    //totale giacenza FINO ALLA data selezionata
                     LstCommesseView = await (from p in lstSC
                                              group p by new { p.IdCommessaNavigation.Commessa, p.IdTipologiaNavigation.Tipologia, p.IdCentroGiacenzaNavigation.CentroLavDesc, p.IdCommessaNavigation.IdPiattaformaNavigation.Piattaforma } into g
                                              select new CommesseView
@@ -141,23 +121,10 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
                                                  DataScatolaOld = g.Where(p => p.IdStato == 1 && p.IdCommessaNavigation.Commessa == g.Key.Commessa && p.IdTipologiaNavigation.Tipologia == g.Key.Tipologia).Select(x => x.DataNormalizzazione).Min(),
                                                  CentroGiacenza = g.Key.CentroLavDesc,
                                                  Piattaforma = g.Key.Piattaforma
-                                             }).OrderBy(z => z.Commessa).ThenBy(z => z.Tipologia).ToListAsync();
-
-
-                    //LstCommesseView = (from p in lstSC
-                    //                   group p by new { p.IdCommessaNavigation.Commessa, p.IdTipologiaNavigation.Tipologia } into g
-                    //                   select new CommesseView
-                    //                   {
-                    //                       Commessa = g.Key.Commessa,
-                    //                       Tipologia = g.Key.Tipologia,
-                    //                       TotaleDocumentiNormalizzati = g.Where(x => x.DataNormalizzazione == EndDate).Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
-                    //                       TotaleDocumentiSorterizzati = g.Where(z => z.DataSorter == EndDate).Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
-                    //                       TotaleDocumentiGiacenza = g.Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti) - g.Where(z => z.IdStatoNavigation.Stato == "SORTERIZZATO").Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti) - g.Where(z => z.IdStatoNavigation.Stato == "MACERATO").Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
-                    //                       ScatolaNormalizzataOld = g.Where(p => p.IdCommessaNavigation.Commessa == g.Key.Commessa && p.IdTipologiaNavigation.Tipologia == g.Key.Tipologia && p.DataSorter == null).OrderBy(x => x.DataNormalizzazione).Select(x => x.Scatola).FirstOrDefault(),
-                    //                       DataScatolaOld = g.Where(p => p.IdCommessaNavigation.Commessa == g.Key.Commessa && p.IdTipologiaNavigation.Tipologia == g.Key.Tipologia && p.DataSorter == null).OrderBy(x => x.DataNormalizzazione).Select(x => x.DataNormalizzazione).FirstOrDefault()
-
-                    //                   }).OrderBy(z => z.Commessa).ThenBy(z => z.Tipologia).ToList();
-
+                                             })
+                                             .OrderBy(z => z.Commessa)
+                                             .ThenBy(z => z.Tipologia)
+                                             .ToListAsync();
 
                     TotaleGiacenza = LstCommesseView.Sum(x => x.TotaleDocumentiGiacenza);
 
@@ -167,54 +134,53 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
                     }
 
                     return Partial("_RiepilogoVolumi", this);
-
-
                 }
                 else
                 {
                     return Page();
                 }
             }
-            catch (SqlException ex)
+            catch (SqlException ex) when (ex.Number == -2)
             {
-                if (ex.Number == -2)
-                {
-                    _logger.LogError(ex.Message);
-                    ErrorMessage = ex.Message;
-                }
+                _logger.LogError(ex, "SQL Timeout in ReportDettaglio");
+                ErrorMessage = "Query timeout. Please try with a smaller date range.";
                 return Partial("_RiepilogoVolumi", this);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
-                ErrorMessage = ex.Message;
+                _logger.LogError(ex, "Error in ReportDettaglio");
+                ErrorMessage = "An error occurred while generating the report.";
                 return Partial("_RiepilogoVolumi", this);
             }
         }
-
 
         public async Task<IActionResult> ReportPiattaformaAsync()
         {
             try
             {
-                Ruolo = User.FindFirstValue("Ruolo");
-                Utente = User.Identity.Name;
+                Ruolo = User.FindFirstValue("Ruolo") ?? string.Empty;
+                Utente = User.Identity?.Name ?? string.Empty;
                 int CentroID = CentroAppartenenza.SetCentroByRoleADMINSupervisor(User, SelectedCentro);
 
                 _context.Database.SetCommandTimeout(120);
 
                 if (ModelState.IsValid)
                 {
-
                     LstGiacenzaView = new List<GiacenzaView>();
-                    string sql = "";
-                    string constr = _context.Database.GetDbConnection().ConnectionString;
+                    string sql;
+                    string? constr = _context.Database.GetDbConnection().ConnectionString;
+
+                    if (string.IsNullOrEmpty(constr))
+                    {
+                        _logger.LogError("Connection string is null or empty");
+                        ErrorMessage = "Database connection error.";
+                        return Partial("_RiepilogoGiacenza", this);
+                    }
 
                     using (SqlConnection con = new SqlConnection(constr))
                     {
                         string fromDate = EndDate.Date.ToString("yyyyMMdd");
 
-                        //se tutti
                         if (CentroID == 5)
                         {
                             sql = @"SELECT c1.CentroLavDesc as Centro,p.Piattaforma,sum(c0.TotaleDocumenti) as Giacenza
@@ -227,17 +193,8 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
                                     group by p.Piattaforma,c1.CentroLavDesc
                                     order by c1.CentroLavDesc,p.Piattaforma";
 
-                            using (SqlCommand cmd = new SqlCommand(sql))
-                            {
-
-                                cmd.Connection = con;
-                                cmd.CommandTimeout = 120;
-                                cmd.Parameters.Clear();
-
-                                string[] myParams = { fromDate };
-
-                                LstGiacenzaView = await _context.Set<GiacenzaView>().FromSqlRaw(sql, myParams).ToListAsync();
-                            }
+                            string[] myParams = { fromDate };
+                            LstGiacenzaView = await _context.Set<GiacenzaView>().FromSqlRaw(sql, myParams).ToListAsync();
                         }
                         else
                         {
@@ -251,20 +208,10 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
                                     group by p.Piattaforma,c1.CentroLavDesc
                                     order by c1.CentroLavDesc,p.Piattaforma";
 
-                            using (SqlCommand cmd = new SqlCommand(sql))
-                            {
-
-                                cmd.Connection = con;
-                                cmd.CommandTimeout = 120;
-                                cmd.Parameters.Clear();
-
-                                string[] myParams = { fromDate, CentroID.ToString() };
-
-                                LstGiacenzaView = await _context.Set<GiacenzaView>().FromSqlRaw(sql, myParams).ToListAsync();
-                            }
+                            string[] myParams = { fromDate, CentroID.ToString() };
+                            LstGiacenzaView = await _context.Set<GiacenzaView>().FromSqlRaw(sql, myParams).ToListAsync();
                         }
                     }
-
 
                     TotaleGiacenza = LstGiacenzaView.Sum(x => x.Giacenza);
 
@@ -274,66 +221,45 @@ namespace GiacenzaSorterRm.Pages.PagesVolumi
                     }
 
                     return Partial("_RiepilogoGiacenza", this);
-
                 }
                 else
                 {
                     return Page();
                 }
-
             }
-            catch (SqlException ex)
+            catch (SqlException ex) when (ex.Number == -2)
             {
-                if (ex.Number == -2)
-                {
-                    _logger.LogError(ex.Message);
-                    ErrorMessage = ex.Message;
-                }
+                _logger.LogError(ex, "SQL Timeout in ReportPiattaforma");
+                ErrorMessage = "Query timeout. Please try with a smaller date range.";
                 return Partial("_RiepilogoGiacenza", this);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
-                ErrorMessage = ex.Message;
+                _logger.LogError(ex, "Error in ReportPiattaforma");
+                ErrorMessage = "An error occurred while generating the report.";
                 return Partial("_RiepilogoGiacenza", this);
             }
-
-
-
-
         }
-
 
         public async Task<IActionResult> OnPostReportAsync()
         {
-            Ruolo = User.FindFirstValue("Ruolo");
-            Utente = User.Identity.Name;
+            Ruolo = User.FindFirstValue("Ruolo") ?? string.Empty;
+            Utente = User.Identity?.Name ?? string.Empty;
 
             if (ModelState.IsValid)
             {
-                //raggruppati per piattaforma
-                if(IdTipo == 1)
+                if (IdTipo == 1)
                 {
                     return await ReportPiattaformaAsync();
                 }
 
-                //Dettaglio
                 if (IdTipo == 2)
                 {
                     return await ReportDettaglioAsync();
                 }
             }
-            else
-            {
-                return Page();
-            }
 
             return Page();
-
         }
-
-
-
-
     }
 }

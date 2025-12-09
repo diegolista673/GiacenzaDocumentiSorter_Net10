@@ -7,15 +7,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 
-
 namespace GiacenzaSorterRm.Pages.TipiDocumenti
 {
-    [Authorize(Roles = "ADMIN, SUPERVISOR")]
+    [Authorize(Roles = "ADMIN,SUPERVISOR")]
     public class CreateModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
         private readonly ILogger<CreateModel> _logger;
-
 
         public CreateModel(ILogger<CreateModel> logger, GiacenzaSorterContext context)
         {
@@ -23,15 +21,13 @@ namespace GiacenzaSorterRm.Pages.TipiDocumenti
             _context = context;
         }
 
-
-
         public IActionResult OnGet()
         {
             return Page();
         }
 
         [BindProperty]
-        public Tipologie Tipologie { get; set; }
+        public Tipologie Tipologie { get; set; } = new Tipologie();
 
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://aka.ms/RazorPagesCRUD.
@@ -42,23 +38,27 @@ namespace GiacenzaSorterRm.Pages.TipiDocumenti
                 return Page();
             }
 
-
             try
             {
                 Tipologie.DataCreazione = DateTime.Now.Date;
-                Tipologie.IdOperatoreCreazione = Int32.Parse(User.FindFirst("IdOperatore").Value);
+                
+                string? idOperatoreValue = User.FindFirst("IdOperatore")?.Value;
+                if (int.TryParse(idOperatoreValue, out int idOperatore))
+                {
+                    Tipologie.IdOperatoreCreazione = idOperatore;
+                }
+
                 _context.Tipologies.Add(Tipologie);
                 await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Tipologia documento creata: {Tipologia}", Tipologie.Tipologia);
+                return RedirectToPage("./Index");
             }
             catch (DbUpdateException)
             {
-                ModelState.AddModelError(string.Empty, "Unable to save. " +
-                            "The name is already in use.");
+                ModelState.AddModelError(string.Empty, "Unable to save. The name is already in use.");
                 return Page();
             }
-
-            _logger.LogInformation("Tipologia documento creata: {Tipologia}", Tipologie.Tipologia);
-            return RedirectToPage("./Index");
         }
     }
 }

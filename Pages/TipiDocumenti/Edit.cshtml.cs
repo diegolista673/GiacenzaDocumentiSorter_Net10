@@ -8,15 +8,13 @@ using GiacenzaSorterRm.Models.Database;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 
-
 namespace GiacenzaSorterRm.Pages.TipiDocumenti
 {
-    [Authorize(Roles = "ADMIN, SUPERVISOR")]
+    [Authorize(Roles = "ADMIN,SUPERVISOR")]
     public class EditModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
         private readonly ILogger<EditModel> _logger;
-
 
         public EditModel(ILogger<EditModel> logger, GiacenzaSorterContext context)
         {
@@ -24,9 +22,8 @@ namespace GiacenzaSorterRm.Pages.TipiDocumenti
             _context = context;
         }
 
-
         [BindProperty]
-        public Tipologie Tipologie { get; set; }
+        public Tipologie Tipologie { get; set; } = new Tipologie();
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -35,16 +32,16 @@ namespace GiacenzaSorterRm.Pages.TipiDocumenti
                 return NotFound();
             }
 
-            Tipologie = await _context.Tipologies.FirstOrDefaultAsync(m => m.IdTipologia == id);
+            Tipologie? tipologie = await _context.Tipologies.FirstOrDefaultAsync(m => m.IdTipologia == id);
 
-            if (Tipologie == null)
+            if (tipologie == null)
             {
                 return NotFound();
             }
+
+            Tipologie = tipologie;
             return Page();
         }
-
-
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -54,12 +51,20 @@ namespace GiacenzaSorterRm.Pages.TipiDocumenti
             }
 
             Tipologie.DataCreazione = DateTime.Now.Date;
-            Tipologie.IdOperatoreCreazione = Int32.Parse(User.FindFirst("IdOperatore").Value);
+            
+            string? idOperatoreValue = User.FindFirst("IdOperatore")?.Value;
+            if (int.TryParse(idOperatoreValue, out int idOperatore))
+            {
+                Tipologie.IdOperatoreCreazione = idOperatore;
+            }
+
             _context.Attach(Tipologie).State = EntityState.Modified;
 
             try
             {
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Tipologia modificata: {Tipologia}", Tipologie.Tipologia);
+                return RedirectToPage("./Index");
             }
             catch (DbUpdateException)
             {
@@ -72,9 +77,6 @@ namespace GiacenzaSorterRm.Pages.TipiDocumenti
                     throw;
                 }
             }
-
-            _logger.LogInformation("Tipologia modificata: {Tipologia}", Tipologie.Tipologia);
-            return RedirectToPage("./Index");
         }
 
         private bool TipologieExists(int id)

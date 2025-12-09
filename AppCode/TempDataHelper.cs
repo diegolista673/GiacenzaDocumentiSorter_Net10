@@ -1,9 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GiacenzaSorterRm.Helpers
 {
@@ -14,44 +10,54 @@ namespace GiacenzaSorterRm.Helpers
             tempData[key] = JsonConvert.SerializeObject(value);
         }
 
-        public static T Get<T>(this ITempDataDictionary tempData, string key) where T : class
+        public static T? Get<T>(this ITempDataDictionary tempData, string key) where T : class
         {
-            object o;
-            tempData.TryGetValue(key, out o);
+            tempData.TryGetValue(key, out object? o);
             return o == null ? null : JsonConvert.DeserializeObject<T>((string)o);
         }
 
-        public static T Peek<T>(this ITempDataDictionary tempData, string key) where T : class
+        public static T? Peek<T>(this ITempDataDictionary tempData, string key) where T : class
         {
-            object o = tempData.Peek(key);
+            object? o = tempData.Peek(key);
             return o == null ? null : JsonConvert.DeserializeObject<T>((string)o);
         }
-
-
-
-
 
         public static void Put<T>(this TempDataDictionary tempData, T value) where T : class
         {
-            tempData[typeof(T).FullName] = value;
+            string? fullName = typeof(T).FullName;
+            if (fullName != null)
+            {
+                tempData[fullName] = value;
+            }
         }
 
         public static void Put<T>(this TempDataDictionary tempData, string key, T value) where T : class
         {
-            tempData[typeof(T).FullName + key] = value;
-        }
-        public static T Get<T>(this TempDataDictionary tempData) where T : class
-        {
-            object o;
-            tempData.TryGetValue(typeof(T).FullName, out o);
-            return o == null ? null : (T)o;
-        }
-        public static T Get<T>(this TempDataDictionary tempData, string key) where T : class
-        {
-            object o;
-            tempData.TryGetValue(typeof(T).FullName + key, out o);
-            return o == null ? null : (T)o;
+            string? fullName = typeof(T).FullName;
+            if (fullName != null)
+            {
+                tempData[fullName + key] = value;
+            }
         }
 
+        public static T? Get<T>(this TempDataDictionary tempData) where T : class
+        {
+            string? fullName = typeof(T).FullName;
+            if (fullName != null && tempData.TryGetValue(fullName, out object? o))
+            {
+                return o as T;
+            }
+            return null;
+        }
+
+        public static T? Get<T>(this TempDataDictionary tempData, string key) where T : class
+        {
+            string? fullName = typeof(T).FullName;
+            if (fullName != null && tempData.TryGetValue(fullName + key, out object? o))
+            {
+                return o as T;
+            }
+            return null;
+        }
     }
 }

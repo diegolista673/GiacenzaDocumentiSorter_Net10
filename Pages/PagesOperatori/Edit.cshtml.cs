@@ -9,28 +9,24 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
-
 namespace GiacenzaSorterRm.Pages.PagesOperatori
 {
-    [Authorize(Roles = "ADMIN, SUPERVISOR")]
+    [Authorize(Roles = "ADMIN,SUPERVISOR")]
     public class EditModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
         private readonly ILogger<EditModel> _logger;
 
-
-        public EditModel(ILogger<EditModel> logger,  GiacenzaSorterContext context)
+        public EditModel(ILogger<EditModel> logger, GiacenzaSorterContext context)
         {
             _logger = logger;
             _context = context;
         }
 
         [BindProperty]
-        public Operatori Operatori { get; set; }
+        public Operatori Operatori { get; set; } = new Operatori();
 
-
-        public SelectList CentriSL { get; set; }
-
+        public SelectList CentriSL { get; set; } = new SelectList(Enumerable.Empty<SelectListItem>());
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -39,23 +35,22 @@ namespace GiacenzaSorterRm.Pages.PagesOperatori
                 return NotFound();
             }
 
-            CentriSL = new SelectList(_context.CentriLavs.Where(x=> x.IdCentroLavorazione != 5), "IdCentroLavorazione", "CentroLavDesc");
+            CentriSL = new SelectList(_context.CentriLavs.Where(x => x.IdCentroLavorazione != 5), 
+                "IdCentroLavorazione", "CentroLavDesc");
 
+            Operatori? operatori = await _context.Operatoris
+                .Include(c => c.IdCentroLavNavigation)
+                .FirstOrDefaultAsync(m => m.IdOperatore == id);
 
-            Operatori = await _context.Operatoris.Include(c => c.IdCentroLavNavigation).FirstOrDefaultAsync(m => m.IdOperatore == id);
-              
-
-            if (Operatori == null)
+            if (operatori == null)
             {
                 return NotFound();
             }
 
+            Operatori = operatori;
             ViewData["IdOperatoreCreazione"] = new SelectList(_context.Operatoris, "IdOperatore", "IdOperatore");
             return Page();
         }
-
-
-
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -64,7 +59,6 @@ namespace GiacenzaSorterRm.Pages.PagesOperatori
                 return Page();
             }
 
-
             if (Operatori.Azienda.ToLower() == "esterno")
             {
                 var passwordHasher = new PasswordHasher<string>();
@@ -72,16 +66,16 @@ namespace GiacenzaSorterRm.Pages.PagesOperatori
                 Operatori.Password = hash;
             }
 
-
             _context.Attach(Operatori).State = EntityState.Modified;
 
             try
             {
                 await _context.SaveChangesAsync();
+                return RedirectToPage("./Index");
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                _logger.LogError(ex.Message.ToString());
+                _logger.LogError(ex, "Error updating Operatore {IdOperatore}", Operatori.IdOperatore);
 
                 if (!OperatoriExists(Operatori.IdOperatore))
                 {
@@ -92,8 +86,6 @@ namespace GiacenzaSorterRm.Pages.PagesOperatori
                     throw;
                 }
             }
-
-            return RedirectToPage("./Index");
         }
 
         private bool OperatoriExists(int id)

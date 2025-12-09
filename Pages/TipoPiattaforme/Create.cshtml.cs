@@ -7,15 +7,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 
-
 namespace GiacenzaSorterRm.Pages.TipoPiattaforme
 {
-    [Authorize(Roles = "ADMIN, SUPERVISOR")]
+    [Authorize(Roles = "ADMIN,SUPERVISOR")]
     public class CreateModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
         private readonly ILogger<CreateModel> _logger;
-
 
         public CreateModel(ILogger<CreateModel> logger, GiacenzaSorterContext context)
         {
@@ -23,18 +21,14 @@ namespace GiacenzaSorterRm.Pages.TipoPiattaforme
             _context = context;
         }
 
-
-
         public IActionResult OnGet()
         {
             return Page();
         }
 
         [BindProperty]
-        public Piattaforme Piattaforme { get; set; }
+        public Piattaforme Piattaforme { get; set; } = new Piattaforme();
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -42,24 +36,29 @@ namespace GiacenzaSorterRm.Pages.TipoPiattaforme
                 return Page();
             }
 
-
             try
             {
                 Piattaforme.DataCreazione = DateTime.Now.Date;
-                Piattaforme.IdOperatoreCreazione = Int32.Parse(User.FindFirst("IdOperatore").Value);
+                
+                string? idOperatoreValue = User.FindFirst("IdOperatore")?.Value;
+                if (int.TryParse(idOperatoreValue, out int idOperatore))
+                {
+                    Piattaforme.IdOperatoreCreazione = idOperatore;
+                }
+
                 _context.Piattaformes.Add(Piattaforme);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation("Piattaforma Creata: {@Piattaforme} by Utente: {Utente}", Piattaforme, User.Identity.Name);
+                
+                _logger.LogInformation("Piattaforma creata: {Piattaforma} by Utente: {Utente}", 
+                    Piattaforme.Piattaforma, User.Identity?.Name ?? "Unknown");
+                
+                return RedirectToPage("./Index");
             }
             catch (DbUpdateException)
             {
-                ModelState.AddModelError(string.Empty, "Unable to save. " +
-                            "The name is already in use.");
+                ModelState.AddModelError(string.Empty, "Unable to save. The name is already in use.");
                 return Page();
             }
-
-
-            return RedirectToPage("./Index");
         }
     }
 }

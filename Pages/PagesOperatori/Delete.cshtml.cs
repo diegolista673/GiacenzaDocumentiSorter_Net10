@@ -4,26 +4,24 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Linq;
 using System.Threading.Tasks;
-
 
 namespace GiacenzaSorterRm.Pages.PagesOperatori
 {
-    [Authorize(Roles = "ADMIN, SUPERVISOR")]
+    [Authorize(Roles = "ADMIN,SUPERVISOR")]
     public class DeleteModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
-        private readonly ILogger<EditModel> _logger;
+        private readonly ILogger<DeleteModel> _logger;
 
-        public DeleteModel(ILogger<EditModel> logger,GiacenzaSorterContext context)
+        public DeleteModel(ILogger<DeleteModel> logger, GiacenzaSorterContext context)
         {
             _logger = logger;
             _context = context;
         }
 
         [BindProperty]
-        public Operatori Operatori { get; set; }
+        public Operatori Operatori { get; set; } = new Operatori();
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -32,12 +30,14 @@ namespace GiacenzaSorterRm.Pages.PagesOperatori
                 return NotFound();
             }
 
-            Operatori = await _context.Operatoris.FirstOrDefaultAsync(m => m.IdOperatore == id);
+            Operatori? operatori = await _context.Operatoris.FirstOrDefaultAsync(m => m.IdOperatore == id);
 
-            if (Operatori == null)
+            if (operatori == null)
             {
                 return NotFound();
             }
+
+            Operatori = operatori;
             return Page();
         }
 
@@ -48,13 +48,14 @@ namespace GiacenzaSorterRm.Pages.PagesOperatori
                 return NotFound();
             }
 
-            Operatori = await _context.Operatoris.FindAsync(id);
+            Operatori? operatori = await _context.Operatoris.FindAsync(id);
 
-            if (Operatori != null)
+            if (operatori != null)
             {
-                _context.Operatoris.Remove(Operatori);
+                _context.Operatoris.Remove(operatori);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation("Operatore Eliminato: {@Operatori} by Utente: {Utente}", Operatori, User.Identity.Name);
+                _logger.LogInformation("Operatore eliminato: {Operatore} by Utente: {Utente}", 
+                    operatori.Operatore, User.Identity?.Name ?? "Unknown");
             }
 
             return RedirectToPage("./Index");

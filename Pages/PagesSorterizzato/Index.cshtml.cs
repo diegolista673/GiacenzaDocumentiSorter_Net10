@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 
-
 namespace GiacenzaSorterRm.Pages.PagesSorterizzato
 {
     [Authorize(Policy = "SorterRequirements")]
@@ -29,38 +28,33 @@ namespace GiacenzaSorterRm.Pages.PagesSorterizzato
             _context = context;
         }
 
-
         [BindProperty]
         [Required]
         [DataType(DataType.Date)]
         public DateTime StartDate { get; set; } = DateTime.Now;
-
 
         [BindProperty]
         [Required]
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; } = DateTime.Now;
 
+        public string Message { get; set; } = string.Empty;
+        
+        public List<CommesseView> LstCommesseView { get; set; } = new List<CommesseView>();
 
-        public string Message { get; set; }
-        public List<CommesseView> LstCommesseView { get; set; }
+        public string Ruolo { get; set; } = string.Empty;
+        
+        public string Utente { get; set; } = string.Empty;
 
-        public string Ruolo { get; set; }
-        public string Utente { get; set; }
-
-        public List<SelectListItem> LstCentri { get; set; }
+        public List<SelectListItem> LstCentri { get; set; } = new List<SelectListItem>();
 
         [BindProperty]
         public int SelectedCentro { get; set; }
 
-
-
         public async Task<IActionResult> OnGet()
         {
-
-            Ruolo = User.FindFirstValue("Ruolo");
-            Utente = User.Identity.Name;
-
+            Ruolo = User.FindFirstValue("Ruolo") ?? string.Empty;
+            Utente = User.Identity?.Name ?? string.Empty;
 
             LstCentri = await _context.CentriLavs.Select(a => new SelectListItem
             {
@@ -71,11 +65,10 @@ namespace GiacenzaSorterRm.Pages.PagesSorterizzato
             return Page();
         }
 
-
         public async Task<IActionResult> OnPostReportAsync()
         {
-            Ruolo = User.FindFirstValue("Ruolo");
-            Utente = User.Identity.Name;
+            Ruolo = User.FindFirstValue("Ruolo") ?? string.Empty;
+            Utente = User.Identity?.Name ?? string.Empty;
             int CentroID = CentroAppartenenza.SetCentroByRoleADMINSupervisor(User, SelectedCentro);
 
             if (ModelState.IsValid)
@@ -85,50 +78,48 @@ namespace GiacenzaSorterRm.Pages.PagesSorterizzato
                 if (CentroID != 5)
                 {
                     lstScatole = _context.Scatoles
-                                        .Include(s => s.IdTipologiaNavigation)
-                                        .Include(s => s.IdCommessaNavigation)
-                                        .Include(s => s.IdContenitoreNavigation)
-                                        .AsNoTracking().Where(x => x.DataSorter >= StartDate && x.DataSorter <= EndDate && x.IdCentroSorterizzazione == CentroID).AsQueryable();
+                        .Include(s => s.IdTipologiaNavigation)
+                        .Include(s => s.IdCommessaNavigation)
+                        .Include(s => s.IdContenitoreNavigation)
+                        .AsNoTracking()
+                        .Where(x => x.DataSorter >= StartDate && x.DataSorter <= EndDate && x.IdCentroSorterizzazione == CentroID);
                 }
                 else
                 {
                     lstScatole = _context.Scatoles
-                                        .Include(s => s.IdTipologiaNavigation)
-                                        .Include(s => s.IdCommessaNavigation)
-                                        .Include(s => s.IdContenitoreNavigation)
-                                        .AsNoTracking().Where(x => x.DataSorter >= StartDate && x.DataSorter <= EndDate ).AsQueryable();
+                        .Include(s => s.IdTipologiaNavigation)
+                        .Include(s => s.IdCommessaNavigation)
+                        .Include(s => s.IdContenitoreNavigation)
+                        .AsNoTracking()
+                        .Where(x => x.DataSorter >= StartDate && x.DataSorter <= EndDate);
                 }
 
-
-
-
-                LstCommesseView = await  (from p in lstScatole
-                                           group p by new { p.IdCommessaNavigation.Commessa, p.IdTipologiaNavigation.Tipologia } into g
-                                           select new CommesseView
-                                           {
-                                               Commessa = g.Key.Commessa,
-                                               Tipologia = g.Key.Tipologia,
-                                               TotaleDocumentiSorterizzati = g.Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti)                             
-                                           }).OrderBy(z => z.Commessa).ThenBy(z => z.Tipologia).ToListAsync();
-
+                LstCommesseView = await (from p in lstScatole
+                                         group p by new { p.IdCommessaNavigation.Commessa, p.IdTipologiaNavigation.Tipologia } into g
+                                         select new CommesseView
+                                         {
+                                             Commessa = g.Key.Commessa,
+                                             Tipologia = g.Key.Tipologia,
+                                             TotaleDocumentiSorterizzati = g.Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti)
+                                         })
+                                         .OrderBy(z => z.Commessa)
+                                         .ThenBy(z => z.Tipologia)
+                                         .ToListAsync();
 
                 if (LstCommesseView.Count == 0)
                 {
                     Message = "Not results found";
                 }
-                
-                _logger.LogInformation("Utente {utente} ha generato il report sorterizzato dal {startdate} al {enddate} per il centro {centroID}", Utente, StartDate.ToString("yyyy-MM-dd"), EndDate.ToString("yyyy-MM-dd"), CentroID);
-                return Partial("_RiepilogoSorterizzato", this);
 
+                _logger.LogInformation("Utente {Utente} ha generato il report sorterizzato dal {StartDate} al {EndDate} per il centro {CentroID}", 
+                    Utente, StartDate.ToString("yyyy-MM-dd"), EndDate.ToString("yyyy-MM-dd"), CentroID);
+                
+                return Partial("_RiepilogoSorterizzato", this);
             }
             else
             {
                 return Page();
             }
-
-
         }
-
-
     }
 }

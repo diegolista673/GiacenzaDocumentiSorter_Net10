@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 using GiacenzaSorterRm.AppCode;
 
-
 namespace GiacenzaSorterRm.Pages.PagesNormalizzato
 {
     public class IndexModel : PageModel
@@ -21,43 +20,39 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzato
         private readonly GiacenzaSorterContext _context;
         private readonly ILogger<IndexModel> _logger;
 
-        public IndexModel(ILogger<IndexModel> logger,GiacenzaSorterContext context )
+        public IndexModel(ILogger<IndexModel> logger, GiacenzaSorterContext context)
         {
             _logger = logger;
             _context = context;
         }
-
 
         [BindProperty]
         [Required]
         [DataType(DataType.Date)]
         public DateTime StartDate { get; set; } = DateTime.Now;
 
-
         [BindProperty]
         [Required]
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; } = DateTime.Now;
 
+        public string Message { get; set; } = string.Empty;
+        
+        public List<CommesseView> LstCommesseView { get; set; } = new List<CommesseView>();
 
+        public string Ruolo { get; set; } = string.Empty;
+        
+        public string Utente { get; set; } = string.Empty;
 
-        public string Message { get; set; }
-        public List<CommesseView> LstCommesseView { get; set; }
-
-        public string Ruolo { get; set; }
-        public string Utente { get; set; }
-
-        public List<SelectListItem> LstCentri { get; set; }
+        public List<SelectListItem> LstCentri { get; set; } = new List<SelectListItem>();
 
         [BindProperty]
         public int SelectedCentro { get; set; }
 
-
         public async Task<IActionResult> OnGet()
         {
-
-            Ruolo = User.FindFirstValue("Ruolo");
-            Utente = User.Identity.Name;
+            Ruolo = User.FindFirstValue("Ruolo") ?? string.Empty;
+            Utente = User.Identity?.Name ?? string.Empty;
 
             LstCentri = await _context.CentriLavs.Select(a => new SelectListItem
             {
@@ -68,10 +63,9 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzato
             return Page();
         }
 
-
         public async Task<IActionResult> OnPostReportAsync()
         {
-            Ruolo = User.FindFirstValue("Ruolo");
+            Ruolo = User.FindFirstValue("Ruolo") ?? string.Empty;
 
             int centroID = CentroAppartenenza.SetCentroByRoleADMINSupervisor(User, SelectedCentro);
 
@@ -79,15 +73,15 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzato
             {
                 IQueryable<Scatole> lstScatole;
 
-
                 if (centroID != 5)
                 {
                     lstScatole = _context.Scatoles
                         .Include(s => s.IdCommessaNavigation)
                         .Include(s => s.IdContenitoreNavigation)
                         .Include(s => s.IdTipoNormalizzazioneNavigation)
-                        .Include(s => s.IdTipologiaNavigation).Where(x => x.DataNormalizzazione >= StartDate && x.DataNormalizzazione <= EndDate && x.IdCentroNormalizzazione == centroID)
-                        .AsNoTracking().AsQueryable();
+                        .Include(s => s.IdTipologiaNavigation)
+                        .Where(x => x.DataNormalizzazione >= StartDate && x.DataNormalizzazione <= EndDate && x.IdCentroNormalizzazione == centroID)
+                        .AsNoTracking();
                 }
                 else
                 {
@@ -95,39 +89,37 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzato
                         .Include(s => s.IdCommessaNavigation)
                         .Include(s => s.IdContenitoreNavigation)
                         .Include(s => s.IdTipoNormalizzazioneNavigation)
-                        .Include(s => s.IdTipologiaNavigation).Where(x => x.DataNormalizzazione >= StartDate && x.DataNormalizzazione <= EndDate)
-                        .AsNoTracking().AsQueryable();
+                        .Include(s => s.IdTipologiaNavigation)
+                        .Where(x => x.DataNormalizzazione >= StartDate && x.DataNormalizzazione <= EndDate)
+                        .AsNoTracking();
                 }
 
-
                 LstCommesseView = await (from p in lstScatole
-                                           group p by new { p.IdCommessaNavigation.Commessa, p.IdTipologiaNavigation.Tipologia } into g
-                                           select new CommesseView
-                                           {
-                                               Commessa = g.Key.Commessa,
-                                               Tipologia = g.Key.Tipologia,
-                                               TotaleDocumentiNormalizzati = g.Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
-
-                                           }).OrderBy(z => z.Commessa).ThenBy(z => z.Tipologia).ToListAsync();
-
+                                         group p by new { p.IdCommessaNavigation.Commessa, p.IdTipologiaNavigation.Tipologia } into g
+                                         select new CommesseView
+                                         {
+                                             Commessa = g.Key.Commessa,
+                                             Tipologia = g.Key.Tipologia,
+                                             TotaleDocumentiNormalizzati = g.Sum(x => (int)x.IdContenitoreNavigation.TotaleDocumenti),
+                                         })
+                                         .OrderBy(z => z.Commessa)
+                                         .ThenBy(z => z.Tipologia)
+                                         .ToListAsync();
 
                 if (LstCommesseView.Count == 0)
                 {
                     Message = "Not results found";
                 }
 
-                _logger.LogInformation("User {User} generated Normalized Summary Report for IDCentro {Centro} from {StartDate} to {EndDate}", Utente, centroID, StartDate.ToShortDateString(), EndDate.ToShortDateString());
+                _logger.LogInformation("User {User} generated Normalized Summary Report for IDCentro {Centro} from {StartDate} to {EndDate}", 
+                    Utente, centroID, StartDate.ToShortDateString(), EndDate.ToShortDateString());
+                
                 return Partial("_RiepilogoNormalizzato", this);
-
             }
             else
             {
                 return Page();
             }
-
-
         }
-
-
     }
 }

@@ -1,8 +1,4 @@
-﻿using GiacenzaSorterRm.Models.Database;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace GiacenzaSorterRm.Models
 {
@@ -11,7 +7,7 @@ namespace GiacenzaSorterRm.Models
         public DispacciModel() { }
 
         public List<string> ElencoDispacci { get; set; } = new List<string>();
-        public string Dispaccio { get; set; }
-
+        
+        public string Dispaccio { get; set; } = string.Empty;
     }
 }

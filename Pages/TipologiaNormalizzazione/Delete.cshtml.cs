@@ -4,25 +4,24 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace GiacenzaSorterRm.Pages.TipologiaNormalizzazione
 {
-    [Authorize(Roles = "ADMIN, SUPERVISOR")]
+    [Authorize(Roles = "ADMIN,SUPERVISOR")]
     public class DeleteModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
-        private readonly ILogger<EditModel> _logger;
+        private readonly ILogger<DeleteModel> _logger;
 
-        public DeleteModel(ILogger<EditModel> logger,GiacenzaSorterContext context)
+        public DeleteModel(ILogger<DeleteModel> logger, GiacenzaSorterContext context)
         {
             _logger = logger;
             _context = context;
         }
 
         [BindProperty]
-        public TipiNormalizzazione TipiNormalizzazione { get; set; }
+        public TipiNormalizzazione TipiNormalizzazione { get; set; } = new TipiNormalizzazione();
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -31,12 +30,15 @@ namespace GiacenzaSorterRm.Pages.TipologiaNormalizzazione
                 return NotFound();
             }
 
-            TipiNormalizzazione = await _context.TipiNormalizzaziones.FirstOrDefaultAsync(m => m.IdTipoNormalizzazione == id);
+            TipiNormalizzazione? tipiNormalizzazione = await _context.TipiNormalizzaziones
+                .FirstOrDefaultAsync(m => m.IdTipoNormalizzazione == id);
 
-            if (TipiNormalizzazione == null)
+            if (tipiNormalizzazione == null)
             {
                 return NotFound();
             }
+
+            TipiNormalizzazione = tipiNormalizzazione;
             return Page();
         }
 
@@ -47,15 +49,15 @@ namespace GiacenzaSorterRm.Pages.TipologiaNormalizzazione
                 return NotFound();
             }
 
-            TipiNormalizzazione = await _context.TipiNormalizzaziones.FindAsync(id);
+            TipiNormalizzazione? tipiNormalizzazione = await _context.TipiNormalizzaziones.FindAsync(id);
 
-            if (TipiNormalizzazione != null)
+            if (tipiNormalizzazione != null)
             {
-                _context.TipiNormalizzaziones.Remove(TipiNormalizzazione);
+                _context.TipiNormalizzaziones.Remove(tipiNormalizzazione);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Tipologia Normalizzazione eliminata: {TipoNormalizzazione} by Utente: {Utente}", 
+                    tipiNormalizzazione.TipoNormalizzazione, User.Identity?.Name ?? "Unknown");
             }
-
-            _logger.LogInformation("Tipologia Normalizzazione Eliminata: {@TipiNormalizzazione} by Utente: {Utente}", TipiNormalizzazione, User.Identity.Name);
 
             return RedirectToPage("./Index");
         }

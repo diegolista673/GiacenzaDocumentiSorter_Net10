@@ -15,7 +15,6 @@ using Microsoft.Data.SqlClient;
 
 namespace GiacenzaSorterRm.Pages.PagesMacero
 {
-    
     public class IndexModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
@@ -27,68 +26,58 @@ namespace GiacenzaSorterRm.Pages.PagesMacero
             _context = context;
         }
 
-
-        public string Ruolo { get; set; }
-        public string Utente { get; set; }
+        public string Ruolo { get; set; } = string.Empty;
+        
+        public string Utente { get; set; } = string.Empty;
+        
         public string Message { get; set; } = string.Empty;
 
-        public SelectList CommesseSL { get; set; }
-
-
+        public SelectList CommesseSL { get; set; } = new SelectList(Enumerable.Empty<SelectListItem>());
 
         [BindProperty]
         [Required]
         [DataType(DataType.Date)]
         public DateTime StartDate { get; set; } = DateTime.Now;
 
-
         [BindProperty]
         [Required]
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; } = DateTime.Now;
 
-        
         [BindProperty]
         [Range(1, int.MaxValue, ErrorMessage = "Commessa is required")]
         [Required]
         public int? IdCommessa { get; set; }
 
-
-        public List<MaceroView> LstMaceroView { get; set; }
-
-
+        public List<MaceroView> LstMaceroView { get; set; } = new List<MaceroView>();
 
         public async Task<IActionResult> OnGet()
         {
-            Ruolo = User.FindFirstValue("Ruolo");
-            Utente = User.Identity.Name;
+            Ruolo = User.FindFirstValue("Ruolo") ?? string.Empty;
+            Utente = User.Identity?.Name ?? string.Empty;
             var sel = await _context.Commesses.ToListAsync();
             CommesseSL = new SelectList(sel, "IdCommessa", "Commessa");
 
             return Page();
         }
 
-
         public async Task<IActionResult> OnPostReportAsync()
         {
-            Ruolo = User.FindFirstValue("Ruolo");
-            Utente = User.Identity.Name;
+            Ruolo = User.FindFirstValue("Ruolo") ?? string.Empty;
+            Utente = User.Identity?.Name ?? string.Empty;
 
             try
             {
-                                                                       
                 if (ModelState.IsValid)
                 {
                     try
                     {
-                        // FIX per SQLite: Usa Date senza Time per comparazione corretta
                         var startDate = StartDate.Date;
                         var endDate = EndDate.Date;
-                        
-                        // Log per debug
-                        _logger.LogInformation($"Query con StartDate={startDate:yyyy-MM-dd}, EndDate={endDate:yyyy-MM-dd}, IdCommessa={IdCommessa}");
 
-                        // Query LINQ - FIX per SQLite: rimuovi la parte time e compara solo le date
+                        _logger.LogInformation("Query con StartDate={StartDate}, EndDate={EndDate}, IdCommessa={IdCommessa}", 
+                            startDate, endDate, IdCommessa);
+
                         var queryResults = await (from s in _context.Scatoles
                                                   join c in _context.Commesses on s.IdCommessa equals c.IdCommessa
                                                   join p in _context.Piattaformes on c.IdPiattaforma equals p.IdPiattaforma into piattaformaJoin
@@ -97,37 +86,31 @@ namespace GiacenzaSorterRm.Pages.PagesMacero
                                                   join s0 in _context.Statis on s.IdStato equals s0.IdStato
                                                   join c1 in _context.CentriLavs on s.IdCentroGiacenza equals c1.IdCentroLavorazione into centroJoin
                                                   from c1 in centroJoin.DefaultIfEmpty()
-                                                  join t in _context.Tipologies on s.IdTipologia equals t.IdTipologia
-                                                  where s.IdStato == 1 
-                                                        && s.IdCommessa == IdCommessa
-                                                  select new 
+                                                  where s.IdStato == 1 && s.IdCommessa == IdCommessa
+                                                  select new
                                                   {
                                                       Centro = c1.CentroLavDesc,
                                                       Piattaforma = p.Piattaforma,
                                                       Commessa = c.Commessa,
                                                       TotaleDocumenti = c0.TotaleDocumenti,
                                                       Scatola = s.Scatola,
-                                                      DataNormalizzazione = s.DataNormalizzazione // Porta la data in memoria
+                                                      DataNormalizzazione = s.DataNormalizzazione
                                                   }).ToListAsync();
-                        
-                        // Log risultati query
-                        _logger.LogInformation($"Query ha restituito {queryResults.Count} record prima del filtro date");
 
-                        // Filtra le date LATO CLIENT (in memoria) 
+                        _logger.LogInformation("Query ha restituito {Count} record prima del filtro date", queryResults.Count);
+
                         var filteredResults = queryResults
-                            .Where(x => x.DataNormalizzazione.Date >= startDate 
-                                        && x.DataNormalizzazione.Date <= endDate)
+                            .Where(x => x.DataNormalizzazione.Date >= startDate && x.DataNormalizzazione.Date <= endDate)
                             .ToList();
-                        
-                        _logger.LogInformation($"Dopo filtro date: {filteredResults.Count} record");
 
-                        // Raggruppamento lato client
+                        _logger.LogInformation("Dopo filtro date: {Count} record", filteredResults.Count);
+
                         LstMaceroView = filteredResults
-                            .GroupBy(x => new 
-                            { 
+                            .GroupBy(x => new
+                            {
                                 Centro = x.Centro ?? "Non Assegnato",
                                 Piattaforma = x.Piattaforma ?? "N/A",
-                                x.Commessa 
+                                x.Commessa
                             })
                             .Select(g => new MaceroView
                             {
@@ -141,7 +124,6 @@ namespace GiacenzaSorterRm.Pages.PagesMacero
                             .ThenBy(x => x.Piattaforma)
                             .ToList();
 
-                        
                         if (LstMaceroView.Count == 0)
                         {
                             Message = "Not results found";
@@ -194,30 +176,25 @@ namespace GiacenzaSorterRm.Pages.PagesMacero
             }
         }
 
-
         public async Task<IActionResult> OnPostMacera()
         {
             try
             {
-                Utente = User.Identity.Name;
-        
+                Utente = User.Identity?.Name ?? string.Empty;
+
                 var startDate = StartDate.Date;
                 var endDate = EndDate.Date;
 
-                // Step 1: Carica le scatole da macerare (senza filtro date nel DB)
                 var scatoleDaMacerare = await _context.Scatoles
                     .Where(s => s.IdCommessa == IdCommessa && s.IdStato == 1)
                     .ToListAsync();
 
-                // Step 2: Filtra date LATO CLIENT (in memoria)
                 var scatoleFiltrate = scatoleDaMacerare
-                    .Where(s => s.DataNormalizzazione.Date >= startDate 
-                                && s.DataNormalizzazione.Date <= endDate)
+                    .Where(s => s.DataNormalizzazione.Date >= startDate && s.DataNormalizzazione.Date <= endDate)
                     .ToList();
 
                 int rowsAffected = scatoleFiltrate.Count;
 
-                // Step 3: Aggiorna solo se ci sono scatole
                 if (rowsAffected > 0)
                 {
                     foreach (var scatola in scatoleFiltrate)
@@ -229,20 +206,19 @@ namespace GiacenzaSorterRm.Pages.PagesMacero
 
                     await _context.SaveChangesAsync();
 
-                    _logger.LogInformation($"Macerate {rowsAffected} scatole dal {StartDate:yyyy-MM-dd} al {EndDate:yyyy-MM-dd} - da operatore: {User.Identity.Name}");
+                    _logger.LogInformation("Macerate {RowsAffected} scatole dal {StartDate} al {EndDate} - da operatore: {Operatore}", 
+                        rowsAffected, StartDate.ToString("yyyy-MM-dd"), EndDate.ToString("yyyy-MM-dd"), User.Identity?.Name ?? "Unknown");
 
                     Message = $"Operazione completata con successo! {rowsAffected} scatole sono state macerate.";
                 }
                 else
                 {
-                    _logger.LogWarning($"Nessuna scatola trovata per macero - IdCommessa: {IdCommessa}, Date: {StartDate:yyyy-MM-dd} - {EndDate:yyyy-MM-dd}");
+                    _logger.LogWarning("Nessuna scatola trovata per macero - IdCommessa: {IdCommessa}, Date: {StartDate} - {EndDate}", 
+                        IdCommessa, StartDate.ToString("yyyy-MM-dd"), EndDate.ToString("yyyy-MM-dd"));
                     Message = "Nessuna scatola trovata per il macero. Potrebbero essere già state macerate.";
                 }
 
-                // Inizializza sempre la lista per evitare null reference
                 LstMaceroView = new List<MaceroView>();
-
-                // Ricarica il report per mostrare lo stato aggiornato (lista vuota dopo macero)
                 return Partial("_RiepilogoMacero", this);
             }
             catch (Exception ex)

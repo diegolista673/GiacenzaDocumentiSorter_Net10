@@ -9,15 +9,13 @@ using GiacenzaSorterRm.Models.Database;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 
-
 namespace GiacenzaSorterRm.Pages.TipiLavorazioni
 {
-    [Authorize(Roles = "ADMIN, SUPERVISOR")]
+    [Authorize(Roles = "ADMIN,SUPERVISOR")]
     public class EditModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
         private readonly ILogger<EditModel> _logger;
-
 
         public EditModel(ILogger<EditModel> logger, GiacenzaSorterContext context)
         {
@@ -26,15 +24,11 @@ namespace GiacenzaSorterRm.Pages.TipiLavorazioni
         }
 
         [BindProperty]
-        public Commesse Commesse { get; set; }
+        public Commesse Commesse { get; set; } = new Commesse();
 
-
-
-        public SelectList PiattaformeSL { get; set; }
+        public SelectList PiattaformeSL { get; set; } = new SelectList(Enumerable.Empty<SelectListItem>());
 
         public int Number { get; set; } = 1;
-
-
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -45,19 +39,18 @@ namespace GiacenzaSorterRm.Pages.TipiLavorazioni
 
             PiattaformeSL = new SelectList(_context.Piattaformes, "IdPiattaforma", "Piattaforma");
 
-           
-            Commesse = await _context.Commesses.Include(c => c.IdOperatoreNavigation).FirstOrDefaultAsync(m => m.IdCommessa == id);
+            Commesse? commesse = await _context.Commesses
+                .Include(c => c.IdOperatoreNavigation)
+                .FirstOrDefaultAsync(m => m.IdCommessa == id);
 
-            if (Commesse == null)
+            if (commesse == null)
             {
                 return NotFound();
             }
 
-
+            Commesse = commesse;
             return Page();
         }
-
-
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -66,14 +59,21 @@ namespace GiacenzaSorterRm.Pages.TipiLavorazioni
                 return Page();
             }
 
-
             Commesse.DataCreazione = DateTime.Now.Date;
-            Commesse.IdOperatore  = Int32.Parse(User.FindFirst("IdOperatore").Value);
-            _context.Attach(Commesse).State = EntityState.Modified;
             
+            string? idOperatoreValue = User.FindFirst("IdOperatore")?.Value;
+            if (int.TryParse(idOperatoreValue, out int idOperatore))
+            {
+                Commesse.IdOperatore = idOperatore;
+            }
+
+            _context.Attach(Commesse).State = EntityState.Modified;
+
             try
             {
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Commessa modificata: {Commessa}", Commesse.Commessa);
+                return RedirectToPage("./Index");
             }
             catch (DbUpdateException)
             {
@@ -86,9 +86,6 @@ namespace GiacenzaSorterRm.Pages.TipiLavorazioni
                     throw;
                 }
             }
-
-            _logger.LogInformation("Commessa modificata: {Commessa}", Commesse.Commessa);
-            return RedirectToPage("./Index");
         }
 
         private bool CommesseExists(int id)

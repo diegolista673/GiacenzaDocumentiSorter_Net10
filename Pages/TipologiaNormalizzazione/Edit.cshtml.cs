@@ -7,23 +7,22 @@ using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Threading.Tasks;
 
-
 namespace GiacenzaSorterRm.Pages.TipologiaNormalizzazione
 {
-    [Authorize(Roles = "ADMIN, SUPERVISOR")]
+    [Authorize(Roles = "ADMIN,SUPERVISOR")]
     public class EditModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
         private readonly ILogger<EditModel> _logger;
 
-        public EditModel(ILogger<EditModel> logger,GiacenzaSorterContext context)
+        public EditModel(ILogger<EditModel> logger, GiacenzaSorterContext context)
         {
             _logger = logger;
             _context = context;
         }
 
         [BindProperty]
-        public TipiNormalizzazione TipiNormalizzazione { get; set; }
+        public TipiNormalizzazione TipiNormalizzazione { get; set; } = new TipiNormalizzazione();
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -32,17 +31,18 @@ namespace GiacenzaSorterRm.Pages.TipologiaNormalizzazione
                 return NotFound();
             }
 
-            TipiNormalizzazione = await _context.TipiNormalizzaziones.FirstOrDefaultAsync(m => m.IdTipoNormalizzazione == id);
+            TipiNormalizzazione? tipiNormalizzazione = await _context.TipiNormalizzaziones
+                .FirstOrDefaultAsync(m => m.IdTipoNormalizzazione == id);
 
-            if (TipiNormalizzazione == null)
+            if (tipiNormalizzazione == null)
             {
                 return NotFound();
             }
+
+            TipiNormalizzazione = tipiNormalizzazione;
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -55,6 +55,9 @@ namespace GiacenzaSorterRm.Pages.TipologiaNormalizzazione
             try
             {
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Tipologia Normalizzazione modificata: {TipoNormalizzazione} by Utente: {Utente}", 
+                    TipiNormalizzazione.TipoNormalizzazione, User.Identity?.Name ?? "Unknown");
+                return RedirectToPage("./Index");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -67,9 +70,6 @@ namespace GiacenzaSorterRm.Pages.TipologiaNormalizzazione
                     throw;
                 }
             }
-
-            _logger.LogInformation("Tipologia Normalizzazione Modificata: {@TipiNormalizzazione} by Utente: {Utente}", TipiNormalizzazione, User.Identity.Name);
-            return RedirectToPage("./Index");
         }
 
         private bool TipiNormalizzazioneExists(int id)

@@ -4,27 +4,24 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using NLog;
-using System.Linq;
 using System.Threading.Tasks;
-
 
 namespace GiacenzaSorterRm.Pages.TipiDocumenti
 {
-    [Authorize(Roles = "ADMIN, SUPERVISOR")]
+    [Authorize(Roles = "ADMIN,SUPERVISOR")]
     public class DeleteModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
-        private readonly ILogger<EditModel> _logger;
+        private readonly ILogger<DeleteModel> _logger;
 
-        public DeleteModel(ILogger<EditModel> logger, GiacenzaSorterContext context)
+        public DeleteModel(ILogger<DeleteModel> logger, GiacenzaSorterContext context)
         {
             _logger = logger;
             _context = context;
         }
 
         [BindProperty]
-        public Tipologie Tipologie { get; set; }
+        public Tipologie Tipologie { get; set; } = new Tipologie();
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -33,12 +30,14 @@ namespace GiacenzaSorterRm.Pages.TipiDocumenti
                 return NotFound();
             }
 
-            Tipologie = await _context.Tipologies.FirstOrDefaultAsync(m => m.IdTipologia == id);
+            Tipologie? tipologie = await _context.Tipologies.FirstOrDefaultAsync(m => m.IdTipologia == id);
 
-            if (Tipologie == null)
+            if (tipologie == null)
             {
                 return NotFound();
             }
+
+            Tipologie = tipologie;
             return Page();
         }
 
@@ -49,15 +48,15 @@ namespace GiacenzaSorterRm.Pages.TipiDocumenti
                 return NotFound();
             }
 
-            Tipologie = await _context.Tipologies.FindAsync(id);
+            Tipologie? tipologie = await _context.Tipologies.FindAsync(id);
 
-            if (Tipologie != null)
+            if (tipologie != null)
             {
-                _context.Tipologies.Remove(Tipologie);
+                _context.Tipologies.Remove(tipologie);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Tipologia documento eliminata: {Tipologia}", tipologie.Tipologia);
             }
 
-            _logger.LogInformation("Tipologia documento eliminata: {Tipologia}", Tipologie.Tipologia);
             return RedirectToPage("./Index");
         }
     }

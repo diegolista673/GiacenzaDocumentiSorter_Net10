@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -12,7 +13,7 @@ using System.Security.Claims;
 
 namespace GiacenzaSorterRm.Pages.TipiLavorazioni
 {
-    [Authorize(Roles = "ADMIN, SUPERVISOR")]
+    [Authorize(Roles = "ADMIN,SUPERVISOR")]
     public class CreateModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
@@ -24,20 +25,19 @@ namespace GiacenzaSorterRm.Pages.TipiLavorazioni
             _context = context;
         }
 
-        public List<SelectListItem> LstCentri { get; set; }
-        public string Ruolo { get; set; }
-        public string Utente { get; set; }
-
+        public List<SelectListItem> LstCentri { get; set; } = new List<SelectListItem>();
+        
+        public string Ruolo { get; set; } = string.Empty;
+        
+        public string Utente { get; set; } = string.Empty;
 
         [BindProperty]
         public int SelectedCentro { get; set; }
 
-
         [BindProperty]
-        public Commesse Commesse { get; set; }
+        public Commesse Commesse { get; set; } = new Commesse();
 
-        public SelectList PiattaformeSL { get; set; }
-
+        public SelectList PiattaformeSL { get; set; } = new SelectList(Enumerable.Empty<SelectListItem>());
 
         public IActionResult OnGet()
         {
@@ -45,13 +45,10 @@ namespace GiacenzaSorterRm.Pages.TipiLavorazioni
             return Page();
         }
 
-
-
         public async Task<IActionResult> OnPostAsync()
         {
-            Ruolo = User.FindFirstValue("Ruolo");
-            Utente = User.Identity.Name;
-
+            Ruolo = User.FindFirstValue("Ruolo") ?? string.Empty;
+            Utente = User.Identity?.Name ?? string.Empty;
 
             if (!ModelState.IsValid)
             {
@@ -60,29 +57,34 @@ namespace GiacenzaSorterRm.Pages.TipiLavorazioni
 
             try
             {
-                
                 Commesse.DataCreazione = DateTime.Now.Date;
-                Commesse.IdOperatore = Int32.Parse(User.FindFirst("IdOperatore").Value);
+                
+                string? idOperatoreValue = User.FindFirst("IdOperatore")?.Value;
+                if (int.TryParse(idOperatoreValue, out int idOperatore))
+                {
+                    Commesse.IdOperatore = idOperatore;
+                }
+
                 Commesse.GiorniSla = 1;
                 Commesse.Attiva = true;
 
                 _context.Commesses.Add(Commesse);
                 await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Commessa creata: {Commessa}", Commesse.Commessa);
+                return RedirectToPage("./Index");
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
-                ModelState.AddModelError(string.Empty, "Unable to save. " +
-                            "The name is already in use.");
+                ModelState.AddModelError(string.Empty, "Unable to save. The name is already in use.");
                 return Page();
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, ex.Message);
+                _logger.LogError(ex, "Error creating Commessa");
+                ModelState.AddModelError(string.Empty, "An error occurred while saving.");
                 return Page();
             }
-
-            _logger.LogInformation("Commesse creata: {Commesse}", Commesse.Commessa);
-            return RedirectToPage("./Index");
         }
     }
 }

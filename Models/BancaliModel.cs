@@ -1,8 +1,5 @@
 ﻿using GiacenzaSorterRm.Models.Database;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GiacenzaSorterRm.Models
 {
@@ -10,8 +7,9 @@ namespace GiacenzaSorterRm.Models
     {
         public BancaliModel() { }
 
-        public List<Bancali> BancaliLst { get; set; }
-        public string LastBancale { get; set; }
+        public List<Bancali>? BancaliLst { get; set; }
+        
+        public string LastBancale { get; set; } = string.Empty;
 
         public bool IsAccettata { get; set; }
 
@@ -19,43 +17,36 @@ namespace GiacenzaSorterRm.Models
 
         public bool Default { get; set; }
 
-        public string PdfBancale { get; set; }
+        public string PdfBancale { get; set; } = string.Empty;
 
-        string _alertAccettata;
-        public string AlertAccettata
+        private string? _alertAccettata;
+        
+        public string? AlertAccettata
         {
             get
             {
-
                 if (IsAccettata)
                 {
-                    this._alertAccettata = "Il bancale risulta inserito";
+                    _alertAccettata = "Il bancale risulta inserito";
                 }
 
-
-                return this._alertAccettata;
+                return _alertAccettata;
             }
-
         }
 
-
-
-        string _alertNonConforme;
-        public string AlertNonConforme
+        private string? _alertNonConforme;
+        
+        public string? AlertNonConforme
         {
             get
             {
-
                 if (IsNotConforme)
                 {
-                    this._alertNonConforme = "Nome bancale non conforme, bancale non inserito in DB";
+                    _alertNonConforme = "Nome bancale non conforme, bancale non inserito in DB";
                 }
 
-                return this._alertNonConforme;
+                return _alertNonConforme;
             }
-
         }
-
-
     }
 }

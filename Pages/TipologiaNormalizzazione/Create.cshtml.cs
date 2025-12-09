@@ -2,20 +2,18 @@ using GiacenzaSorterRm.Models.Database;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
-
 namespace GiacenzaSorterRm.Pages.TipologiaNormalizzazione
 {
-    [Authorize(Roles = "ADMIN, SUPERVISOR")]
+    [Authorize(Roles = "ADMIN,SUPERVISOR")]
     public class CreateModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
-        private readonly ILogger<EditModel> _logger;
+        private readonly ILogger<CreateModel> _logger;
 
-        public CreateModel(ILogger<EditModel> logger,GiacenzaSorterContext context)
+        public CreateModel(ILogger<CreateModel> logger, GiacenzaSorterContext context)
         {
             _logger = logger;
             _context = context;
@@ -27,10 +25,8 @@ namespace GiacenzaSorterRm.Pages.TipologiaNormalizzazione
         }
 
         [BindProperty]
-        public TipiNormalizzazione TipiNormalizzazione { get; set; }
+        public TipiNormalizzazione TipiNormalizzazione { get; set; } = new TipiNormalizzazione();
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -41,7 +37,9 @@ namespace GiacenzaSorterRm.Pages.TipologiaNormalizzazione
             _context.TipiNormalizzaziones.Add(TipiNormalizzazione);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("Tipologia Normalizzazione Creata: {@TipiNormalizzazione} by Utente: {Utente}", TipiNormalizzazione, User.Identity.Name);
+            _logger.LogInformation("Tipologia Normalizzazione creata: {TipoNormalizzazione} by Utente: {Utente}", 
+                TipiNormalizzazione.TipoNormalizzazione, User.Identity?.Name ?? "Unknown");
+            
             return RedirectToPage("./Index");
         }
     }

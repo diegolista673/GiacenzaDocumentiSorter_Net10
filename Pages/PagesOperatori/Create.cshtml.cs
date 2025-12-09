@@ -11,12 +11,11 @@ using Microsoft.AspNetCore.Identity;
 
 namespace GiacenzaSorterRm.Pages.PagesOperatori
 {
-    [Authorize(Roles = "ADMIN, SUPERVISOR")]
+    [Authorize(Roles = "ADMIN,SUPERVISOR")]
     public class CreateModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
         private readonly ILogger<CreateModel> _logger;
-
 
         public CreateModel(ILogger<CreateModel> logger, GiacenzaSorterContext context)
         {
@@ -24,25 +23,19 @@ namespace GiacenzaSorterRm.Pages.PagesOperatori
             _context = context;
         }
 
-
         [BindProperty]
-        public Operatori Operatori { get; set; }
+        public Operatori Operatori { get; set; } = new Operatori();
 
-        public SelectList CentriSL { get; set; }
-
-
+        public SelectList CentriSL { get; set; } = new SelectList(Enumerable.Empty<SelectListItem>());
 
         public IActionResult OnGet()
         {
-            CentriSL = new SelectList(_context.CentriLavs.Where(x => x.IdCentroLavorazione != 5), "IdCentroLavorazione", "CentroLavDesc");
+            CentriSL = new SelectList(_context.CentriLavs.Where(x => x.IdCentroLavorazione != 5), 
+                "IdCentroLavorazione", "CentroLavDesc");
             ViewData["Title"] = "Create Operatore";
             return Page();
         }
 
-
-
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -52,7 +45,6 @@ namespace GiacenzaSorterRm.Pages.PagesOperatori
 
             try
             {
-
                 var passwordHasher = new PasswordHasher<string>();
                 var hash = passwordHasher.HashPassword(null, Operatori.Password);
                 Operatori.Password = hash;
@@ -60,18 +52,14 @@ namespace GiacenzaSorterRm.Pages.PagesOperatori
                 _context.Operatoris.Add(Operatori);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation("Operatore created: {Operatore}", Operatori.Operatore);
-
+                _logger.LogInformation("Operatore creato: {Operatore}", Operatori.Operatore);
+                return RedirectToPage("./Index");
             }
             catch (DbUpdateException)
             {
-                ModelState.AddModelError(string.Empty, "Unable to save. " +
-                            "The name is already in use.");
+                ModelState.AddModelError(string.Empty, "Unable to save. The name is already in use.");
                 return Page();
             }
-
-
-            return RedirectToPage("./Index");
         }
     }
 }

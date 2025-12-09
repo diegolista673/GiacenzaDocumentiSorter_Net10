@@ -14,13 +14,11 @@ using Microsoft.AspNetCore.Authorization;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Microsoft.Data.SqlClient;
-using System.Data;
 using Microsoft.Extensions.Configuration;
 
 
 namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
 {
-
     [Authorize(Policy = "NormalizzazioneRequirements")]
     public class CreateModel : PageModel
     {
@@ -35,26 +33,25 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
             _configuration = configuration;
         }
 
-        public SelectList CommesseSL { get; set; } 
-        public SelectList TipologieSL { get; set; }
-        public SelectList ContenitoriSL { get; set; }
-        public SelectList TipoNormSL { get; set; }
-        public List<Scatole> ScatoleLst { get; set; }
-        public ScatoleModel ScatoleModel { get; set; }
-
+        public SelectList CommesseSL { get; set; } = new SelectList(Enumerable.Empty<SelectListItem>());
+        
+        public SelectList TipologieSL { get; set; } = new SelectList(Enumerable.Empty<SelectListItem>());
+        
+        public SelectList ContenitoriSL { get; set; } = new SelectList(Enumerable.Empty<SelectListItem>());
+        
+        public SelectList TipoNormSL { get; set; } = new SelectList(Enumerable.Empty<SelectListItem>());
+        
+        public List<Scatole> ScatoleLst { get; set; } = new List<Scatole>();
+        
+        public ScatoleModel ScatoleModel { get; set; } = new ScatoleModel();
 
         [BindProperty(SupportsGet = true)]
-        public Scatole Scatole { get; set; }
-
-
-        ///[BindProperty(SupportsGet = true)]
-        //public Bancali Bancali { get; set; }
+        public Scatole Scatole { get; set; } = new Scatole();
 
 
         public async Task<IActionResult> OnGet()
         {
-
-            ViewData["Title"] =  "Normalizzazione";
+            ViewData["Title"] = "Normalizzazione";
             await InitializePageAsync();
 
             ScatoleModel = new ScatoleModel
@@ -65,18 +62,8 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
             return Page();
         }
 
-
-
         public async Task<IActionResult> OnPostInsertScatolaAsync()
         {
-            //var pallet = await _context.Bancalis.Where(x => x.Bancale == Bancali.Bancale).FirstOrDefaultAsync();
-
-            //if (IsDataScatolaBeforeDataBancale(Scatole, pallet))
-            //{
-            //    ScatoleModel.ScatoleLst = await GetListScatole(Scatole.DataNormalizzazione);
-            //    ModelState.AddModelError("Scatole.DataNormalizzazione", "Attenzione! Data inserita antecedente accettazione bancale");
-            //}
-
             if (!ModelState.IsValid)
             {
                 await InitializePageAsync();
@@ -95,42 +82,36 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
                     ScatoleModel = new ScatoleModel();
 
                     var res = await ControllaNomeScatolaMondoAsync(Scatole.Scatola);
-                    
+
                     if (!res)
                     {
                         ScatoleModel.ScatolaNonPresenteMondo = true;
                         ScatoleModel.IsNotConforme = true;
-
                         ScatoleModel.LastScatola = Scatole.Scatola;
                         ScatoleModel.ScatoleLst = await GetListScatole(Scatole.DataNormalizzazione);
                         return Partial("_RiepilogoNormalizzateInserite", ScatoleModel);
                     }
-
 
                     if (ControllaNomeScatola(Scatole.Scatola))
                     {
                         ScatoleModel.IsNotConforme = true;
-
                         ScatoleModel.LastScatola = Scatole.Scatola;
                         ScatoleModel.ScatoleLst = await GetListScatole(Scatole.DataNormalizzazione);
                         return Partial("_RiepilogoNormalizzateInserite", ScatoleModel);
                     }
 
-
-
                     if (!ScatolaExists(Scatole.Scatola))
                     {
-                        Scatole.OperatoreNormalizzazione = User.Identity.Name;
+                        Scatole.OperatoreNormalizzazione = User.Identity?.Name ?? string.Empty;
                         Scatole.IdStato = 1;
                         Scatole.IdCentroNormalizzazione = CentroAppartenenza.SetCentroByUser(User);
                         Scatole.IdCentroGiacenza = CentroAppartenenza.SetCentroByUser(User);
-                        //Scatole.IdBancale = pallet.IdBancale;
 
                         _context.Scatoles.Add(Scatole);
-
                         await _context.SaveChangesAsync();
 
-                        _logger.LogInformation("Insert scatola normalizzata : " + Scatole.Scatola + " - operatore : " + User.Identity.Name);
+                        _logger.LogInformation("Insert scatola normalizzata: {Scatola} - operatore: {Operatore}", 
+                            Scatole.Scatola, User.Identity?.Name ?? "Unknown");
                     }
                     else
                     {
@@ -143,22 +124,13 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex.Message);
+                    _logger.LogError(ex, "Error inserting scatola");
                     return Partial("_RiepilogoNormalizzateInserite", ScatoleModel);
                 }
             }
         }
 
-
-
-
-        /// <summary>
-        /// Controlla che il nome scatola non sia ripetuto più volte a causa di un inserimento troppop veloce
-        /// conta le occorrenze della parola formata dalle prime 8 lettere all'interno della stringa di input
-        /// </summary>
-        /// <param name="scatola"></param>
-        /// <returns></returns>
-        private bool ControllaNomeScatola (string nomeScatola)
+        private bool ControllaNomeScatola(string nomeScatola)
         {
             if (!string.IsNullOrEmpty(nomeScatola) && (nomeScatola.Length >= 8))
             {
@@ -174,17 +146,6 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
             return false;
         }
 
-
-
-
-        /// <summary>
-        /// Controlla che il nome scatola esiste su Mondo
-        /// Usa connection string configurata in base all'ambiente:
-        /// - LocalDev/TestDev: Azure SQL Database
-        /// - Production: SQL Server on-premises
-        /// </summary>
-        /// <param name="nomeScatola">Nome della scatola da verificare</param>
-        /// <returns>True se la scatola esiste su Mondo, False altrimenti</returns>
         private async Task<bool> ControllaNomeScatolaMondoAsync(string nomeScatola)
         {
             if (string.IsNullOrWhiteSpace(nomeScatola))
@@ -193,12 +154,11 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
                 return false;
             }
 
-            // Recupera connection string da configurazione (User Secrets in dev, Environment Variables in prod)
-            string connectionString = _configuration.GetConnectionString("MondoConnection");
-            
+            string? connectionString = _configuration.GetConnectionString("MondoConnection");
+
             if (string.IsNullOrWhiteSpace(connectionString))
             {
-                _logger.LogError("MondoConnection string non configurata. Configurare in User Secrets (dev) o Environment Variables (prod)");
+                _logger.LogError("MondoConnection string non configurata");
                 throw new InvalidOperationException("MondoConnection non configurata. Verificare appsettings e User Secrets.");
             }
 
@@ -212,190 +172,172 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
                     using (SqlCommand cmd = new SqlCommand(sql, connection))
                     {
                         cmd.Parameters.AddWithValue("@scatola", nomeScatola);
-                        cmd.CommandTimeout = 30; // Timeout 30 secondi
+                        cmd.CommandTimeout = 30;
 
                         await connection.OpenAsync();
-                        
+
                         var scatolaMondo = await cmd.ExecuteScalarAsync();
-                        
+
                         if (scatolaMondo != null)
                         {
-                            res = scatolaMondo.ToString().Equals(nomeScatola, StringComparison.OrdinalIgnoreCase);
-                            
+                            res = scatolaMondo.ToString()?.Equals(nomeScatola, StringComparison.OrdinalIgnoreCase) ?? false;
+
                             if (res)
                             {
-                                _logger.LogDebug($"Scatola {nomeScatola} trovata su Mondo");
+                                _logger.LogDebug("Scatola {Scatola} trovata su Mondo", nomeScatola);
                             }
                             else
                             {
-                                _logger.LogWarning($"Scatola {nomeScatola} trovata su Mondo ma con nome diverso: {scatolaMondo}");
+                                _logger.LogWarning("Scatola {Scatola} trovata su Mondo ma con nome diverso: {ScatolaMondo}", 
+                                    nomeScatola, scatolaMondo);
                             }
                         }
                         else
                         {
-                            _logger.LogWarning($"Scatola {nomeScatola} NON trovata su Mondo");
+                            _logger.LogWarning("Scatola {Scatola} NON trovata su Mondo", nomeScatola);
                         }
                     }
                 }
             }
             catch (SqlException sqlEx)
             {
-                _logger.LogError(sqlEx, $"Errore SQL durante verifica scatola {nomeScatola} su Mondo: {sqlEx.Message}");
+                _logger.LogError(sqlEx, "Errore SQL durante verifica scatola {Scatola} su Mondo", nomeScatola);
                 throw new InvalidOperationException($"Errore connessione database Mondo: {sqlEx.Message}", sqlEx);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Errore generico durante verifica scatola {nomeScatola} su Mondo: {ex.Message}");
+                _logger.LogError(ex, "Errore generico durante verifica scatola {Scatola} su Mondo", nomeScatola);
                 throw;
             }
 
             return res;
         }
 
-
         private bool ScatolaExists(string scatola)
         {
             return _context.Scatoles.Any(e => e.Scatola == scatola);
         }
 
-
         public async Task InitializePageAsync()
         {
-            int centroID = CentroAppartenenza.SetCentroByUser(User);
-
             Scatole = new Scatole
             {
                 DataNormalizzazione = DateTime.Now
             };
 
-            var sel = await _context.Commesses.Where(x=> x.Attiva == true).OrderBy(x=> x.Commessa).ToListAsync();
+            var sel = await _context.Commesses
+                .Where(x => x.Attiva == true)
+                .OrderBy(x => x.Commessa)
+                .ToListAsync();
 
             CommesseSL = new SelectList(sel, "IdCommessa", "Commessa");
-            
             TipologieSL = new SelectList(_context.Tipologies, "IdTipologia", "Tipologia");
             ContenitoriSL = new SelectList(_context.Contenitoris, "IdContenitore", "Contenitore");
             TipoNormSL = new SelectList(_context.TipiNormalizzaziones, "IdTipoNormalizzazione", "TipoNormalizzazione");
         }
 
-
         public async Task<List<Scatole>> GetListScatole(DateTime? dataLavorazione)
         {
-            
+            if (!dataLavorazione.HasValue)
+            {
+                return new List<Scatole>();
+            }
+
             if (User.IsInRole("ADMIN"))
             {
                 ScatoleLst = await _context.Scatoles
-                                  .Include(s => s.IdCommessaNavigation)
-                                  .Include(s => s.IdContenitoreNavigation)
-                                  .Include(s => s.IdStatoNavigation)
-                                  .Include(s => s.IdTipoNormalizzazioneNavigation)
-                                  .Include(s => s.IdTipologiaNavigation).Where(x => x.DataNormalizzazione == dataLavorazione.Value.Date ).OrderBy(x => x.IdScatola).ToListAsync();
+                    .Include(s => s.IdCommessaNavigation)
+                    .Include(s => s.IdContenitoreNavigation)
+                    .Include(s => s.IdStatoNavigation)
+                    .Include(s => s.IdTipoNormalizzazioneNavigation)
+                    .Include(s => s.IdTipologiaNavigation)
+                    .Where(x => x.DataNormalizzazione == dataLavorazione.Value.Date)
+                    .OrderBy(x => x.IdScatola)
+                    .ToListAsync();
             }
             else
             {
                 int idCentro = CentroAppartenenza.SetCentroByUser(User);
 
                 ScatoleLst = await _context.Scatoles
-                          .Include(s => s.IdCommessaNavigation)
-                          .Include(s => s.IdContenitoreNavigation)
-                          .Include(s => s.IdStatoNavigation)
-                          .Include(s => s.IdTipoNormalizzazioneNavigation)
-                          .Include(s => s.IdTipologiaNavigation).Where(x => x.DataNormalizzazione == dataLavorazione.Value.Date && x.IdCentroNormalizzazione == idCentro).OrderBy(x => x.IdScatola).ToListAsync();
-
+                    .Include(s => s.IdCommessaNavigation)
+                    .Include(s => s.IdContenitoreNavigation)
+                    .Include(s => s.IdStatoNavigation)
+                    .Include(s => s.IdTipoNormalizzazioneNavigation)
+                    .Include(s => s.IdTipologiaNavigation)
+                    .Where(x => x.DataNormalizzazione == dataLavorazione.Value.Date && x.IdCentroNormalizzazione == idCentro)
+                    .OrderBy(x => x.IdScatola)
+                    .ToListAsync();
             }
 
             return ScatoleLst;
-
         }
-
 
         public async Task<JsonResult> OnGetFindIdCommessaAsync(string bancale)
         {
-            //var idCommessa = await _context.Bancalis.Where(x => x.Bancale == bancale ).Select(x => x.IdCommessa).FirstOrDefaultAsync();
-            //string jsondata = JsonConvert.SerializeObject(idCommessa);
-            //return new JsonResult(jsondata);
-            string jsondata = "";
+            string jsondata = string.Empty;
 
-            var pallet = await _context.Bancalis.Where(x => x.Bancale == bancale).FirstOrDefaultAsync();
-            if(pallet != null)
+            Bancali? pallet = await _context.Bancalis.Where(x => x.Bancale == bancale).FirstOrDefaultAsync();
+            
+            if (pallet != null)
             {
                 var idCommessa = pallet.IdCommessa;
                 var dataAccettazione = pallet.DataAccettazioneBancale;
-                List<object> lst = new List<object>();
-                lst.Add(idCommessa);
-                lst.Add(dataAccettazione);
+                List<object> lst = new List<object> { idCommessa, dataAccettazione };
                 jsondata = JsonConvert.SerializeObject(lst);
             }
-            
-            
+
             return new JsonResult(jsondata);
-
         }
-
 
         public async Task<JsonResult> OnGetAssociazioneTipologiaAsync(int idCommessa)
         {
-            var lstTipologie = await _context.CommessaTipologiaContenitores.Where(x => x.IdCommessa == idCommessa && x.Attiva == true).OrderBy(x => x.IdRiepilogo).Select(x => x.IdTipologia).ToListAsync();
+            var lstTipologie = await _context.CommessaTipologiaContenitores
+                .Where(x => x.IdCommessa == idCommessa && x.Attiva == true)
+                .OrderBy(x => x.IdRiepilogo)
+                .Select(x => x.IdTipologia)
+                .ToListAsync();
 
-            var SelectTipologie = await _context.Tipologies.Where(x => lstTipologie.Contains(x.IdTipologia)).Select(a =>
-                                        new SelectListItem
-                                        {
-                                            Value = a.IdTipologia.ToString(),
-                                            Text = a.Tipologia
-                                        }).AsNoTracking().OrderBy(x=> x.Text).ToListAsync();
-            
+            var SelectTipologie = await _context.Tipologies
+                .Where(x => lstTipologie.Contains(x.IdTipologia))
+                .Select(a => new SelectListItem
+                {
+                    Value = a.IdTipologia.ToString(),
+                    Text = a.Tipologia
+                })
+                .AsNoTracking()
+                .OrderBy(x => x.Text)
+                .ToListAsync();
+
             string jsondata = JsonConvert.SerializeObject(SelectTipologie);
-
             return new JsonResult(jsondata);
         }
-
 
         public async Task<JsonResult> OnGetAssociazioneContenitoreAsync(int idCommessa, int idTipologia)
         {
-            var lstContenitori = await _context.CommessaTipologiaContenitores.Where(x => x.IdCommessa == idCommessa && x.IdTipologia==idTipologia && x.Attiva == true).Select(x => x.IdContenitore).ToListAsync();
+            var lstContenitori = await _context.CommessaTipologiaContenitores
+                .Where(x => x.IdCommessa == idCommessa && x.IdTipologia == idTipologia && x.Attiva == true)
+                .Select(x => x.IdContenitore)
+                .ToListAsync();
 
-            var SelectContenitore = await _context.Contenitoris.Where(x => lstContenitori.Contains(x.IdContenitore)).Select(a =>
-                                        new SelectListItem
-                                        {
-                                            Value = a.IdContenitore.ToString(),
-                                            Text = a.Contenitore
-                                        }).AsNoTracking().ToListAsync();
+            var SelectContenitore = await _context.Contenitoris
+                .Where(x => lstContenitori.Contains(x.IdContenitore))
+                .Select(a => new SelectListItem
+                {
+                    Value = a.IdContenitore.ToString(),
+                    Text = a.Contenitore
+                })
+                .AsNoTracking()
+                .ToListAsync();
 
             string jsondata = JsonConvert.SerializeObject(SelectContenitore);
-
             return new JsonResult(jsondata);
-
         }
 
-
-
-        /// <summary>
-        /// data scatola non può essere precedente a data bancale
-        /// </summary>
-        /// <param name="scatola"></param>
-        /// <returns></returns>
         private bool IsDataScatolaBeforeDataBancale(Scatole scatola, Bancali bancale)
         {
-            bool res ;
             int compare = DateTime.Compare(scatola.DataNormalizzazione, bancale.DataAccettazioneBancale);
-            if(compare < 0)
-            {
-                res = true;
-            }
-            else
-            {
-                res = false;
-            }
-            return res;
+            return compare < 0;
         }
-
-
-
-
-
-
     }
-
-
-
-
 }

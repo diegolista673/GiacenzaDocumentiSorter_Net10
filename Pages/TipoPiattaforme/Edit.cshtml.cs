@@ -10,12 +10,11 @@ using Microsoft.Extensions.Logging;
 
 namespace GiacenzaSorterRm.Pages.TipoPiattaforme
 {
-    [Authorize(Roles = "ADMIN, SUPERVISOR")]
+    [Authorize(Roles = "ADMIN,SUPERVISOR")]
     public class EditModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
         private readonly ILogger<EditModel> _logger;
-
 
         public EditModel(ILogger<EditModel> logger, GiacenzaSorterContext context)
         {
@@ -23,9 +22,8 @@ namespace GiacenzaSorterRm.Pages.TipoPiattaforme
             _context = context;
         }
 
-
         [BindProperty]
-        public Piattaforme Piattaforme { get; set; }
+        public Piattaforme Piattaforme { get; set; } = new Piattaforme();
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -34,17 +32,17 @@ namespace GiacenzaSorterRm.Pages.TipoPiattaforme
                 return NotFound();
             }
 
-            Piattaforme = await _context.Piattaformes.FirstOrDefaultAsync(m => m.IdPiattaforma == id);
+            Piattaforme? piattaforme = await _context.Piattaformes.FirstOrDefaultAsync(m => m.IdPiattaforma == id);
 
-            if (Piattaforme == null)
+            if (piattaforme == null)
             {
                 return NotFound();
             }
+
+            Piattaforme = piattaforme;
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -53,17 +51,25 @@ namespace GiacenzaSorterRm.Pages.TipoPiattaforme
             }
 
             Piattaforme.DataCreazione = DateTime.Now.Date;
-            Piattaforme.IdOperatoreCreazione = Int32.Parse(User.FindFirst("IdOperatore").Value);
+            
+            string? idOperatoreValue = User.FindFirst("IdOperatore")?.Value;
+            if (int.TryParse(idOperatoreValue, out int idOperatore))
+            {
+                Piattaforme.IdOperatoreCreazione = idOperatore;
+            }
+
             _context.Attach(Piattaforme).State = EntityState.Modified;
 
             try
             {
                 await _context.SaveChangesAsync();
-                _logger.LogInformation("Piattaforma Modificata: {@Piattaforme} by Utente: {Utente}", Piattaforme, User.Identity.Name);  
+                _logger.LogInformation("Piattaforma modificata: {Piattaforma} by Utente: {Utente}", 
+                    Piattaforme.Piattaforma, User.Identity?.Name ?? "Unknown");
+                return RedirectToPage("./Index");
             }
             catch (DbUpdateException)
             {
-                if (!TipologieExists(Piattaforme.IdPiattaforma))
+                if (!PiattaformeExists(Piattaforme.IdPiattaforma))
                 {
                     return NotFound();
                 }
@@ -72,11 +78,9 @@ namespace GiacenzaSorterRm.Pages.TipoPiattaforme
                     throw;
                 }
             }
-
-            return RedirectToPage("./Index");
         }
 
-        private bool TipologieExists(int id)
+        private bool PiattaformeExists(int id)
         {
             return _context.Piattaformes.Any(e => e.IdPiattaforma == id);
         }

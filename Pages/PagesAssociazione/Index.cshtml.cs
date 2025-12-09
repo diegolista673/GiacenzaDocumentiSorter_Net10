@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using GiacenzaSorterRm.Models.Database;
@@ -9,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace GiacenzaSorterRm.Pages.PagesAssociazione
 {
-    [Authorize(Roles = "ADMIN, SUPERVISOR")]
+    [Authorize(Roles = "ADMIN,SUPERVISOR")]
     public class IndexModel : PageModel
     {
         private readonly GiacenzaSorterContext _context;
@@ -19,7 +17,7 @@ namespace GiacenzaSorterRm.Pages.PagesAssociazione
             _context = context;
         }
 
-        public IList<CommessaTipologiaContenitore> CommessaTipologiaContenitore { get; set; }
+        public IList<CommessaTipologiaContenitore> CommessaTipologiaContenitore { get; set; } = new List<CommessaTipologiaContenitore>();
 
         public async Task OnGetAsync()
         {
