@@ -21,13 +21,13 @@ public partial class Commesse
 
     public bool? Attiva { get; set; }
 
-    public virtual ICollection<Bancali> Bancalis { get; } = new List<Bancali>();
+    public virtual ICollection<Bancali> Bancalis { get; set; } = new List<Bancali>();
 
-    public virtual ICollection<CommessaTipologiaContenitore> CommessaTipologiaContenitores { get; } = new List<CommessaTipologiaContenitore>();
+    public virtual ICollection<CommessaTipologiaContenitore> CommessaTipologiaContenitores { get; set; } = new List<CommessaTipologiaContenitore>();
 
-    public virtual Operatori IdOperatoreNavigation { get; set; }
+    public virtual Operatori? IdOperatoreNavigation { get; set; }
 
-    public virtual Piattaforme IdPiattaformaNavigation { get; set; }
+    public virtual Piattaforme? IdPiattaformaNavigation { get; set; }
 
-    public virtual ICollection<Scatole> Scatoles { get; } = new List<Scatole>();
+    public virtual ICollection<Scatole> Scatoles { get; set; } = new List<Scatole>();
 }

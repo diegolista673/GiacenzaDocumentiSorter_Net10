@@ -7,7 +7,7 @@ public partial class Contenitori
 {
     public int IdContenitore { get; set; }
 
-    public string Contenitore { get; set; }
+    public string? Contenitore { get; set; }
 
     public DateTime? DataCreazione { get; set; }
 
@@ -15,9 +15,9 @@ public partial class Contenitori
 
     public int? IdOperatoreCreazione { get; set; }
 
-    public virtual ICollection<CommessaTipologiaContenitore> CommessaTipologiaContenitores { get; } = new List<CommessaTipologiaContenitore>();
+    public virtual ICollection<CommessaTipologiaContenitore> CommessaTipologiaContenitores { get; set; } = new List<CommessaTipologiaContenitore>();
 
-    public virtual Operatori IdOperatoreCreazioneNavigation { get; set; }
+    public virtual Operatori? IdOperatoreCreazioneNavigation { get; set; }
 
-    public virtual ICollection<Scatole> Scatoles { get; } = new List<Scatole>();
+    public virtual ICollection<Scatole> Scatoles { get; set; } = new List<Scatole>();
 }

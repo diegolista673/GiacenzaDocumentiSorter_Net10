@@ -7,7 +7,7 @@ public partial class TipiNormalizzazione
 {
     public int IdTipoNormalizzazione { get; set; }
 
-    public string TipoNormalizzazione { get; set; }
+    public string TipoNormalizzazione { get; set; } = null!;
 
-    public virtual ICollection<Scatole> Scatoles { get; } = new List<Scatole>();
+    public virtual ICollection<Scatole> Scatoles { get; set; } = new List<Scatole>();
 }

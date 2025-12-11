@@ -1,0 +1,57 @@
+@page
+@model GiacenzaSorterRm.Pages.PagesAssociazione.CreateModel
+
+@{
+    ViewData["Title"] = "Create Associazione";
+}
+
+<div class="container h-100">
+    <div class="row h-100 justify-content-center align-items-center">
+        <div class="col-12 col-md-12 col-lg-6">
+
+            <h4>Crea Associazione</h4>
+            <hr />
+            <div class="row">
+                <div class="col-md-12">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        <div class="form-group">
+                            <label asp-for="Ctc.IdCommessa" class="control-label">Commessa</label>
+                            <select asp-for="Ctc.IdCommessa" class="form-control" asp-items="Model.CommesseSL">
+                                <option value="">-- Seleziona Commessa --</option>
+                            </select>
+                            <span asp-validation-for="Ctc.IdCommessa" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label asp-for="Ctc.IdTipologia" class="control-label">Tipologia</label>
+                            <select asp-for="Ctc.IdTipologia" class="form-control" asp-items="Model.TipologieSL">
+                                <option value="">-- Seleziona Tipologia --</option>
+                            </select>
+                            <span asp-validation-for="Ctc.IdTipologia" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label asp-for="Ctc.IdContenitore" class="control-label">Contenitore</label>
+                            <select asp-for="Ctc.IdContenitore" class="form-control" asp-items="Model.ContenitoriSL">
+                                <option value="">-- Seleziona Contenitore --</option>
+                            </select>
+                            <span asp-validation-for="Ctc.IdContenitore" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-primary" /> |
+                            <a asp-page="Index">Back to List</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

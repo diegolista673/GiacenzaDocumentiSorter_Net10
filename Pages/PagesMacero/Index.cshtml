@@ -256,12 +256,12 @@
                         FetchHelpers.hideSpinner('divProcessing');
                         document.getElementById('dvReport').style.display = 'block';
                         
-                        // ? DEBUG: Verifica disponibilità librerie
+                        // Debug: Verifica disponibilità librerie
                         console.log('DataTables disponibile:', typeof $.fn.DataTable);
                         console.log('Buttons disponibile:', typeof $.fn.DataTable.Buttons);
                         
                         if (document.getElementById('tableProduzione')) {
-                            console.log('? Tabella #tableProduzione trovata');
+                            console.log('✅ Tabella #tableProduzione trovata');
                             
                             // Distruggi DataTable esistente se presente
                             if ($.fn.DataTable.isDataTable('#tableProduzione')) {
@@ -269,14 +269,22 @@
                                 $('#tableProduzione').DataTable().destroy();
                             }
                             
-                            // ? SOLUZIONE: Configura tutti i bottoni PRIMA dell'inizializzazione
+                            // ✅ SOLUZIONE: Configura tutti i bottoni PRIMA dell'inizializzazione
                             const buttonsConfig = [
                                 {
                                     extend: 'excelHtml5',
                                     autoFilter: true,
                                     text: '<i class="fas fa-file-excel"></i> Export to Excel',
                                     exportOptions: {
-                                        columns: ':not(.notexport)'
+                                        columns: ':not(.notexport)',
+                                        format: {
+                                            body: function (data, row, column, node) {
+                                                data = $('<p>' + data + '</p>').text();
+                                                return column === 2 ?
+                                                    data.replace(/[.]/g, '') :
+                                                    data;
+                                            }
+                                        }
                                     },
                                     className: 'btn btn-primary',
                                     title: function () {
@@ -288,8 +296,8 @@
                             @if (Model.Ruolo == "ADMIN" || Model.Ruolo == "SUPERVISOR")
                             {
                                 <text>
-                                // ? Aggiungi bottone Macera condizionalmente
-                                console.log('? Utente ADMIN/SUPERVISOR - Aggiungo bottone Macera');
+                                // ✅ Aggiungi bottone Macera condizionalmente
+                                console.log('✅ Utente ADMIN/SUPERVISOR - Aggiungo bottone Macera');
                                 buttonsConfig.push({
                                     text: '<i class="far fa-trash-alt"></i> Macera',
                                     className: 'btn btn-danger ml-2',
@@ -303,7 +311,7 @@
                             
                             console.log('Configurazione bottoni:', buttonsConfig);
                             
-                            // ? Inizializza DataTable con array di bottoni completo
+                            // ✅ Inizializza DataTable con array di bottoni completo
                             try {
                                 const table = $('#tableProduzione').DataTable({
                                     dom: 'Bfrtip',
@@ -319,15 +327,15 @@
                                     scrollX: true
                                 });
                                 
-                                console.log('? DataTable inizializzato con successo');
+                                console.log('✅ DataTable inizializzato con successo');
                                 console.log('Numero bottoni:', table.buttons().count());
                                 
                             } catch (dtError) {
-                                console.error('? Errore inizializzazione DataTable:', dtError);
+                                console.error('❌ Errore inizializzazione DataTable:', dtError);
                             }
                             
                         } else {
-                            console.warn('? Tabella #tableProduzione NON trovata nel DOM');
+                            console.warn('❌ Tabella #tableProduzione NON trovata nel DOM');
                         }
                     },
                     (error) => {

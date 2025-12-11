@@ -7,7 +7,7 @@ public partial class Stati
 {
     public int IdStato { get; set; }
 
-    public string Stato { get; set; }
+    public string? Stato { get; set; }
 
-    public virtual ICollection<Scatole> Scatoles { get; } = new List<Scatole>();
+    public virtual ICollection<Scatole> Scatoles { get; set; } = new List<Scatole>();
 }

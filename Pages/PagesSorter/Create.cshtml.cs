@@ -1,15 +1,16 @@
+using GiacenzaSorterRm.AppCode;
+using GiacenzaSorterRm.Models;
+using GiacenzaSorterRm.Models.Database;
+using GiacenzaSorterRm.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using GiacenzaSorterRm.Models.Database;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using GiacenzaSorterRm.AppCode;
-using GiacenzaSorterRm.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace GiacenzaSorterRm.Pages.PagesSorter
 {
@@ -40,7 +41,7 @@ namespace GiacenzaSorterRm.Pages.PagesSorter
             InitializePage();
             ScatoleModel = new ScatoleModel
             {
-                ScatoleLst = await GetListScatole(Scatole.DataSorter),
+                ScatoleLst = await GetListScatoleAsync(Scatole.DataSorter),
                 Default = true
             };
 
@@ -49,31 +50,53 @@ namespace GiacenzaSorterRm.Pages.PagesSorter
 
         public async Task<IActionResult> OnPostAsync()
         {
+            ModelState.Remove("Scatole.Note");
+            ModelState.Remove("Scatole.OperatoreMacero");
+            ModelState.Remove("Scatole.OperatoreSorter");
+            ModelState.Remove("Scatole.IdStatoNavigation");
+            ModelState.Remove("Scatole.NoteCambioGiacenza");
+            ModelState.Remove("Scatole.IdCommessaNavigation");
+            ModelState.Remove("Scatole.IdTipologiaNavigation");
+            ModelState.Remove("Scatole.IdTipoNormalizzazione");
+            ModelState.Remove("Scatole.IdContenitoreNavigation");
+            ModelState.Remove("Scatole.OperatoreCambioGiacenza");
+            ModelState.Remove("Scatole.IdCentroGiacenzaNavigation");
+            ModelState.Remove("Scatole.IdTipoNormalizzazioneNavigation");
+            ModelState.Remove("Scatole.IdCentroNormalizzazioneNavigation");
+            ModelState.Remove("Scatole.IdCentroSorterizzazioneNavigation");
+            ModelState.Remove("Scatole.OperatoreNormalizzazione");
+
             if (!ModelState.IsValid)
             {
                 ScatoleModel = new ScatoleModel
                 {
                     LastScatola = Scatole.Scatola,
-                    ScatoleLst = await GetListScatole(Scatole.DataSorter)
+                    ScatoleLst = await GetListScatoleAsync(Scatole.DataSorter)
                 };
+
+                _logger.LogWarning("Model state is invalid for sorter scatola: {Scatola}", Scatole.Scatola);
                 return Partial("_RiepilogoScatoleSorter", ScatoleModel);
             }
 
             try
             {
-                Scatole? ScatolaGiacenza = await _context.Scatoles
+                
+                var scatolaExists = await _context.Scatoles
                     .Where(x => x.Scatola == Scatole.Scatola)
                     .FirstOrDefaultAsync();
 
-                if (ScatolaGiacenza != null)
+                if (scatolaExists != null)
                 {
                     // se scatola è già stata sorterizzata
-                    if (ScatolaGiacenza.DataSorter != null)
+                    if (scatolaExists.DataSorter != null)
                     {
+                        _logger.LogInformation("Scatola già sorterizzata: {Scatola} - operatore: {Operatore}",
+                            Scatole.Scatola, User.Identity?.Name ?? "Unknown");
+
                         ScatoleModel = new ScatoleModel
                         {
                             LastScatola = Scatole.Scatola,
-                            ScatoleLst = await GetListScatole(Scatole.DataSorter),
+                            ScatoleLst = await GetListScatoleAsync(Scatole.DataSorter),
                             IsNormalizzata = true,
                             IsSorterizzata = true,
                             Default = false
@@ -81,37 +104,36 @@ namespace GiacenzaSorterRm.Pages.PagesSorter
                     }
                     else
                     {
-                        Scatole? scatola = await _context.Scatoles.SingleOrDefaultAsync(b => b.Scatola == Scatole.Scatola);
-                        
-                        if (scatola != null)
+                        scatolaExists.DataSorter = Scatole.DataSorter;
+                        scatolaExists.IdCentroSorterizzazione = CentroAppartenenza.SetCentroByUser(User);
+                        scatolaExists.IdStato = 2;
+                        scatolaExists.OperatoreSorter = User.Identity?.Name ?? string.Empty;
+                        scatolaExists.Note = Scatole.Note;
+
+                        await _context.SaveChangesAsync();
+
+                        _logger.LogInformation("Inserimento scatola sorterizzata: {Scatola} - operatore: {Operatore}", 
+                            Scatole.Scatola, User.Identity?.Name ?? "Unknown");
+
+                        ScatoleModel = new ScatoleModel
                         {
-                            scatola.DataSorter = Scatole.DataSorter;
-                            scatola.IdCentroSorterizzazione = CentroAppartenenza.SetCentroByUser(User);
-                            scatola.IdStato = 2;
-                            scatola.OperatoreSorter = User.Identity?.Name ?? string.Empty;
-                            scatola.Note = Scatole.Note;
+                            LastScatola = Scatole.Scatola,
+                            ScatoleLst = await GetListScatoleAsync(Scatole.DataSorter),
+                            Default = true
+                        };
 
-                            await _context.SaveChangesAsync();
-
-                            _logger.LogInformation("Inserimento scatola sorterizzata: {Scatola} - operatore: {Operatore}", 
-                                Scatole.Scatola, User.Identity?.Name ?? "Unknown");
-
-                            ScatoleModel = new ScatoleModel
-                            {
-                                LastScatola = Scatole.Scatola,
-                                ScatoleLst = await GetListScatole(Scatole.DataSorter),
-                                Default = true
-                            };
-                        }
                     }
                 }
                 else
                 {
                     // se scatola non esiste chiede di normalizzarla prima
+                    _logger.LogWarning("Scatola non esistente, normalizzazione richiesta: {Scatola} - operatore: {Operatore}", 
+                        Scatole.Scatola, User.Identity?.Name ?? "Unknown");
+
                     ScatoleModel = new ScatoleModel
                     {
                         LastScatola = Scatole.Scatola,
-                        ScatoleLst = await GetListScatole(Scatole.DataSorter),
+                        ScatoleLst = await GetListScatoleAsync(Scatole.DataSorter),
                         IsNormalizzata = false,
                         IsSorterizzata = false,
                         Default = false
@@ -151,7 +173,7 @@ namespace GiacenzaSorterRm.Pages.PagesSorter
             };
         }
 
-        public async Task<List<Scatole>> GetListScatole(DateTime? dataLavorazione)
+        public async Task<List<Scatole>> GetListScatoleAsync(DateTime? dataLavorazione)
         {
             if (!dataLavorazione.HasValue)
             {

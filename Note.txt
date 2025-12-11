@@ -1,4 +1,7 @@
 
-test in locael con mondo
+controllare inserimento scatole in normalizzazione (rivedere inserimento e model state con inserimtno dto? )
+creato classe dto per scatola normalizzata , rivedere l'inserimento e i controlli
+
+
 test in produzione in collaudo e produzione su IIS
 

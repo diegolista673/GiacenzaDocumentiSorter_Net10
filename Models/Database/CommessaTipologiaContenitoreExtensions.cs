@@ -17,16 +17,16 @@ namespace GiacenzaSorterRm.Models.Database
     {
         //CommessaTipologiaContenitore
         [Display(Name = "Commessa")]
-        public string DescCommessa { get; set; }
+        public string? DescCommessa { get; set; }
 
         [Display(Name = "Tipologia")]
-        public string DescTipologia { get; set; }
+        public string? DescTipologia { get; set; }
 
         [Display(Name = "Contenitore")]
-        public string DescContenitore { get; set; }
+        public string? DescContenitore { get; set; }
 
         
         [DisplayFormat(DataFormatString = "{0:N0}")]
-        public string Quantita { get; set; }
+        public string? Quantita { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -42,8 +42,10 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
         public SelectList TipoNormSL { get; set; } = new SelectList(Enumerable.Empty<SelectListItem>());
         
         public List<Scatole> ScatoleLst { get; set; } = new List<Scatole>();
-        
+
         public ScatoleModel ScatoleModel { get; set; } = new ScatoleModel();
+
+        
 
         [BindProperty(SupportsGet = true)]
         public Scatole Scatole { get; set; } = new Scatole();
@@ -56,7 +58,7 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
 
             ScatoleModel = new ScatoleModel
             {
-                ScatoleLst = await GetListScatole(Scatole.DataNormalizzazione)
+                ScatoleLst = await GetListScatoleAsync(Scatole.DataNormalizzazione.Date)
             };
 
             return Page();
@@ -64,13 +66,29 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
 
         public async Task<IActionResult> OnPostInsertScatolaAsync()
         {
+            ModelState.Remove("Scatole.Note");
+            ModelState.Remove("Scatole.OperatoreMacero");
+            ModelState.Remove("Scatole.OperatoreSorter");
+            ModelState.Remove("Scatole.IdStatoNavigation");
+            ModelState.Remove("Scatole.NoteCambioGiacenza");
+            ModelState.Remove("Scatole.IdCommessaNavigation");
+            ModelState.Remove("Scatole.IdTipologiaNavigation");
+            ModelState.Remove("Scatole.IdTipoNormalizzazione");
+            ModelState.Remove("Scatole.IdContenitoreNavigation");
+            ModelState.Remove("Scatole.OperatoreCambioGiacenza");
+            ModelState.Remove("Scatole.IdCentroGiacenzaNavigation");
+            ModelState.Remove("Scatole.IdTipoNormalizzazioneNavigation");
+            ModelState.Remove("Scatole.IdCentroNormalizzazioneNavigation");
+            ModelState.Remove("Scatole.IdCentroSorterizzazioneNavigation");
+            ModelState.Remove("Scatole.OperatoreNormalizzazione");
+
             if (!ModelState.IsValid)
             {
                 await InitializePageAsync();
                 ScatoleModel = new ScatoleModel
                 {
                     LastScatola = Scatole.Scatola,
-                    ScatoleLst = await GetListScatole(Scatole.DataNormalizzazione)
+                    ScatoleLst = await GetListScatoleAsync(Scatole.DataNormalizzazione)
                 };
 
                 return Partial("_RiepilogoNormalizzateInserite", ScatoleModel);
@@ -88,7 +106,7 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
                         ScatoleModel.ScatolaNonPresenteMondo = true;
                         ScatoleModel.IsNotConforme = true;
                         ScatoleModel.LastScatola = Scatole.Scatola;
-                        ScatoleModel.ScatoleLst = await GetListScatole(Scatole.DataNormalizzazione);
+                        ScatoleModel.ScatoleLst = await GetListScatoleAsync(Scatole.DataNormalizzazione);
                         return Partial("_RiepilogoNormalizzateInserite", ScatoleModel);
                     }
 
@@ -96,7 +114,7 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
                     {
                         ScatoleModel.IsNotConforme = true;
                         ScatoleModel.LastScatola = Scatole.Scatola;
-                        ScatoleModel.ScatoleLst = await GetListScatole(Scatole.DataNormalizzazione);
+                        ScatoleModel.ScatoleLst = await GetListScatoleAsync(Scatole.DataNormalizzazione);
                         return Partial("_RiepilogoNormalizzateInserite", ScatoleModel);
                     }
 
@@ -119,7 +137,7 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
                     }
 
                     ScatoleModel.LastScatola = Scatole.Scatola;
-                    ScatoleModel.ScatoleLst = await GetListScatole(Scatole.DataNormalizzazione);
+                    ScatoleModel.ScatoleLst = await GetListScatoleAsync(Scatole.DataNormalizzazione);
                     return Partial("_RiepilogoNormalizzateInserite", ScatoleModel);
                 }
                 catch (Exception ex)
@@ -159,7 +177,7 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
             if (string.IsNullOrWhiteSpace(connectionString))
             {
                 _logger.LogError("MondoConnection string non configurata");
-                throw new InvalidOperationException("MondoConnection non configurata. Verificare appsettings e User Secrets.");
+                throw new InvalidOperationException("MondoConnection string non configurata");
             }
 
             bool res = false;
@@ -269,43 +287,49 @@ namespace GiacenzaSorterRm.Pages.PagesNormalizzazione
             TipoNormSL = new SelectList(tipoNormList, "Value", "Text");
         }
 
-        public async Task<List<Scatole>> GetListScatole(DateTime? dataLavorazione)
+
+        public async Task<List<Scatole>> GetListScatoleAsync(DateTime? dataLavorazione)
         {
             if (!dataLavorazione.HasValue)
             {
+                _logger.LogWarning("GetListScatole: dataLavorazione è null");
                 return new List<Scatole>();
             }
 
-            if (User.IsInRole("ADMIN"))
-            {
-                ScatoleLst = await _context.Scatoles
-                    .Include(s => s.IdCommessaNavigation)
-                    .Include(s => s.IdContenitoreNavigation)
-                    .Include(s => s.IdStatoNavigation)
-                    .Include(s => s.IdTipoNormalizzazioneNavigation)
-                    .Include(s => s.IdTipologiaNavigation)
-                    .Where(x => x.DataNormalizzazione == dataLavorazione.Value.Date)
-                    .OrderBy(x => x.IdScatola)
-                    .ToListAsync();
-            }
-            else
+            // Query base
+            var query = _context.Scatoles
+                .Where(x => x.DataNormalizzazione.Date == dataLavorazione.Value.Date);
+
+            // Filtro per centro (solo se non ADMIN)
+            if (!User.IsInRole("ADMIN"))
             {
                 int idCentro = CentroAppartenenza.SetCentroByUser(User);
+                query = query.Where(x => x.IdCentroNormalizzazione == idCentro);
+            }
 
+            try
+            { 
+                
                 ScatoleLst = await _context.Scatoles
+                    .Where(x => x.DataNormalizzazione == dataLavorazione.Value.Date)
                     .Include(s => s.IdCommessaNavigation)
                     .Include(s => s.IdContenitoreNavigation)
                     .Include(s => s.IdStatoNavigation)
                     .Include(s => s.IdTipoNormalizzazioneNavigation)
                     .Include(s => s.IdTipologiaNavigation)
-                    .Where(x => x.DataNormalizzazione == dataLavorazione.Value.Date && x.IdCentroNormalizzazione == idCentro)
                     .OrderBy(x => x.IdScatola)
+                    .AsNoTracking()
                     .ToListAsync();
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Errore GetListScatole per data {Data}", dataLavorazione);
+                return new List<Scatole>();
+            }
+
 
             return ScatoleLst;
         }
-
         public async Task<JsonResult> OnGetFindIdCommessaAsync(string bancale)
         {
             string jsondata = string.Empty;

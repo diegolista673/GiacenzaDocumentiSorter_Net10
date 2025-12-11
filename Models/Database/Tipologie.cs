@@ -7,17 +7,17 @@ public partial class Tipologie
 {
     public int IdTipologia { get; set; }
 
-    public string Tipologia { get; set; }
+    public string? Tipologia { get; set; }
 
     public DateTime? DataCreazione { get; set; }
 
     public int? IdOperatoreCreazione { get; set; }
 
-    public string Note { get; set; }
+    public string? Note { get; set; }
 
-    public virtual ICollection<CommessaTipologiaContenitore> CommessaTipologiaContenitores { get; } = new List<CommessaTipologiaContenitore>();
+    public virtual ICollection<CommessaTipologiaContenitore> CommessaTipologiaContenitores { get; set; } = new List<CommessaTipologiaContenitore>();
 
-    public virtual Operatori IdOperatoreCreazioneNavigation { get; set; }
+    public virtual Operatori? IdOperatoreCreazioneNavigation { get; set; }
 
-    public virtual ICollection<Scatole> Scatoles { get; } = new List<Scatole>();
+    public virtual ICollection<Scatole> Scatoles { get; set; } = new List<Scatole>();
 }

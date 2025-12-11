@@ -82,7 +82,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <input asp-for="Scatole.Scatola" id="Scatole_Scatola" class="form-control input-scatola" placeholder="Scatola" v-model="scatola" v-bind:disabled="isDisabledScatola" data-transform="uppercase" />
+                            <input asp-for="Scatole.Scatola" id="Scatole_Scatola" class="form-control input-scatola" placeholder="Scatola" autocomplete="off" v-model="scatola" v-bind:disabled="isDisabledScatola" data-transform="uppercase" />
                             <span asp-validation-for="Scatole.Scatola" class="text-danger"></span>
                         </div>
 

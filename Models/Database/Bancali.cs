@@ -11,15 +11,15 @@ public partial class Bancali
 
     public int IdCentroArrivo { get; set; }
 
-    public string Bancale { get; set; }
+    public string Bancale { get; set; } = null!;
 
     public DateTime DataAccettazioneBancale { get; set; }
 
-    public string Note { get; set; }
+    public string? Note { get; set; }
 
     public int IdOperatoreAccettazione { get; set; }
 
-    public string OperatoreAccettazione { get; set; }
+    public string OperatoreAccettazione { get; set; } = null!;
 
     public int? IdCentroDestinazione { get; set; }
 
@@ -27,17 +27,17 @@ public partial class Bancali
 
     public int? IdOperatoreInvioAltroCentro { get; set; }
 
-    public string OperatoreInvioAltroCentro { get; set; }
+    public string? OperatoreInvioAltroCentro { get; set; }
 
     public DateTime? DataSorter { get; set; }
 
     public int? Progressivo { get; set; }
 
-    public virtual ICollection<BancaliDispacci> BancaliDispaccis { get; } = new List<BancaliDispacci>();
+    public virtual ICollection<BancaliDispacci> BancaliDispaccis { get; set; } = new List<BancaliDispacci>();
 
-    public virtual CentriLav IdCentroArrivoNavigation { get; set; }
+    public virtual CentriLav IdCentroArrivoNavigation { get; set; } = null!;
 
-    public virtual Commesse IdCommessaNavigation { get; set; }
+    public virtual Commesse IdCommessaNavigation { get; set; } = null!;
 
-    public virtual Operatori IdOperatoreAccettazioneNavigation { get; set; }
+    public virtual Operatori IdOperatoreAccettazioneNavigation { get; set; } = null!;
 }

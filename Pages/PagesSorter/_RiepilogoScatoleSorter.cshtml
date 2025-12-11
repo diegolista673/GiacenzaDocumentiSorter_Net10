@@ -60,34 +60,37 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.ScatoleLst)
+            @if (Model.ScatoleLst != null)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Scatola)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IdCommessaNavigation.Commessa)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IdContenitoreNavigation.Contenitore)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IdTipologiaNavigation.Tipologia)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Note)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DataSorter)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IdStatoNavigation.Stato)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.OperatoreSorter)
-                    </td>
-                </tr>
+                @foreach (var item in Model.ScatoleLst)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Scatola)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IdCommessaNavigation.Commessa)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IdContenitoreNavigation.Contenitore)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IdTipologiaNavigation.Tipologia)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Note)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DataSorter)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IdStatoNavigation.Stato)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OperatoreSorter)
+                        </td>
+                    </tr>
+                }
             }
         </tbody>
     </table>

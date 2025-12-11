@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace GiacenzaSorterRm.Models
+
 {
     public class ScatolaDto
     {

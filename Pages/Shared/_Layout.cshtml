@@ -35,6 +35,8 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.5/css/dataTables.bootstrap5.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.2.5/css/buttons.bootstrap5.min.css" />
 
+    @* ✅ AGGIUNTO: Sezione per CSS page-specific *@
+    @await RenderSectionAsync("styles", required: false)
 </head>
 
 <body>
