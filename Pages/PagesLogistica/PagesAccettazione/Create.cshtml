@@ -1,0 +1,175 @@
+﻿@page "{handler?}"
+@model GiacenzaSorterRm.Pages.PagesLogistica.PagesAccettazione.CreateModel
+@{
+    ViewData["Title"] = "Accettazione";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+
+    <div class="card text-white bg-info mb-1 max-w-100" >
+        <div class="card-body">
+            <h2 class="text-center">Accettazione Bancale</h2>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 ">
+
+            <div class="card" id="app">
+
+                <div class="card-header">
+                    <h5 class="card-title">Inserimento Bancale</h5>
+                </div>
+                <div class="card-body">
+
+                    <form method="post" id="formInsertDispacci">
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="input-group ">
+                                    <input asp-for="Dispaccio" class="form-control input-dispaccio " placeholder="Dispaccio" / data-transform="uppercase">
+                                    <span class="input-group-btn ml-2">
+                                        <button type="submit" class="btn btn-primary" id="btnDispacci">Add</button>
+                                    </span>
+                                </div>
+                                <span asp-validation-for="Dispaccio" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                    </form>
+
+                    <div class="mb-3" id="resultDivDispacci">
+                        <partial name="_RiepilogoDispacci" model="Model.DispacciModel" />
+                    </div>
+
+
+                    <form method="post" id="formCreaNuovoBancale">
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="mb-3">
+                      
+                            <input asp-for="Bancali.DataAccettazioneBancale" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <select asp-for="Bancali.IdCommessa" class="form-control  mr-sm-1" asp-items="@Model.CommesseSL ">
+                                <option value="">- Commessa -</option>
+                            </select>
+                            <span asp-validation-for="Bancali.IdCommessa" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <textarea asp-for="Bancali.Note" class="form-control" cols="40" rows="3" placeholder="Note"></textarea>
+                            <span asp-validation-for="Bancali.Note" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3 d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary" id="btnPost">Nuovo bancale</button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-9 col-md-9 col-lg-9 col-xl-9 align-self-stretch ">
+            <div id="resultDiv">
+                <partial name="_RiepilogoAccettazioneBancali" model="Model.BancaliModel" />
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+@section scripts{
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="module">
+        import { FetchHelpers } from '/js/fetch-helpers.js';
+
+        // Inizializza DataTables al caricamento
+        $(document).ready(function () {
+            $('#tableProduzione').DataTable({ scrollX: true });
+
+            $('#tableProduzioneDispacci').DataTable({
+                scrollY: '20vh',
+                scrollCollapse: true,
+                paging: false,
+                dom: '<<t>i>'
+            });
+        });
+
+        // Handler Form 1: Inserimento Dispacci
+        document.getElementById('formInsertDispacci').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            
+            try {
+                await FetchHelpers.postFormWithUpdate(
+                    '?handler=InsertDispacci',
+                    formData,
+                    'resultDivDispacci',
+                    () => {
+                        // Success callback
+                        FetchHelpers.clearInputs(['Dispaccio']);
+                        
+                        // Reinizializza DataTable dispacci
+                        FetchHelpers.reinitDataTable('tableProduzioneDispacci', {
+                            scrollY: '20vh',
+                            scrollCollapse: true,
+                            paging: false,
+                            dom: '<<t>i>'
+                        });
+                    }
+                );
+            } catch (error) {
+                console.error('Errore inserimento dispaccio:', error);
+            }
+        });
+
+        // Handler Form 2: Crea Nuovo Bancale
+        document.getElementById('formCreaNuovoBancale').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            
+            try {
+                await FetchHelpers.postFormWithUpdate(
+                    '?handler=CreaNuovoBancale',
+                    formData,
+                    'resultDiv',
+                    () => {
+                        // Success callback
+                        FetchHelpers.clearInputs(['Dispaccio', 'Bancali_Note']);
+                        
+                        // Reinizializza DataTable bancali
+                        FetchHelpers.reinitDataTable('tableProduzione', { 
+                            scrollX: true, 
+                            order: [] 
+                        });
+                        
+                        // Vai all'ultima pagina
+                        FetchHelpers.dataTableGoToLastPage('tableProduzione');
+                        
+                        // Pulisci tabella dispacci
+                        const tableDispacci = $('#tableProduzioneDispacci').DataTable();
+                        tableDispacci.clear().draw();
+                    }
+                );
+            } catch (error) {
+                console.error('Errore creazione bancale:', error);
+            }
+        });
+    </script>
+}
+
+
+

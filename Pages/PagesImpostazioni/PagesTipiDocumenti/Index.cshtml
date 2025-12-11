@@ -1,0 +1,69 @@
+@page
+@model GiacenzaSorterRm.Pages.PagesImpostazioni.PagesTipiDocumenti.IndexModel
+
+@{
+    ViewData["Title"] = "Tipologie";
+}
+
+<div class="container h-100">
+    <div class="row h-100 justify-content-center align-items-center">
+        <div class="col-12 col-md-12 col-lg-12">
+
+            <h1>Tipologie Documenti</h1>
+            <br />
+            <p>
+                <a asp-page="Create">Create New</a>
+            </p>
+            <table class="table table-striped table-bordered nowrap display compact table-sm" style="width:100%" tabindex="-1" id="tableProduzione">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            @Html.DisplayNameFor(model => model.Tipologie[0].Tipologia)
+                        </th>
+                        <th scope="col">
+                            @Html.DisplayNameFor(model => model.Tipologie[0].DataCreazione)
+                        </th>
+                        <th scope="col">
+                            @Html.DisplayNameFor(model => model.Tipologie[0].Note)
+                        </th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Tipologie)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Tipologia)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DataCreazione)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Note)
+                            </td>
+                            <td>
+                                <a asp-page="./Edit" asp-route-id="@item.IdTipologia">Edit</a> |
+                                <a asp-page="./Delete" asp-route-id="@item.IdTipologia">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+
+        $(document).ready(function () {
+            $('#tableProduzione').DataTable();
+        });
+
+    </script>
+}

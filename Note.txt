@@ -5,3 +5,10 @@ creato classe dto per scatola normalizzata , rivedere l'inserimento e i controll
 
 test in produzione in collaudo e produzione su IIS
 
+aggiornare il campo attiva in produzione
+-- Per SQL Server
+ALTER TABLE CommessaTipologiaContenitore
+ALTER COLUMN Attiva BIT NOT NULL;
+
+ALTER TABLE CommessaTipologiaContenitore
+ADD CONSTRAINT DF_CommessaTipologiaContenitore_Attiva DEFAULT 0 FOR Attiva;

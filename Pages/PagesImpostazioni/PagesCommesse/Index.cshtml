@@ -1,0 +1,96 @@
+@page
+@model GiacenzaSorterRm.Pages.PagesImpostazioni.PagesCommesse.IndexModel
+
+@{
+    ViewData["Title"] = "Commesse";
+}
+
+
+
+<div class="container h-100">
+    <div class="row h-100 justify-content-center align-items-center">
+        <div class="col-12 col-md-12 col-lg-12">
+
+            <h1>Commesse</h1>
+            <br />
+            <p>
+                <a asp-page="Create">Create New</a>
+            </p>
+            <table class="table table-striped table-bordered display compact table-sm" style="width:100%" id="tableProduzione" tabindex="-1">
+                <thead>
+                    <tr>
+                        <th scope="col" >
+                            ID
+                        </th>
+                        <th scope="col">
+                            @Html.DisplayNameFor(model => model.Commesse[0].Commessa)
+                        </th>
+                        <th scope="col" style="text-align: center">
+                            @Html.DisplayNameFor(model => model.Commesse[0].Attiva)                             
+                        </th>
+                        <th scope="col" style="text-align: center">
+                            @Html.DisplayNameFor(model => model.Commesse[0].GiorniSla)
+                        </th>
+                        <th scope="col" style="text-align: center">
+                           @Html.DisplayNameFor(model => model.Commesse[0].IdPiattaformaNavigation.Piattaforma)
+                        </th>
+                        <th scope="col" >
+                            @Html.DisplayNameFor(model => model.Commesse[0].Note)
+                        </th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Commesse)
+                    {
+                    <tr>
+                        <td style="width: 5%; ">
+                            @Html.DisplayFor(modelItem => item.IdCommessa)
+                        </td>
+                        <td style="word-break: break-all; width: 30%; ">
+                            @Html.DisplayFor(modelItem => item.Commessa)
+                        </td>
+                            <td style="width: 10%;text-align: center ">
+                            @* @Html.DisplayFor(modelItem => item.Attiva) *@
+
+                                @if (item.Attiva == true)
+                                {
+                                    <div>SI</div>
+                                }
+                                else
+                                {
+                                    <div>NO</div>
+                                }
+                            </td>
+                            <td style="text-align: center;width: 5%; ">
+                            @Html.DisplayFor(modelItem => item.GiorniSla)
+                        </td>
+                        <td style="text-align: center; width: 10%; ">
+                           @Html.DisplayFor(modelItem => item.IdPiattaformaNavigation.Piattaforma)
+                        </td>
+                        <td style="word-break: break-all; width: 30%; ">
+                           @Html.DisplayFor(modelItem => item.Note)
+                        </td>
+                        <td style="text-align: center; width: 40%; ">
+                            <a asp-page="./Edit" asp-route-id="@item.IdCommessa">Edit</a> |
+                            <a asp-page="./Delete" asp-route-id="@item.IdCommessa">Delete</a>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+            $('#tableProduzione').DataTable();
+        });
+
+
+    </script>
+}

@@ -1,0 +1,157 @@
+﻿@page
+@model GiacenzaSorterRm.Pages.PagesReports.PagesVolumi.IndexModel
+
+@{
+    ViewData["Title"] = "Giacenza";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid" id="app">
+
+    <div class="card text-white bg-info mb-3 max-w-100" >
+
+            <div class="card-body">
+                <h2 class="text-center">Riepilogo Giacenza</h2>
+
+            </div>
+        </div>
+
+        <br />
+
+        <form class="d-flex flex-wrap gap-2 justify-content-center" method="post" id="formReport">
+
+            <div class="mb-3">
+                <select asp-for="IdTipo" class="form-select" id="selectType">
+                    <option value="0">- Seleziona Tipo -</option>
+                    <option value="1">Piattaforma</option>
+                    <option value="2">Dettaglio</option>
+                </select>
+                <span asp-validation-for="IdTipo" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+            <select asp-for="SelectedCentro" asp-items="Model.LstCentri" class="form-select" id="selectCentro">
+                    <option value="0">- Seleziona Centro -</option>
+                </select>
+                <span asp-validation-for="SelectedCentro" class="text-danger"></span>
+            </div>
+
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary" id="btnStart">Report</button>
+            </div>
+
+        </form>
+
+        <br />
+        <br />
+
+        <div id="divProcessing" class="d-none" role="status" aria-live="polite" aria-busy="true">
+            <br />
+            <br />
+            <p class="sr-only">Caricamento in corso...</p>`r`n            <p class="text-center" aria-hidden="true">Processing data, please wait . . .</p>
+            <p>
+                <img class="mx-auto d-block" src="~/images/Spinner.gif" alt="Caricamento in corso..." role="presentation">
+            </p>
+
+        </div>
+
+        <div class="center-text" id="dvReport"></div>
+
+    </div>
+
+
+
+
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="module">
+        import { FetchHelpers } from '/js/fetch-helpers.js';
+
+        // Nascondi spinner inizialmente
+        FetchHelpers.hideSpinner('divProcessing');
+
+        // Handler submit form
+        document.getElementById('formReport').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const selectCentro = document.querySelector('#selectCentro');
+            const selectType = document.querySelector('#selectType');
+            
+            // Validazione
+            if (selectCentro.value == '0' || selectType.value == '0') {
+                alert('Seleziona Centro e Tipo');
+                return;
+            }
+            
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            // Mostra spinner
+            FetchHelpers.showSpinner('divProcessing');
+            const reportDiv = document.getElementById('dvReport');
+            reportDiv.style.display = 'none';
+            reportDiv.innerHTML = '';
+            
+            try {
+                await FetchHelpers.postFormWithUpdate(
+                    '?handler=Report',
+                    formData,
+                    'dvReport',
+                    () => {
+                        // Success callback
+                        FetchHelpers.hideSpinner('divProcessing');
+                        reportDiv.style.display = 'block';
+                        
+                        // Configurazione DataTable basata sul tipo selezionato
+                        const tipoSelezionato = selectType.value;
+                        
+                        const tableConfig = {
+                            dom: 'Bflrtip',
+                            buttons: [
+                                {
+                                    extend: 'excelHtml5',
+                                    autoFilter: true,
+                                    text: '<i class="fas fa-file-excel"></i> Export to Excel',
+                                    className: 'col-auto btn btn-primary',
+                                    title: function () {
+                                        const tipoLabel = tipoSelezionato === '1' ? 'Giacenza' : 'Dettaglio';
+                                        return tipoLabel + ' al ' + $('#EndDate').val();
+                                    },
+                                    exportOptions: {
+                                        format: {
+                                            body: function (data, row, column, node) {
+                                                data = $('<p>' + data + '</p>').text();
+                                                if (tipoSelezionato === '1') {
+                                                    return column === 2 ? data.replace(/[.]/g, '') : data;
+                                                } else {
+                                                    return $.isNumeric(column) ? data.replace(/[.]/g, '') : data;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            order: [[0, 'asc']],
+                            scrollX: true
+                        };
+                        
+                        // Inizializza DataTable
+                        FetchHelpers.reinitDataTable('tableProduzione', tableConfig);
+                    },
+                    (error) => {
+                        // Error callback
+                        FetchHelpers.hideSpinner('divProcessing');
+                        reportDiv.style.display = 'block';
+                        reportDiv.innerHTML = '<div class="alert alert-danger">Errore durante il caricamento del report. Riprova.</div>';
+                    }
+                );
+            } catch (error) {
+                console.error('Errore report giacenza:', error);
+                FetchHelpers.hideSpinner('divProcessing');
+                reportDiv.style.display = 'block';
+            }
+        });
+    </script>
+}

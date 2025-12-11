@@ -6,10 +6,6 @@ namespace GiacenzaSorterRm.Models.Database;
 
 public partial class GiacenzaSorterContext : DbContext
 {
-    public GiacenzaSorterContext()
-    {
-    }
-
     public GiacenzaSorterContext(DbContextOptions<GiacenzaSorterContext> options)
         : base(options)
     {
@@ -50,7 +46,6 @@ public partial class GiacenzaSorterContext : DbContext
             entity.HasIndex(e => e.Bancale, "IX_Table_1").IsUnique();
 
             entity.Property(e => e.Bancale)
-                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.DataAccettazioneBancale).HasColumnType("datetime");
@@ -60,7 +55,6 @@ public partial class GiacenzaSorterContext : DbContext
                 .HasMaxLength(300)
                 .IsUnicode(false);
             entity.Property(e => e.OperatoreAccettazione)
-                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.OperatoreInvioAltroCentro)
@@ -90,20 +84,16 @@ public partial class GiacenzaSorterContext : DbContext
             entity.ToTable("BancaliDispacci");
 
             entity.Property(e => e.Bancale)
-                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.Centro)
-                .IsRequired()
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.DataAssociazione).HasColumnType("datetime");
             entity.Property(e => e.Dispaccio)
-                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.Operatore)
-                .IsRequired()
                 .HasMaxLength(50)
                 .IsUnicode(false);
 
@@ -166,7 +156,6 @@ public partial class GiacenzaSorterContext : DbContext
             entity.HasIndex(e => e.Commessa, "IX_Commesse").IsUnique();
 
             entity.Property(e => e.Commessa)
-                .IsRequired()
                 .HasMaxLength(200)
                 .IsUnicode(false);
             entity.Property(e => e.DataCreazione).HasColumnType("datetime");
@@ -242,6 +231,12 @@ public partial class GiacenzaSorterContext : DbContext
 
             entity.ToTable("Scatole");
 
+            entity.HasIndex(e => new { e.IdStato, e.IdCentroGiacenza, e.DataNormalizzazione }, "IDX_GIACENZA_CENTRO");
+
+            entity.HasIndex(e => new { e.IdTipologia, e.IdStato, e.DataNormalizzazione }, "IDX_GIACENZA_DETTAGLIO");
+
+            entity.HasIndex(e => new { e.IdCommessa, e.IdStato, e.DataNormalizzazione }, "IDX_Macero");
+
             entity.HasIndex(e => e.Scatola, "IX_Scatole").IsUnique();
 
             entity.Property(e => e.DataCambioGiacenza).HasColumnType("datetime");
@@ -265,7 +260,6 @@ public partial class GiacenzaSorterContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.Scatola)
-                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);
 
@@ -325,7 +319,6 @@ public partial class GiacenzaSorterContext : DbContext
             entity.ToTable("TipiNormalizzazione");
 
             entity.Property(e => e.TipoNormalizzazione)
-                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);
         });

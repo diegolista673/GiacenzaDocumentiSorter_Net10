@@ -1,0 +1,29 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using GiacenzaSorterRm.Models.Database;
+using Microsoft.AspNetCore.Authorization;
+
+namespace GiacenzaSorterRm.Pages.PagesImpostazioni.PagesOperatori
+{
+    [Authorize(Roles = "ADMIN,SUPERVISOR")]
+    public class IndexModel : PageModel
+    {
+        private readonly GiacenzaSorterContext _context;
+
+        public IndexModel(GiacenzaSorterContext context)
+        {
+            _context = context;
+        }
+
+        public IList<Operatori> Operatori { get; set; } = new List<Operatori>();
+
+        public async Task OnGetAsync()
+        {
+            Operatori = await _context.Operatoris
+                .Include(d => d.IdCentroLavNavigation)
+                .ToListAsync();
+        }
+    }
+}

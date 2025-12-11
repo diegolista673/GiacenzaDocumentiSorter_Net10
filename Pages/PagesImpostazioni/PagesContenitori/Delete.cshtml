@@ -1,0 +1,54 @@
+﻿@page
+@model GiacenzaSorterRm.Pages.PagesImpostazioni.PagesContenitori.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete Contenitore";
+}
+
+
+
+<div class="container h-100">
+    <div class="row h-100 justify-content-center align-items-center">
+        <div class="col-12 col-md-12 col-lg-6">
+
+            <h4>Elimina Contenitore</h4>
+            <hr />
+            <br />
+            <h4>Are you sure you want to delete this?</h4>
+            <div>
+                
+                <hr />
+                <dl class="row">
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Contenitori.Contenitore)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Contenitori.Contenitore)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Contenitori.DataCreazione)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Contenitori.DataCreazione)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Contenitori.TotaleDocumenti)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Contenitori.TotaleDocumenti)
+                    </dd>
+
+                </dl>
+
+                <form method="post">
+                    <input type="hidden" asp-for="Contenitori.IdContenitore" />
+                    <input type="submit" value="Delete" class="btn btn-danger" /> |
+                    <a asp-page="./Index">Back to List</a>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+

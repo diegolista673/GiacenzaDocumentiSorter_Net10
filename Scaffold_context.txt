@@ -1,0 +1,2 @@
+/*comando per aggiornare il context senza sovrascivere il metodo onconfiguring del context che non può avere in chiaro la stringa di connessione
+dotnet ef dbcontext scaffold "Server=VEVRFL1M031H;Database=GIACENZA_SORTER_RM;TrustServerCertificate=true;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer --output-dir Models/Database --context-dir Models/Database -f --context GiacenzaSorterContext --no-onconfiguring
