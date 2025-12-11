@@ -11,7 +11,7 @@
   <HasBeginStepCommandLineCredentials>true</HasBeginStepCommandLineCredentials>
   <HasBeginStepCommandLineTruststorePassword>false</HasBeginStepCommandLineTruststorePassword>
   <SonarQubeHostUrl>https://sonarcloud.io</SonarQubeHostUrl>
-  <SonarQubeVersion>8.0.0.77196</SonarQubeVersion>
+  <SonarQubeVersion>8.0.0.77300</SonarQubeVersion>
   <SonarProjectKey>diegolista673_GiacenzaDocumentiSorter_Net10</SonarProjectKey>
   <AdditionalConfig>
     <ConfigSetting Id="BuildUri" />
@@ -143,7 +143,7 @@
     <Property Name="sonar.cs.analyzer.architecture.pluginKey">architecturecsharpfrontend</Property>
     <Property Name="sonar.terraform.activate">true</Property>
     <Property Name="sonar.php.frameworkDetection">true</Property>
-    <Property Name="sonar.enableAiPrSummary">false</Property>
+    <Property Name="sonar.enableAiPrSummary">true</Property>
     <Property Name="sonar.architecture.config.model">Model is not configured.</Property>
     <Property Name="sonar.cs.analyzer.dotnet.pluginVersion">10.16.1.129956</Property>
     <Property Name="email.from">noreply@sonarcloud.io</Property>
@@ -210,7 +210,7 @@ Automatic Analysis will not be available between 07:00 CET and 09:00 CET</Proper
     <Property Name="sonar.maintenance_mode.link">https://community.sonarsource.com/t/sonarcloud-autoscan-maintenance-september-28th-07-00-and-09-00-cet/101442</Property>
     <Property Name="sonar.maintenance_mode.start_date">2023-09-28T09:10:00:00.000+01:00</Property>
     <Property Name="sonar.sensor.cache.baseUrl">https://api.sonarcloud.io/analysis</Property>
-    <Property Name="sonar.core.startTime">09/12/2025 13:33:51</Property>
+    <Property Name="sonar.core.startTime">11/12/2025 11:12:49</Property>
   </ServerSettings>
   <LocalSettings>
     <Property Name="sonar.organization">diegolista673</Property>

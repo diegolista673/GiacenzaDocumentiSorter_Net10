@@ -22,6 +22,7 @@ C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\Contenitori.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\ContenitoriExtensions.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\GiacenzaSorterContext.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\GiacenzaSorterContextExtension.cs
+C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\GiacenzaSorterRmContext.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\Operatori.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\OperatoriExtensions.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\Piattaforme.cs
@@ -33,6 +34,8 @@ C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\TipiNormalizzazioneE
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\Tipologie.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\Database\TipologieExtensions.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\DispacciModel.cs
+C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\DTOs\ScatolaNormalizzataDto.cs
+C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\DTOs\ScatolaVerificaDto.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\GiacenzaView.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\MaceroView.cs
 C:\Users\SMARTW\source\repos\GiacenzaSorter\Models\ScatolaDto.cs

@@ -1,5 +1,4 @@
 ﻿using GiacenzaSorterRm.Models.Database;
-using GiacenzaSorterRm.Models.DTOs;
 using System.Collections.Generic;
 
 namespace GiacenzaSorterRm.Models
