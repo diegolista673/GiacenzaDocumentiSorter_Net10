@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 
 
 <head>
@@ -64,47 +64,47 @@
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLogistica" role="button" data-bs-toggle="dropdown" aria-expanded="false" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Logistica</a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownLogistica">
-                                        @* <li><a class="dropdown-item" asp-page="/PagesLogistica/PagesAccettazione/Create">Accettazione Bancali</a></li> *@
-                                        <li><a class="dropdown-item" asp-page="/PagesLogistica/PagesNormalizzazione/Create">Normalizzazione Scatole</a></li>
+                                        @* <li><a class="dropdown-item" asp-page="/PagesLogistica/PagesAccettazione/Create" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Accettazione Bancali</a></li> *@
+                                        <li><a class="dropdown-item" asp-page="/PagesLogistica/PagesNormalizzazione/Create" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Normalizzazione Scatole</a></li>
                                     </ul>
                                 </li>
 
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSorter" role="button" data-bs-toggle="dropdown" aria-expanded="false" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Sorter</a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownSorter">
-                                        <li><a class="dropdown-item" asp-page="/PagesSorter/Create">Scansione Sorter</a></li>
+                                        <li><a class="dropdown-item" asp-page="/PagesSorter/Create" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Scansione Sorter</a></li>
                                     </ul>
                                 </li>
 
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAggiornamento" role="button" data-bs-toggle="dropdown" aria-expanded="false" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Aggiornamento</a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownAggiornamento">
-                                        <li><a class="dropdown-item" asp-page="/PagesAggiornamento/PagesMacero/Index">Macero</a></li>
-                                        <li><a class="dropdown-item" asp-page="/PagesAggiornamento/PagesSpostaGiacenza/Create">Sposta Giacenza</a></li>
+                                        <li><a class="dropdown-item" asp-page="/PagesAggiornamento/PagesMacero/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Macero</a></li>
+                                        <li><a class="dropdown-item" asp-page="/PagesAggiornamento/PagesSpostaGiacenza/Create" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Sposta Giacenza</a></li>
                                     </ul>
                                 </li>
 
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownReports" role="button" data-bs-toggle="dropdown" aria-expanded="false" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Reports</a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownReports">
-                                        @* <li><a class="dropdown-item" asp-page="PagesReports/PagesRiepilogoBancali/Index">Report Bancali</a></li> *@
-                                        <li><a class="dropdown-item" asp-page="/PagesReports/PagesVolumi/Index">Report Giacenza</a></li>
-                                        <li><a class="dropdown-item" asp-page="/PagesReports/PagesRiepilogo/Index">Report Scatole</a></li>
-                                        <li><a class="dropdown-item" asp-page="/PagesReports/PagesNormalizzato/Index">Report Commesse Normalizzate</a></li>
-                                        <li><a class="dropdown-item" asp-page="/PagesReports/PagesSorterizzato/Index">Report Commesse Sorter</a></li>
+                                        @* <li><a class="dropdown-item" asp-page="/PagesReports/PagesRiepilogoBancali/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Report Bancali</a></li> *@
+                                        <li><a class="dropdown-item" asp-page="/PagesReports/PagesVolumi/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Report Giacenza</a></li>
+                                        <li><a class="dropdown-item" asp-page="/PagesReports/PagesRiepilogo/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Report Scatole</a></li>
+                                        <li><a class="dropdown-item" asp-page="/PagesReports/PagesNormalizzato/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Report Commesse Normalizzate</a></li>
+                                        <li><a class="dropdown-item" asp-page="/PagesReports/PagesSorterizzato/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Report Commesse Sorter</a></li>
                                     </ul>
                                 </li>
 
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownImpostazioni" role="button" data-bs-toggle="dropdown" aria-expanded="false" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Impostazioni</a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownImpostazioni">
-                                        <li><a class="dropdown-item" asp-page="/PagesImpostazioni/PagesAssociazione/Index">Associazione</a></li>
-                                        <li><a class="dropdown-item" asp-page="/PagesImpostazioni/PagesCommesse/Index">Commesse</a></li>
-                                        <li><a class="dropdown-item" asp-page="/PagesImpostazioni/PagesContenitori/Index">Contenitori</a></li>
-                                        <li><a class="dropdown-item" asp-page="/PagesImpostazioni/PagesOperatori/Index">Operatori</a></li>
-                                        <li><a class="dropdown-item" asp-page="/PagesImpostazioni/PagesTipoPiattaforme/Index">Piattaforme</a></li>
-                                        <li><a class="dropdown-item" asp-page="/PagesImpostazioni/PagesTipologiaNormalizzazione/Index">Tipologia Normalizzazione</a></li>
-                                        <li><a class="dropdown-item" asp-page="/PagesImpostazioni/PagesTipiDocumenti/Index">Tipologie</a></li>
+                                        <li><a class="dropdown-item" asp-page="/PagesImpostazioni/PagesAssociazione/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Associazione</a></li>
+                                        <li><a class="dropdown-item" asp-page="/PagesImpostazioni/PagesCommesse/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Commesse</a></li>
+                                        <li><a class="dropdown-item" asp-page="/PagesImpostazioni/PagesContenitori/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Contenitori</a></li>
+                                        <li><a class="dropdown-item" asp-page="/PagesImpostazioni/PagesOperatori/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Operatori</a></li>
+                                        <li><a class="dropdown-item" asp-page="/PagesImpostazioni/PagesTipoPiattaforme/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Piattaforme</a></li>
+                                        <li><a class="dropdown-item" asp-page="/PagesImpostazioni/PagesTipologiaNormalizzazione/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Tipologia Normalizzazione</a></li>
+                                        <li><a class="dropdown-item" asp-page="/PagesImpostazioni/PagesTipiDocumenti/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Tipologie</a></li>
                                     </ul>
                                 </li>
 
@@ -112,37 +112,37 @@
                             else if (User.FindFirst("Azienda").Value == "POSTEL")
                             {
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdownLogisticaPostel" role="button" aria-expanded="false" aria-disabled="true" tabindex="-1">Logistica</a>
+                                    <span class="nav-link dropdown-toggle disabled" role="button" aria-disabled="true" tabindex="-1">Logistica</span>
                                 </li>
 
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSorterPostel" role="button" data-bs-toggle="dropdown" aria-expanded="false" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Sorter</a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownSorterPostel">
-                                        <li><a class="dropdown-item" asp-page="/PagesSorter/Create">Scansione Sorter</a></li>
+                                        <li><a class="dropdown-item" asp-page="/PagesSorter/Create" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Scansione Sorter</a></li>
                                     </ul>
                                 </li>
 
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAggiornamentoPostel" role="button" data-bs-toggle="dropdown" aria-expanded="false" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Aggiornamento</a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownAggiornamentoPostel">
-                                        <li><a class="dropdown-item" asp-page="/PagesAggiornamento/PagesMacero/Index">Macero</a></li>
-                                        <li><a class="dropdown-item" asp-page="/PagesAggiornamento/PagesSpostaGiacenza/Create">Sposta Giacenza</a></li>
+                                        <li><a class="dropdown-item" asp-page="/PagesAggiornamento/PagesMacero/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Macero</a></li>
+                                        <li><a class="dropdown-item" asp-page="/PagesAggiornamento/PagesSpostaGiacenza/Create" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Sposta Giacenza</a></li>
                                     </ul>
                                 </li>
 
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownReportsPostel" role="button" data-bs-toggle="dropdown" aria-expanded="false" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Reports</a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownReportsPostel">
-                                        @* <li><a class="dropdown-item" asp-page="PagesReports/PagesRiepilogoBancali/Index">Report Bancali</a></li> *@
-                                        <li><a class="dropdown-item" asp-page="/PagesReports/PagesVolumi/Index">Report Giacenza</a></li>
-                                        <li><a class="dropdown-item" asp-page="/PagesReports/PagesRiepilogo/Index">Report Scatole</a></li>
-                                        <li><a class="dropdown-item" asp-page="/PagesReports/PagesNormalizzato/Index">Report Commesse Normalizzate</a></li>
-                                        <li><a class="dropdown-item" asp-page="/PagesReports/PagesSorterizzato/Index">Report Commesse Sorter</a></li>
+                                        @* <li><a class="dropdown-item" asp-page="/PagesReports/PagesRiepilogoBancali/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Report Bancali</a></li> *@
+                                        <li><a class="dropdown-item" asp-page="/PagesReports/PagesVolumi/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Report Giacenza</a></li>
+                                        <li><a class="dropdown-item" asp-page="/PagesReports/PagesRiepilogo/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Report Scatole</a></li>
+                                        <li><a class="dropdown-item" asp-page="/PagesReports/PagesNormalizzato/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Report Commesse Normalizzate</a></li>
+                                        <li><a class="dropdown-item" asp-page="/PagesReports/PagesSorterizzato/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Report Commesse Sorter</a></li>
                                     </ul>
                                 </li>
 
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdownImpostazioniPostel" role="button" aria-expanded="false" aria-disabled="true" tabindex="-1">Impostazioni</a>
+                                    <span class="nav-link dropdown-toggle disabled" role="button" aria-disabled="true" tabindex="-1">Impostazioni</span>
                                 </li>
 
                             }
@@ -151,32 +151,32 @@
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLogisticaEsterno" role="button" data-bs-toggle="dropdown" aria-expanded="false" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Logistica</a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownLogisticaEsterno">
-                                        @* <li><a class="dropdown-item" asp-page="PagesLogistica/PagesAccettazione/Create">Accettazione Bancali</a></li> *@
-                                        <li><a class="dropdown-item" asp-page="PagesLogistica/PagesNormalizzazione/Create">Normalizzazione Scatole</a></li>
+                                        @* <li><a class="dropdown-item" asp-page="/PagesLogistica/PagesAccettazione/Create" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Accettazione Bancali</a></li> *@
+                                        <li><a class="dropdown-item" asp-page="/PagesLogistica/PagesNormalizzazione/Create" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Normalizzazione Scatole</a></li>
                                     </ul>
                                 </li>
 
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdownSorterEsterno" role="button" aria-expanded="false" aria-disabled="true" tabindex="-1">Sorter</a>
+                                    <span class="nav-link dropdown-toggle disabled" role="button" aria-disabled="true" tabindex="-1">Sorter</span>
                                 </li>
 
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdownAggiornamentoEsterno" role="button" aria-expanded="false" aria-disabled="true" tabindex="-1">Aggiornamento</a>
+                                    <span class="nav-link dropdown-toggle disabled" role="button" aria-disabled="true" tabindex="-1">Aggiornamento</span>
                                 </li>
 
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownReportsEsterno" role="button" data-bs-toggle="dropdown" aria-expanded="false" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Reports</a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownReportsEsterno">
-                                        @* <li><a class="dropdown-item" asp-page="PagesReports/PagesRiepilogoBancali/Index">Report Bancali</a></li> *@
-                                        <li><a class="dropdown-item disabled" tabindex="-1" aria-disabled="true">Report Giacenza</a></li>
-                                        <li><a class="dropdown-item" asp-page="/PagesReports/PagesRiepilogo/Index">Report Scatole</a></li>
-                                        <li><a class="dropdown-item" asp-page="/PagesReports/PagesNormalizzato/Index">Report Commesse Normalizzate</a></li>
-                                        <li><a class="dropdown-item disabled" tabindex="-1" aria-disabled="true">Report Commesse Sorter</a></li>
+                                        @* <li><a class="dropdown-item" asp-page="/PagesReports/PagesRiepilogoBancali/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Report Bancali</a></li> *@
+                                        <li><span class="dropdown-item disabled" tabindex="-1" aria-disabled="true">Report Giacenza</span></li>
+                                        <li><a class="dropdown-item" asp-page="/PagesReports/PagesRiepilogo/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Report Scatole</a></li>
+                                        <li><a class="dropdown-item" asp-page="/PagesReports/PagesNormalizzato/Index" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">Report Commesse Normalizzate</a></li>
+                                        <li><span class="dropdown-item disabled" tabindex="-1" aria-disabled="true">Report Commesse Sorter</span></li>
                                     </ul>
                                 </li>
 
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdownImpostazioniEsterno" role="button" aria-expanded="false" aria-disabled="true" tabindex="-1">Impostazioni</a>
+                                    <span class="nav-link dropdown-toggle disabled" role="button" aria-disabled="true" tabindex="-1">Impostazioni</span>
                                 </li>
                             }
 

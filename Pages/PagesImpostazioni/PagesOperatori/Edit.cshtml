@@ -16,7 +16,7 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Operatori.IdOperatore" />
                 <div class="mb-3">
-                    <label asp-for="Operatori.Operatore" class="form-label">Operatore</label>
+                    <label for="Operatori_Operatore" class="form-label">Operatore</label>
                     <input asp-for="Operatori.Operatore" id="Operatori_Operatore" class="form-control" aria-required="true" />
                     <span asp-validation-for="Operatori.Operatore" class="text-danger"></span>
                 </div>
@@ -24,8 +24,8 @@
                 @if(User.IsInRole("ADMIN"))
                 {
                     <div class="mb-3">
-                        <label asp-for="Operatori.Ruolo" class="form-label">Ruolo</label>
-                        <select asp-for="Operatori.Ruolo" id="Operatori_Ruolo" class="form-select" aria-required="true">
+                        <label for="Operatori_Ruolo_Admin" class="form-label">Ruolo</label>
+                        <select asp-for="Operatori.Ruolo" id="Operatori_Ruolo_Admin" class="form-select" aria-required="true">
                             <option value="">- Ruolo -</option>
                             <option value="ADMIN">ADMIN</option>
                             <option value="SUPERVISOR">SUPERVISOR</option>
@@ -39,8 +39,8 @@
                 @if (User.IsInRole("SUPERVISOR"))
                 {
                     <div class="mb-3">
-                        <label asp-for="Operatori.Ruolo" class="form-label">Ruolo</label>
-                        <select asp-for="Operatori.Ruolo" id="Operatori_Ruolo" class="form-select" v-model="selectRuolo" aria-required="true">
+                        <label for="Operatori_Ruolo_Supervisor" class="form-label">Ruolo</label>
+                        <select asp-for="Operatori.Ruolo" id="Operatori_Ruolo_Supervisor" class="form-select" v-model="selectRuolo" aria-required="true">
                             <option value="">- Ruolo -</option>
                             <option value="SUPERVISOR">SUPERVISOR</option>
                             <option value="USER">USER</option>
@@ -51,7 +51,7 @@
 
 
                 <div class="mb-3">
-                    <label asp-for="Operatori.Azienda" class="form-label">Azienda</label>
+                    <label for="Operatori_Azienda" class="form-label">Azienda</label>
                     <select asp-for="Operatori.Azienda" id="Operatori_Azienda" class="form-select" v-model="selectAzienda" v-on:change="onChangeAzienda($event)" aria-required="true">
                         <option value="">- Azienda -</option>
                         <option value="POSTEL">POSTEL</option>
@@ -62,7 +62,7 @@
 
 
                 <div class="mb-3">
-                    <label asp-for="Operatori.IdCentroLav" class="form-label">Centro Lavorazione</label>
+                    <label for="Operatori_IdCentroLav" class="form-label">Centro Lavorazione</label>
                     <select asp-for="Operatori.IdCentroLav" id="Operatori_IdCentroLav" class="form-select" asp-items="@Model.CentriSL" aria-required="true">
                         <option value="">- Centro -</option>
                     </select>
@@ -71,7 +71,7 @@
 
 
                 <div class="mb-3">
-                    <label asp-for="Operatori.Password" class="form-label">Password - min 8 char -</label>
+                    <label for="Operatori_Password" class="form-label">Password - min 8 char -</label>
                     <input asp-for="Operatori.Password" id="Operatori_Password" type="password" class="form-control" v-bind:disabled="isDisabledPassword" v-model="Password" aria-describedby="passwordHelpEdit" />
                     <small id="passwordHelpEdit" class="form-text text-muted">La password è obbligatoria solo per operatori esterni. Lascia vuoto per non modificarla.</small>
                     <span asp-validation-for="Operatori.Password" class="text-danger"></span>

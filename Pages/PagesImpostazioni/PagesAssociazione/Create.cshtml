@@ -17,7 +17,7 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         
                         <div class="form-group mb-3">
-                            <label asp-for="Ctc.IdCommessa" class="control-label form-label">Commessa</label>
+                            <label for="Ctc_IdCommessa" class="control-label form-label">Commessa</label>
                             <select asp-for="Ctc.IdCommessa" id="Ctc_IdCommessa" class="form-control form-select" asp-items="Model.CommesseSL" aria-required="true">
                                 <option value="">-- Seleziona Commessa --</option>
                             </select>
@@ -25,7 +25,7 @@
                         </div>
                         
                         <div class="form-group mb-3">
-                            <label asp-for="Ctc.IdTipologia" class="control-label form-label">Tipologia</label>
+                            <label for="Ctc_IdTipologia" class="control-label form-label">Tipologia</label>
                             <select asp-for="Ctc.IdTipologia" id="Ctc_IdTipologia" class="form-control form-select" asp-items="Model.TipologieSL" aria-required="true">
                                 <option value="">-- Seleziona Tipologia --</option>
                             </select>
@@ -33,7 +33,7 @@
                         </div>
                         
                         <div class="form-group mb-3">
-                            <label asp-for="Ctc.IdContenitore" class="control-label form-label">Contenitore</label>
+                            <label for="Ctc_IdContenitore" class="control-label form-label">Contenitore</label>
                             <select asp-for="Ctc.IdContenitore" id="Ctc_IdContenitore" class="form-control form-select" asp-items="Model.ContenitoriSL" aria-required="true">
                                 <option value="">-- Seleziona Contenitore --</option>
                             </select>
