@@ -97,7 +97,7 @@ namespace GiacenzaSorterRm
                 options.MinimumSameSitePolicy = SameSiteMode.Strict;
             });
 
-            services.AddBrowserDetection();
+            
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(cookieOptions =>
             {

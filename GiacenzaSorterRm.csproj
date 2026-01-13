@@ -50,10 +50,10 @@
     <PackageReference Include="NLog" Version="6.0.6" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="6.1.0" />
     <PackageReference Include="PDFsharpNetStandard2" Version="1.51.4845" />
-    <PackageReference Include="Shyjus.BrowserDetector" Version="2.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
-    <PackageReference Include="System.DirectoryServices" Version="10.0.0" />
-    <PackageReference Include="System.DirectoryServices.Protocols" Version="10.0.0" />
+    <PackageReference Include="System.DirectoryServices" Version="10.0.1" />
+    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="10.0.1" />
+    <PackageReference Include="System.DirectoryServices.Protocols" Version="10.0.1" />
     
     <!-- Override vulnerabilità transitive -->
     <PackageReference Include="System.Drawing.Common" Version="10.0.0" />

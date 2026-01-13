@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using GiacenzaSorterRm.Models.Database;
-using Shyjus.BrowserDetection;
+
 
 namespace GiacenzaSorterRm.Pages
 {
@@ -18,7 +18,6 @@ namespace GiacenzaSorterRm.Pages
     {
         private readonly GiacenzaSorterContext _context;
         private readonly ILogger<IndexModel> _logger;
-        private readonly IBrowserDetector browserDetector;
         private readonly GiacenzaSorterRm.Services.IAuthenticationService _authService;
 
         // LoggerMessage definito come campo statico per performance
@@ -57,12 +56,10 @@ namespace GiacenzaSorterRm.Pages
         public IndexModel(
             ILogger<IndexModel> logger, 
             GiacenzaSorterContext context, 
-            IBrowserDetector browserDetector,
             GiacenzaSorterRm.Services.IAuthenticationService authService)
         {
             _logger = logger;
             _context = context;
-            this.browserDetector = browserDetector;
             _authService = authService;
         }
 
@@ -72,13 +69,6 @@ namespace GiacenzaSorterRm.Pages
             if (User.Identity?.IsAuthenticated == true)
             {
                 return RedirectToPage("/Home");
-            }
-
-            // Check browser compatibility
-            var browser = this.browserDetector.Browser;
-            if (browser.Name == BrowserNames.InternetExplorer)
-            {
-                return RedirectToPage("/IndexBrowser");
             }
 
             return Page();

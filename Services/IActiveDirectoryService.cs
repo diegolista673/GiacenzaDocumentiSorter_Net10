@@ -15,14 +15,6 @@ namespace GiacenzaSorterRm.Services
         /// <returns>True se credenziali valide e account attivo</returns>
         Task<bool> AuthenticateAsync(string username, string password);
         
-        /// <summary>
-        /// Verifica se utente esiste in AD
-        /// </summary>
-        Task<bool> UserExistsAsync(string username);
-        
-        /// <summary>
-        /// Verifica se account è abilitato
-        /// </summary>
-        Task<bool> IsAccountEnabledAsync(string username);
+
     }
 }
